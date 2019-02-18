@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+  <style>
+
+.newspaper {
+  -webkit-column-count: 4; /* Chrome, Safari, Opera */
+  -moz-column-count: 4; /* Firefox */
+  column-count: 4;
+  -webkit-column-width: 100px; /* Chrome, Safari, Opera */
+  -moz-column-width: 100px; /* Firefox */
+  column-width: 100px;
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+div.a {
+    text-align: center;
+}
+
+div.b {
+    text-align: left;
+}
+
+div.c {
+    text-align: right;
+}
+
+div.c {
+    text-align: justify;
+}
+
+body {
+  background-color: AliceBlue;
+  background-image: url({% static 'image/background-2462430_1920.jpg' %});
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 10px;
+  padding: 20px;
+}
+
+/* Style the header */
+.header {
+  background-color: #66b3ff;
+  padding: 30px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 40px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+select.series-dropdown{
+  align-items: center;
+  width: 30%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+select.brand-dropdown{
+  align-items: center;
+  width: 30%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+input[type=date] {
+  width: 10%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+input.id_main_url {
+  width: 50%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+input[type=checkbox] {
+  width: 2%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+input[type=radio] {
+  width: 2%;
+  padding: 10px 15px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 10%;
+  background-color: #66b3ff;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+input[type=submit]:hover {
+  background-color: #0066cc;
+}
+
+div.form-container {
+  opacity: 0.9;
+  border-radius: 5px;
+  background-color: #cce5ff;
+  padding: 20px;
+}
+
+</style>
+<head>
+  <meta charset="utf-8">
+    <link rel="icon" href="{% static 'image/favicon.ico' %}">
+  <title>{% block title %}Social Meida Tool{% endblock %}</title>
+</head>
+<body>
+  <div class="header">
+    <fieldset><br>
+      <h1>
+        <font color="white">Social Media Tracking Tool</font>
+      </h1>
+    </fieldset>
+  </div>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body class="homepage-contents">
+    <script type="text/javascript">
+        function LoadMain() {
+            var checkError = "{{errorvalue}}";
+            var checkurl = document.getElementById("id_main_url").value;
+                if (checkError=="" && checkurl=="https://talk.sonymobile.com"){
+                    document.getElementById("homepage-form").action = "series/";                    
+                }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||  checkurl=="https://www.gsmarena.com") {
+                    document.getElementById("homepage-form").action ="brand/";
+                }else if(checkError==""){
+                    document.getElementById("homepage-form").action ="series/";
+                }else{
+                    document.getElementById("homepage-form").action ="";
+                }    
+        }
+    </script>
+    <div id="content-container" class="container">
+        <form id="homepage-form" method="POST">
+            <div class="a">
+                <div name="form-container" class="form-container">
+                    <h3>Enter URL:</h3>
+                    <input id="id_main_url" type="text" name="mainurl" value="https://talk.sonymobile.com" size="100" class="id_main_url"><br><br>
+                    <input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
+                    <t id="errorvalue" style="color:red">{{errorvalue}}</t>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+{% endblock content %}
