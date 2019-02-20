@@ -75,6 +75,8 @@ def mobile_view(request):
     mobile_list = []
     mobile_dict ={}
     error_message=""
+    info_msg = ""
+    successmsg = ""
 
     if request.POST.get('back_button'):
         response = redirect('brand/')
