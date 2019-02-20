@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 https://www.gsmarena.com
+=======
+<<<<<<< HEAD
+https://www.gsmarena.com/
+=======
+https://talk.sonymobile.com
+>>>>>>> e95b10292ffbdf487c866013808d95d4e3618630
+>>>>>>> a4aaa7e473b335d34601f13571812427fa6ce112
