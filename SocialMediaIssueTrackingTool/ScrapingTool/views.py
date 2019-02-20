@@ -8,6 +8,7 @@ import logging
 
 from ScrapingTool.file_read_write import fileReaderWriter
 from ScrapingTool.get_issue_links import getIssueLinks
+from ScrapingTool.logics.DateFormateClass import dateFormate, dateListFunction
 from ScrapingTool.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.Gsmarena_brand_list import get_brand_names
 from ScrapingTool.Gsmarena_models_list import pagination_for_mobile_brand_list
@@ -336,35 +337,6 @@ def issueLinksPagination(list_of_dates, links_list):
     #Fetch scraped data by passing product pagination links
     get_value_from_issue_links = get_issue_links.get_issue_link(pagination_link_list, list_of_dates)
     return get_value_from_issue_links
-
-
-#Fetch date ranges between from and to date then adding in to list
-def dateListFunction(formdate, todate):
-    date_list = []
-
-    from_dt, to_dt = dateFormate(formdate, todate)
-
-    for dt in daterange(from_dt, to_dt):
-        date_list.append(dt.strftime("%m/%d/%Y"))
-    return date_list
-
-
-# Fetch date ranges between from and to date.
-def daterange(fromdate, todate):
-    for n in range(int((todate - fromdate).days) + 1):
-        yield fromdate + datetime.timedelta(n)
-
-
-# Converting From and To date in date formate from string formate.
-def dateFormate(from_date, to_date):
-    todate = datetime.datetime.strptime(to_date, "%Y-%m-%d")
-    fromdate = datetime.datetime.strptime(from_date, "%Y-%m-%d")
-
-    from_dt = datetime.date(fromdate.year, fromdate.month, fromdate.day)
-    to_dt = datetime.date(todate.year, todate.month, todate.day)
-
-    return from_dt, to_dt
-
 
 #Fetch Series names and link for selected product
 def get_dictionary_data():
