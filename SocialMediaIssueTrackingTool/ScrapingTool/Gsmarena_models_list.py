@@ -29,6 +29,7 @@ def pagination_for_mobile_brand_list(url):
 def get_models_names(list_page):
     mobile_model_name_list = []
     mobile_model_links_list = []
+    mobile_model_year_list=[]
 
     for l in list_page:
         print("https://www.gsmarena.com/"+l)
@@ -36,11 +37,15 @@ def get_models_names(list_page):
         soup = BeautifulSoup(http_request.content ,"html.parser")
 
         for mobile_model_container in soup.find_all("div", class_="makers"):
+
+
             for mobile_model in mobile_model_container.find_all("span"):
                 mobile_model_name_list.append(mobile_model.text)
             for model_links in mobile_model_container.find_all("a"):
                 mobile_model_links_list.append(model_links.attrs['href'])
 
+    print(mobile_model_year_list)
+    print(mobile_model_name_list)
     data_tuple =(mobile_model_name_list,mobile_model_links_list)
     return data_tuple
 
