@@ -9,10 +9,12 @@ import requests
 from bs4 import BeautifulSoup
 from requests import RequestException
 import re,datetime
+import logging
 
+from ScrapingTool.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.scrap_data import scrapData
 
-
+logging.basicConfig(level=logging.DEBUG)
 class getIssueLinks:
 
     def get_issue_link(self,product_links_list,Date_list):
@@ -104,3 +106,29 @@ class getIssueLinks:
                     final_links_list.append(link)
             print("after duplicate remove %s", final_links_list)
             return final_links_list
+
+    '''
+       Methog to get all product pages link , to get all product issue link ,scrap and extract data for selected products
+       Input:list_of_dates, product links_list
+       Output:Scraped data for selected product and selected dates
+       '''
+    def issueLinksPagination(self, list_of_dates, links_list):
+        get_product_links = getProductNamesAndLinks()
+        pagination_link_list = []
+
+        for urls in links_list:
+            proper_url = "https://talk.sonymobile.com" + urls
+            # Fetch product page links using get_pagination_links() method
+            all_pages_urls = get_product_links.get_pagination_links(proper_url)
+            # If no pages for product
+            if not all_pages_urls:
+                pagination_link_list.append(proper_url)
+            # else if pages exists,
+            else:
+                for pagination_main_urls in all_pages_urls:
+                    pagination_link_list.append(pagination_main_urls)
+        logging.debug("list of product links including pagination links %s", pagination_link_list)
+
+        # Fetch scraped data by passing product pagination links
+        get_value_from_issue_links = self.get_issue_link(pagination_link_list, list_of_dates)
+        return get_value_from_issue_links

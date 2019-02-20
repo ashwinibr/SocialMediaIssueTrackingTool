@@ -14,7 +14,6 @@ from ScrapingTool.Gsmarena_brand_list import get_brand_names
 from ScrapingTool.Gsmarena_models_list import pagination_for_mobile_brand_list
 from ScrapingTool.Gsmarena_get_issue import main_method
 
-
 logging.basicConfig(level=logging.DEBUG)
 
 @csrf_exempt
@@ -173,7 +172,8 @@ def series_view(request):
                           {"errorvalue": error_message})
 
     #Call get_dictionary_data() method to get series names
-    series_dictionary = get_dictionary_data()
+    series = getProductNamesAndLinks()
+    series_dictionary =series.get_dictionary_data()
     if series_dictionary:
             for series_name in series_dictionary.keys():
                 logging.debug("iterate series names : %s", series_name)
@@ -195,6 +195,8 @@ def product_view(request):
     successmsg = ""
     product_names_list = []
 
+    get_issue_link_obj=getIssueLinks()
+
     if request.POST.get('back_button'):
         response = redirect('series/')
         logging.info("redirecting form social media view to series page view")
@@ -209,7 +211,8 @@ def product_view(request):
         series_list = request.POST.getlist('series[]')
         with open("ScrapingTool/files/series.txt", "w") as file:
             #Call get_dictionary_data() method to get series link for selected series name by user
-            series_dictionary = get_dictionary_data()
+            series=getProductNamesAndLinks()
+            series_dictionary = series.get_dictionary_data()
             for series_name, series_links in series_dictionary.items():
                 for list_of_series in series_list:
                     if list_of_series == series_name:
@@ -269,7 +272,7 @@ def product_view(request):
                             if start_date <= end_date:
                                 list_of_dates = dateListFunction(fromdate, todate)
                                 #Fetching all the links of product pages by calling method issueLinksPagination() for selected product
-                                data_dictionary = issueLinksPagination(list_of_dates, product_links_list)
+                                data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
                                     logging.info(
@@ -287,7 +290,7 @@ def product_view(request):
                         elif request.POST.get("alldates") == "on":
                             print("on")
                             list_of_dates = []
-                            issueLinksPagination(list_of_dates, product_links_list)
+                            get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
                             logging.info(
                                 "displaying an success message after scraping data from website : %s",
@@ -325,45 +328,7 @@ def product_view(request):
                       {"errorvalue": error_message})
 
 
-# -----------------------------------------------------------------
 
-# logical methods
 
-'''
-Methog to get all product pages link , to get all product issue link ,scrap and extract data for selected products
-Input:list_of_dates, product links_list
-Output:Scraped data for selected product and selected dates
-'''
-def issueLinksPagination(list_of_dates, links_list):
-    get_product_links = getProductNamesAndLinks()
-    get_issue_links = getIssueLinks()
-    pagination_link_list = []
 
-    for urls in links_list:
-        proper_url = "https://talk.sonymobile.com" + urls
-        #Fetch product page links using get_pagination_links() method
-        all_pages_urls = get_product_links.get_pagination_links(proper_url)
-        #If no pages for product
-        if not all_pages_urls:
-            pagination_link_list.append(proper_url)
-        #else if pages exists,
-        else:
-            for pagination_main_urls in all_pages_urls:
-                pagination_link_list.append(pagination_main_urls)
-    logging.debug("list of product links including pagination links %s",pagination_link_list)
 
-    #Fetch scraped data by passing product pagination links
-    get_value_from_issue_links = get_issue_links.get_issue_link(pagination_link_list, list_of_dates)
-    return get_value_from_issue_links
-
-#Fetch Series names and link for selected product
-def get_dictionary_data():
-
-    file_read = fileReaderWriter()
-    get_product_links = getProductNamesAndLinks()
-
-    file_path = open("ScrapingTool/files/mainurl.txt", "r")
-    url = file_read.read_links_from_text_file(file_path) + "/t5/Phones-Tablets/ct-p/Phones"
-    series_dictionary = get_product_links.get_product_series(url)
-
-    return series_dictionary

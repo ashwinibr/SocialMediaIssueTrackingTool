@@ -13,7 +13,7 @@ from requests import RequestException
 
 
 from ScrapingTool.file_read_write import fileReaderWriter
-from ScrapingTool.product_name_and_links import getProductNamesAndLinks
+
 
 
 class scrapData:
