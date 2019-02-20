@@ -118,6 +118,7 @@ def mobile_view(request):
 
         for model in checklist:
             print(mobile_dict[model])
+            print("github check")
             main_method(main_url + mobile_dict[model])            
         
         return render(request, "socialmediascraping.html",
