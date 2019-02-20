@@ -57,6 +57,8 @@ def get_issue_from_gsmarena(pagination_link_list):
     thread_list=[]
     product_list=[]
 
+    selected_date_list = []
+
     for li in pagination_link_list:
         complete_url="https://www.gsmarena.com/"+li
         http_request = requests.get(complete_url)
@@ -69,20 +71,34 @@ def get_issue_from_gsmarena(pagination_link_list):
                 thread_list.append(complete_url)
                 product_list.append(product_name.text)
 
-                date=issue_container.find("li",class_="upost")
-                d=date.text
-                word_list = d.split()  # list of words
+                posted_date = issue_container.find("li", class_="upost")
+                post_date = posted_date.text
+                print(post_date)
+                word_list = post_date.split()  # list of words
                 hour = word_list[-2]
-                if hour == "hour" or hour == "hours":
-                    date = datetime.date.today()
-                    date_list.append(date)
-
+                hour_list = ["hour","hours","minute","minutes","second","seconds"]
+                if hour in hour_list:
+                    modified_date = datetime.date.today()
                 else:
-                    s = datetime.datetime.strptime(d, '%d %b %Y')
-                    date_list.append(s.strftime('%Y-%m-%d'))
+                    time_date = datetime.datetime.strptime(post_date, '%d %b %Y')
+                    modified_date = time_date.strftime('%Y-%m-%d')
+                if not selected_date_list:
+                    date_list.append(modified_date)
+                    print(modified_date)
+                    comment = issue_container.find("p", class_="uopin")
+                    issue_data = comment.text
+                    user_comment.append(issue_data)
+                    print(issue_data)
+                else:
+                    for date in selected_date_list:
+                        if date == modified_date:
+                            date_list.append(modified_date)
+                            print(modified_date)
+                            comment = issue_container.find("p", class_="uopin")
+                            issue_data = comment.text
+                            user_comment.append(issue_data)
+                            print(issue_data)
 
-                comment=issue_container.find("p", class_="uopin")
-                user_comment.append(comment.text)
 
     print(len(date_list),len(thread_list),len(user_comment),len(product_list))
 
@@ -95,3 +111,20 @@ def get_issue_from_gsmarena(pagination_link_list):
     # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
     file_writer.write_data_using_pandas(data_dictionary)
 
+"""
+                date=issue_container.find("li",class_="upost")
+                d=date.text
+                word_list = d.split()  # list of words
+                hour = word_list[-2]
+                if hour == "hour" or hour == "hours":
+                    date = datetime.date.today()
+                    date_list.append(date)
+                else:
+                    s = datetime.datetime.strptime(d, '%d %b %Y')
+                    date_list.append(s.strftime('%Y-%m-%d'))
+
+                comment=issue_container.find("p", class_="uopin")
+                user_comment.append(comment.text)
+
+
+"""
