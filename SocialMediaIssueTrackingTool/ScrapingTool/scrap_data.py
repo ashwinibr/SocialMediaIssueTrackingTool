@@ -15,6 +15,7 @@ from requests import RequestException
 from ScrapingTool.file_read_write import fileReaderWriter
 
 
+
 class scrapData:
     logging.basicConfig(level=logging.DEBUG)
 
@@ -196,5 +197,6 @@ class scrapData:
         #Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
         file_writer.write_data_using_pandas(data_dictionary)
         return data_dictionary
+
 
 

@@ -4,10 +4,10 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from ScrapingTool.file_read_write import fileReaderWriter
+
 
 class getProductNamesAndLinks:
-
-
 #Fetch series name and link
     def get_product_series(self, url):
         series_dictionary_data = {}
@@ -88,3 +88,15 @@ class getProductNamesAndLinks:
                 urls = page_url % i  # make a url list and iterate over it
                 pagination_list.append(urls)
         return pagination_list
+
+
+# Fetch Series names and link for selected product
+    def get_dictionary_data(self):
+        file_read = fileReaderWriter()
+        get_product_links = getProductNamesAndLinks()
+
+        file_path = open("ScrapingTool/files/mainurl.txt", "r")
+        url = file_read.read_links_from_text_file(file_path) + "/t5/Phones-Tablets/ct-p/Phones"
+        series_dictionary = get_product_links.get_product_series(url)
+
+        return series_dictionary
