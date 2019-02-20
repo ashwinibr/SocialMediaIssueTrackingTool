@@ -112,24 +112,5 @@ def get_issue_from_gsmarena(pagination_link_list):
     # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
     file_writer.write_data_using_pandas(data_dictionary)
 
-<<<<<<< HEAD
-"""
-                date=issue_container.find("li",class_="upost")
-                d=date.text
-                word_list = d.split()  # list of words
-                hour = word_list[-2]
-                if hour == "hour" or hour == "hours":
-                    date = datetime.date.today()
-                    date_list.append(date)
-                else:
-                    s = datetime.datetime.strptime(d, '%d %b %Y')
-                    date_list.append(s.strftime('%Y-%m-%d'))
-
-                comment=issue_container.find("p", class_="uopin")
-                user_comment.append(comment.text)
-
-
-"""
-=======
     return data_dictionary
->>>>>>> e95b10292ffbdf487c866013808d95d4e3618630
+
