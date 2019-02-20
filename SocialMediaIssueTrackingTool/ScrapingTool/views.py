@@ -76,6 +76,8 @@ def mobile_view(request):
     mobile_list = []
     mobile_dict ={}
     error_message=""
+    info_msg = ""
+    successmsg = ""
 
     if request.POST.get('back_button'):
         response = redirect('brand/')
@@ -119,14 +121,30 @@ def mobile_view(request):
         selected_model_url = []
         for model in checklist:
             selected_model_url.append(main_url + "/" + mobile_dict[model])
-        main_method(selected_model_url, checklist)
         
-        return render(request, "socialmediascraping.html",
-                  {"errorvalue": error_message, "productname": mobile_dict.keys})        
-                        
-    return render(request, "socialmediascraping.html",
-                  {"errorvalue": error_message, "productname": mobile_dict.keys})
+        data_dictionary = main_method(selected_model_url, checklist)
+        
+        if data_dictionary:
+            successmsg = "Data extracted successfully, Click download to get data in excel"
+            logging.info("displaying an success message after scraping data from website : %s",
+                                        successmsg)
+        else:
+            info_msg = "Info:No data for selected date"
+            logging.warning("there is no data for selected product with selected date %s",info_msg)
 
+    elif request.POST.get("douwnload_button"):
+        file_name = 'ScrapingTool/files/FinalData.xlsx'  # this should live elsewhere, definitely
+        with open(file_name, 'rb') as f:
+            response = HttpResponse(f.read(),
+                                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=' + file_name
+            response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            return response
+
+    return render(request, "socialmediascraping.html",
+                  {"errorvalue": error_message, "productname": mobile_dict.keys, "successmsg": successmsg,
+                       "infomsg": info_msg})        
+                        
 
 @csrf_exempt
 def series_view(request):
