@@ -115,11 +115,10 @@ def mobile_view(request):
         file = open("ScrapingTool/files/mainurl.txt", "r")
         main_url = file_read.read_links_from_text_file(file)
 
-
+        selected_model_url = []
         for model in checklist:
-            print(mobile_dict[model])
-            print("github check")
-            main_method(main_url + mobile_dict[model])            
+            selected_model_url.append(main_url + "/" + mobile_dict[model])
+        main_method(selected_model_url, checklist)
         
         return render(request, "socialmediascraping.html",
                   {"errorvalue": error_message, "productname": mobile_dict.keys})        
