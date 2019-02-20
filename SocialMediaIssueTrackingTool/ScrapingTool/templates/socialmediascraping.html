@@ -2,135 +2,129 @@
 {% block content %}
     <body id="social-media-content-container" class="social-media-container" onload="DownloadOnOff()">
         <div class="social-media-container-product-list">
-                      <meta charset="utf-8">
-                      <meta name="viewport" content="width=device-width, initial-scale=1">
-                      <title>jQuery UI Datepicker - Default functionality</title>
-                      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-                      <link rel="stylesheet" href="/resources/demos/style.css">
-                      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-                      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                      <script>
-                      $( function() {
-                        if ($( "#fromdate" ).type!='date')
-                            $( "#fromdate" ).datepicker({ dateFormat: 'yy-mm-dd', maxDate: 0});                        
-                            $( "#todate" ).datepicker({ dateFormat: 'yy-mm-dd', maxDate: 0})
-                        } );                                         
-                      </script>            
-                        <script language="JavaScript">
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>jQuery UI Datepicker - Default functionality</title>
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+            <link rel="stylesheet" href="/resources/demos/style.css">
+            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            <script>
+              $( function() {
+                if ($( "#fromdate" ).type!='date')
+                    $( "#fromdate" ).datepicker({ dateFormat: 'yy-mm-dd', maxDate: 0});                        
+                    $( "#todate" ).datepicker({ dateFormat: 'yy-mm-dd', maxDate: 0})
+                } );                                         
+            </script>            
+            <script language="JavaScript">
+                function Datelimit() {
+                        fromdate.max = new Date().toISOString().split("T")[0];
+                        todate.max = new Date().toISOString().split("T")[0];
+                        document.getElementById("successmsg").innerHTML = '';
+                        document.getElementById("douwnload_button").style.visibility="hidden";
+                        document.getElementById("errorvalue").innerHTML = '';                                          
+                        document.getElementById("infomsg").innerHTML = '';                                          
 
-                                function Datelimit() {
-                                        fromdate.max = new Date().toISOString().split("T")[0];
-                                        todate.max = new Date().toISOString().split("T")[0];
-                                        document.getElementById("successmsg").innerHTML = '';
-                                        document.getElementById("douwnload_button").style.visibility="hidden";
-                                        document.getElementById("errorvalue").innerHTML = '';                                          
-                                        document.getElementById("infomsg").innerHTML = '';                                          
+                }
 
-                                }
+                function clearDateErr() {
+                    if(document.getElementById("alldates").checked) {
+                        document.getElementById("errorfrom").innerHTML = '';
+                        document.getElementById("errorto").innerHTML = '';
+                        document.getElementById("fromdate").value = '';
+                        document.getElementById("todate").value = '';
+                        document.getElementById("fromdate").disabled = true;
+                        document.getElementById("todate").disabled = true;
+                        document.getElementById("successmsg").innerHTML = '';
+                        document.getElementById("douwnload_button").style.visibility="hidden";                                        
+                    }
+                    else{
+                        document.getElementById("fromdate").disabled = false;
+                        document.getElementById("todate").disabled = false; 
+                    }
+                }
 
-                                function clearDateErr() {
-                                    if(document.getElementById("alldates").checked) {
-                                        document.getElementById("errorfrom").innerHTML = '';
-                                        document.getElementById("errorto").innerHTML = '';
-                                        document.getElementById("fromdate").value = '';
-                                        document.getElementById("todate").value = '';
-                                        document.getElementById("fromdate").disabled = true;
-                                        document.getElementById("todate").disabled = true;
-                                        document.getElementById("successmsg").innerHTML = '';
-                                        document.getElementById("douwnload_button").style.visibility="hidden";                                        
-                                    }
-                                    else{
-                                        document.getElementById("fromdate").disabled = false;
-                                        document.getElementById("todate").disabled = false; 
-                                    }
-                                }
+                function enable_dates() {
+                        document.getElementById("fromdate").disabled = false;
+                        document.getElementById("todate").disabled = false;
+                }
 
-                                function enable_dates() {
-                                        document.getElementById("fromdate").disabled = false;
-                                        document.getElementById("todate").disabled = false;
-                                }
+                function DownloadOnOff() {
+                    document.getElementById("loader").style.visibility="hidden";
+                    var checkSuccess = "{{successmsg}}";
+                        if (checkSuccess==""){
+                            document.getElementById("douwnload_button").style.visibility="hidden";
+                        }
+                        else{
+                            document.getElementById("douwnload_button").style.visibility="visible";
+                        }
+                }
 
-                                function DownloadOnOff() {
-                                    document.getElementById("loader").style.visibility="hidden";
-                                    var checkSuccess = "{{successmsg}}";
-                                        if (checkSuccess==""){
-                                            document.getElementById("douwnload_button").style.visibility="hidden";
-                                        }
-                                        else{
-                                            document.getElementById("douwnload_button").style.visibility="visible";
-                                        }
-                                }
+                function toggle(source) {
+                var checkboxes = document.querySelectorAll('input[name="product[]"]');
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i] != source)
+                        checkboxes[i].checked = source.checked;
+                    }
+                }
+                      
+                function checkTextFieldFrom() {
+                    var valueDatefrom = document.getElementById('fromdate').value;
+                    document.getElementById("errorfrom").innerHTML = ''
+                    document.getElementById("errorto").innerHTML = '';
+                    document.getElementById("successmsg").innerHTML = '';
+                    document.getElementById("douwnload_button").style.visibility="hidden";
 
-                                function toggle(source) {
-                                var checkboxes = document.querySelectorAll('input[name="product[]"]');
-                                for (var i = 0; i < checkboxes.length; i++) {
-                                    if (checkboxes[i] != source)
-                                        checkboxes[i].checked = source.checked;
-                                    }
-                                }
-                                      
-                                function checkTextFieldFrom() {
-                                    var valueDatefrom = document.getElementById('fromdate').value;
-                                    document.getElementById("errorfrom").innerHTML = ''
-                                    document.getElementById("errorto").innerHTML = '';
-                                    document.getElementById("successmsg").innerHTML = '';
-                                    document.getElementById("douwnload_button").style.visibility="hidden";
+                    if (!Date.parse(valueDatefrom)) {
+                        document.getElementById("errorfrom").innerHTML = 'Enter Valid Date';
+                        document.getElementById("errorto").innerHTML = 'Enter Valid Date';
+                    }
 
-                                    if (!Date.parse(valueDatefrom)) {
-                                        document.getElementById("errorfrom").innerHTML = 'Enter Valid Date';
-                                        document.getElementById("errorto").innerHTML = 'Enter Valid Date';
-                                    }
+                }
 
-                                }
+                function Loader(){
+                        document.getElementById("loader").style.visibility="visible";
+                }
+              
+            </script>
+            <title>Social Media Tracking Tool</title>                      
+            <form id="socialmedia-form" method="POST">
+                <div name="form-container" class="form-container" action="">
+                    <fieldset>
+                        <div class="b">
+                            <label for="fromdate">  From Date: </label><input type="text" name="fromdate"id="fromdate"> 
+                            <t id="errorfrom" style="color:red"></t><br><br>
+                            <label for="todate">   To Date: </label><input type="text" name="todate" id="todate" onblur="checkTextFieldFrom();">
+                            <t id="errorto" style="color:red"></t><br><br>
+                            <input type="checkbox" id="alldates" name="alldates" onchange="clearDateErr()"> Select all Dates<br><br>
+                            <br><br>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div class="product-lis">
+                            <label> Select Product:</label>
+                            <br><br>
+                        </div>
 
-                                function Loader(){
-                                        document.getElementById("loader").style.visibility="visible";
-                                }
-                              
-                        </script>
-                <title>Social Media Tracking Tool</title>                      
-                <form id="socialmedia-form" method="POST">
-                    <div name="form-container" class="form-container" action="">
-                        <fieldset>
-                                <div class="b">
-                                    <label for="fromdate">  From Date: </label><input type="text" name="fromdate"id="fromdate"> 
-                                     <t id="errorfrom" style="color:red"></t><br><br>
-                                    <label for="todate">   To Date: </label><input type="text" name="todate" id="todate" onblur="checkTextFieldFrom();">
-                                     <t id="errorto" style="color:red"></t><br><br>
-                                    <input type="checkbox" id="alldates" name="alldates" onchange="clearDateErr()"> Select all Dates<br><br>
-
-                                    <br><br>
-                                </div>
-                        </fieldset>
-
-                        <fieldset>
-                            <div class="product-lis">
-                                <label> Select Product:</label>
-                                <br><br>
+                        <div class="b">
+                            <div class="newspaper">
+                            <div class="a"><div class="loader" id="loader"></div></div>
+                            <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
+                            {% for names in productname %}
+                            <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()">{{names}}<br>
+                            {%endfor %}
                             </div>
-
-                            <div class="b">
-                                <div class="newspaper">
-                                <div class="a"><div class="loader" id="loader"></div></div>
-                                <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
-
-                                {% for names in productname %}
-                                <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()">{{names}}<br>
-                                {%endfor %}
-                                </div>
-                            </div>
-                            <br>
-                        </fieldset>
-                        <br><input type="submit" name="back_button" id="back_button" value="Back">
-                        <input type="submit" name="social_media_button" value="Submit" onclick="Loader()">
-                        <input type="submit" name="douwnload_button" id="douwnload_button" value="Download">
-                        <t id="errorvalue" style="color:red">{{errorvalue}}</t>
-                        <t id="successmsg" style="color:green">{{successmsg}}</t>
-                        <t id="infomsg" style="color:#ff7f27">{{infomsg}}</t>
-                    </div>
-
-                </form>
+                        </div>
+                        <br>
+                    </fieldset>
+                    <br><input type="submit" name="back_button" id="back_button" value="Back">
+                    <input type="submit" name="social_media_button" value="Submit" onclick="Loader()">
+                    <input type="submit" name="douwnload_button" id="douwnload_button" value="Download">
+                    <t id="errorvalue" style="color:red">{{errorvalue}}</t>
+                    <t id="successmsg" style="color:green">{{successmsg}}</t>
+                    <t id="infomsg" style="color:#ff7f27">{{infomsg}}</t>
+                </div>
+            </form>
         </div>
     </body>
-
 {% endblock content %}
