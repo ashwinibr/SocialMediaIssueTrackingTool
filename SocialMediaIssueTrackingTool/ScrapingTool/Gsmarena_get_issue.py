@@ -30,7 +30,8 @@ def main_method(model_link_list,model_name_list):
                 review_opinion_link_list.append(review_button_link.attrs['href'])
         review_issue.append(review_opinion_link_list[0])
     pagination_link_list = pagination_for_user_comment_links(review_issue)
-    get_issue_from_gsmarena(pagination_link_list)
+    data_dictionary=get_issue_from_gsmarena(pagination_link_list)
+    return data_dictionary
 
 
 def pagination_for_user_comment_links(review_opinion_link_list):
@@ -95,3 +96,4 @@ def get_issue_from_gsmarena(pagination_link_list):
     # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
     file_writer.write_data_using_pandas(data_dictionary)
 
+    return data_dictionary
