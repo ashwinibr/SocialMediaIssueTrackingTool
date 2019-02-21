@@ -1,5 +1,5 @@
 import re
-
+from collections import defaultdict
 import requests
 from bs4 import BeautifulSoup
 
