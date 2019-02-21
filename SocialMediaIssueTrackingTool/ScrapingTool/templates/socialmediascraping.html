@@ -103,6 +103,12 @@
                     <fieldset>
                         <div class="product-lis">
                             <label> Select Product:</label>
+                            <select name="years" class="years-dropdown">
+                                {% for year in announcedyear %}
+                                <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
+                                {%endfor %}
+                            </select>
+                            <button type="submit" name="updatelist" value='submit'>Update List</button>
                             <br><br>
                         </div>
 

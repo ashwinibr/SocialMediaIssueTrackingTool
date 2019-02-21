@@ -78,6 +78,10 @@ def mobile_view(request):
     error_message=""
     info_msg = ""
     successmsg = ""
+    now = datetime.datetime.now()
+    yearlist=[]
+    mobile_list_display=[]
+    announced_year=[]
 
     if request.POST.get('back_button'):
         response = redirect('brand/')
@@ -85,6 +89,7 @@ def mobile_view(request):
         return response
 
     if request.POST.get('brand_submit'):
+
         print("Brand submit clicked") 
         brand_list = get_brand_names()
         brand_dict = dict(zip(brand_list[0],brand_list[1]))
@@ -97,8 +102,40 @@ def mobile_view(request):
             file.write(brand_url)
         
         mobile_list = pagination_for_mobile_brand_list(brand_url)
-        mobile_dict = dict(zip(mobile_list[0],mobile_list[1]))
-        print(mobile_list)
+        announced_year=['Latest Released']
+        for key in mobile_list[0].keys():
+            announced_year.append(key)
+        print(announced_year)
+        now = datetime.datetime.now()
+        yearlist=[str(now.year),str(now.year-1),str(now.year-2)]
+        for year in yearlist:
+            mobile_list_display.extend(mobile_list[0][year])
+        
+    if request.POST.get('updatelist'):
+        print("updatelist button clicked")
+        filter_value = request.POST.get('years')
+        print(filter_value)
+        file_read = fileReaderWriter()
+        file = open("ScrapingTool/files/Series.txt", "r")
+        brand_url = file_read.read_links_from_text_file(file)
+        print(brand_url)
+        mobile_list = pagination_for_mobile_brand_list(brand_url)
+        announced_year=['Latest Released']
+        for key in mobile_list[0].keys():
+            announced_year.append(key)
+
+        if(filter_value) =='Latest Released':
+            print("condition matched")
+            now = datetime.datetime.now()
+            yearlist=[str(now.year),str(now.year-1),str(now.year-2)]
+        else:
+            yearlist=[filter_value]
+
+        print(yearlist)
+
+        for year in yearlist:
+            mobile_list_display.extend(mobile_list[0][year])
+        
 
     #On click of social_media_button
     if request.POST.get('social_media_button'):
@@ -109,9 +146,19 @@ def mobile_view(request):
         file = open("ScrapingTool/files/Series.txt", "r")
         brand_url = file_read.read_links_from_text_file(file)
         mobile_list = pagination_for_mobile_brand_list(brand_url)
-        mobile_dict = dict(zip(mobile_list[0],mobile_list[1]))
-        print("======================mobile dict============",mobile_dict)
-        print(mobile_list)
+        mobile_dict = mobile_list[1]
+        
+        announced_year=['Latest Released']
+        for key in mobile_list[0].keys():
+            announced_year.append(key)
+        print(announced_year)
+        
+        yearlist=[str(now.year),str(now.year-1),str(now.year-2)]
+        for year in yearlist:
+            mobile_list_display.extend(mobile_list[0][year])
+        print(mobile_list_display)
+        #print("======================mobile dict============",mobile_dict)
+        #print(mobile_list)
         
         file_read = fileReaderWriter()
         file = open("ScrapingTool/files/mainurl.txt", "r")
@@ -146,7 +193,7 @@ def mobile_view(request):
                                 # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
                                 selected_model_url = []
                                 for model in checklist:
-                                    selected_model_url.append(main_url + "/" + mobile_dict[model])
+                                    selected_model_url.append(main_url + "/" + mobile_dict[model][0])
                                 data_dictionary = main_method(selected_model_url, checklist,list_of_dates)
 
                                 if data_dictionary:
@@ -169,7 +216,7 @@ def mobile_view(request):
                             selected_model_url = []
 
                             for model in checklist:
-                                selected_model_url.append(main_url + "/" + mobile_dict[model])
+                                selected_model_url.append(main_url + "/" + mobile_dict[model][0])
                             main_method(selected_model_url, checklist,list_of_dates)
 
                             successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -196,10 +243,10 @@ def mobile_view(request):
             response['Content-Disposition'] = 'attachment; filename=' + file_name
             response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             return response
-
+    
     return render(request, "socialmediascraping.html",
-                  {"errorvalue": error_message, "productname": mobile_dict.keys, "successmsg": successmsg,
-                       "infomsg": info_msg})        
+                  {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
+                       "infomsg": info_msg, 'announcedyear': announced_year})        
                         
 
 @csrf_exempt
