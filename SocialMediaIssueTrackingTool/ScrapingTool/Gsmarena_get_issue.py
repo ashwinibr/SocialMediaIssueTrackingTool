@@ -86,7 +86,11 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                 hour = word_list[-1]
                 hour_list = ["ago"]
                 if hour in hour_list:
-                    modified_date = datetime.date.today()
+                    prod_date = datetime.date.today()
+                    match = re.search('\d{4}-\d{2}-\d{2}', str(prod_date))
+                    product_date = datetime.datetime.strptime(match.group(), '%Y-%m-%d').date()
+                    modified_date =  product_date.strftime('%m/%d/%Y')
+                    print("modified",modified_date)
                 else:
                     time_date = datetime.datetime.strptime(post_date, '%d %b %Y')
                     prod_date= time_date.strftime('%Y-%m-%d')
@@ -97,7 +101,6 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                     thread_list.append(complete_url)
                     product_list.append(product_name.text)
                     date_list.append(modified_date)
-                    print("date_list", date_list)
                     comment = issue_container.find("p", class_="uopin")
                     if comment:
                         issue_data = comment.text
