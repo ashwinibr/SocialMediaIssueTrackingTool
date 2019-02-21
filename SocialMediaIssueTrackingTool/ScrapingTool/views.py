@@ -104,33 +104,89 @@ def mobile_view(request):
     if request.POST.get('social_media_button'):
         logging.info("onclick of social media submit button")
         print("Social media button clicked")
-        checklist = request.POST.getlist('product[]')
-        logging.debug("User selected product list : %s",checklist)
 
         file_read = fileReaderWriter()
         file = open("ScrapingTool/files/Series.txt", "r")
         brand_url = file_read.read_links_from_text_file(file)
         mobile_list = pagination_for_mobile_brand_list(brand_url)
         mobile_dict = dict(zip(mobile_list[0],mobile_list[1]))
+        print("======================mobile dict============",mobile_dict)
         print(mobile_list)
         
         file_read = fileReaderWriter()
         file = open("ScrapingTool/files/mainurl.txt", "r")
         main_url = file_read.read_links_from_text_file(file)
 
-        selected_model_url = []
-        for model in checklist:
-            selected_model_url.append(main_url + "/" + mobile_dict[model])
-        
-        data_dictionary = main_method(selected_model_url, checklist)
-        
-        if data_dictionary:
-            successmsg = "Data extracted successfully, Click download to get data in excel"
-            logging.info("displaying an success message after scraping data from website : %s",
-                                        successmsg)
+        todate = request.POST.get('todate')
+        fromdate = request.POST.get('fromdate')
+
+        if not fromdate and not todate and not request.POST.get("alldates") == "on":
+            error_message="Error: Please select the date"
+            logging.error("displaying an error message if the user forgotten to select the date  : %s", error_message)
+
         else:
-            info_msg = "Info:No data for selected date"
-            logging.warning("there is no data for selected product with selected date %s",info_msg)
+            if not fromdate and not request.POST.get("alldates") == "on":
+                error_message = "Error: Please select the from date before submit"
+                logging.error("displaying an error message if the user forgotten to select the From date  : %s",
+                                  error_message)
+            elif not todate and not request.POST.get("alldates") == "on":
+                error_message = "Error: Please select the To date before submit"
+                logging.error("displaying an error message if user forgotten to select the To date  : %s",
+                                  error_message)
+            else:
+                #Fetch products selected by user-checklist
+                checklist = request.POST.getlist('product[]')
+                logging.debug("User selected product list : %s", checklist)
+
+                if checklist:
+                        if fromdate and todate:
+                            if fromdate <= todate:
+                                list_of_dates = dateListFunction(fromdate, todate)
+                                #list_of_dates = ['02/18/2019', '02/21/2019']
+                                # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
+                                selected_model_url = []
+                                for model in checklist:
+                                    selected_model_url.append(main_url + "/" + mobile_dict[model])
+                                data_dictionary = main_method(selected_model_url, checklist,list_of_dates)
+
+                                if data_dictionary:
+                                    successmsg = "Data extracted successfully, Click download to get data in excel"
+                                    logging.info(
+                                        "displaying an success message after scraping data from website : %s",
+                                        successmsg)
+                                else:
+                                    info_msg = "Info:No data for selected date"
+                                    logging.warning("there is no data for selected product with selected date %s",
+                                                    info_msg)
+                            else:
+                                error_message = "Error:From date should be less than or equal to To date"
+                                logging.error(
+                                    "displaying an error message if user selected - to date<from date  : %s",
+                                    error_message)
+                        elif request.POST.get("alldates") == "on":
+                            print("on")
+                            list_of_dates = []
+                            selected_model_url = []
+
+                            for model in checklist:
+                                selected_model_url.append(main_url + "/" + mobile_dict[model])
+                            main_method(selected_model_url, checklist,list_of_dates)
+
+                            successmsg = "Data extracted successfully, Click download to get data in excel"
+                            logging.info(
+                                "displaying an success message after scraping data from website : %s",
+                                successmsg)
+                        else:
+                            error_message = "Error: Please select the date before submit"
+                            logging.error(
+                                "displaying an error message to select date  : %s",
+                                error_message)
+                #Else if product not selected,displays error
+                else:
+                    error_message = "Error: Please select the product"
+                    logging.error(
+                            "displaying an error message to select product  : %s",
+                            error_message)
 
     elif request.POST.get("douwnload_button"):
         file_name = 'ScrapingTool/files/FinalData.xlsx'  # this should live elsewhere, definitely
@@ -272,6 +328,7 @@ def product_view(request):
                             start_date, end_date = dateFormate(fromdate, todate)
                             if start_date <= end_date:
                                 list_of_dates = dateListFunction(fromdate, todate)
+                                print("++++++++++++++++++listdates",list_of_dates)
                                 #Fetching all the links of product pages by calling method issueLinksPagination() for selected product
                                 data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
                                 if data_dictionary:

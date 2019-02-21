@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from ScrapingTool.file_read_write import fileReaderWriter
 
 
-def main_method(model_link_list,model_name_list):
+def main_method(model_link_list,model_name_list,list_of_dates):
 
     print(model_name_list)
     print("main method")
@@ -30,7 +30,7 @@ def main_method(model_link_list,model_name_list):
                 review_opinion_link_list.append(review_button_link.attrs['href'])
         review_issue.append(review_opinion_link_list[0])
     pagination_link_list = pagination_for_user_comment_links(review_issue)
-    data_dictionary=get_issue_from_gsmarena(pagination_link_list)
+    data_dictionary=get_issue_from_gsmarena(pagination_link_list,list_of_dates)
     return data_dictionary
 
 
@@ -52,13 +52,11 @@ def pagination_for_user_comment_links(review_opinion_link_list):
     return pagination_list
 
 
-def get_issue_from_gsmarena(pagination_link_list):
+def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
     date_list=[]
     user_comment=[]
     thread_list=[]
     product_list=[]
-
-    selected_date_list = []
 
     for li in pagination_link_list:
         complete_url="https://www.gsmarena.com/"+li
@@ -69,44 +67,48 @@ def get_issue_from_gsmarena(pagination_link_list):
             product_name=html_container.find("h1", class_="specs-phone-name-title")
 
             for issue_container in soup.find_all("div", class_="user-thread"):
-                thread_list.append(complete_url)
-                product_list.append(product_name.text)
+                #thread_list.append(complete_url)
+                #product_list.append(product_name.text)
 
                 posted_date = issue_container.find("li", class_="upost")
                 post_date = posted_date.text
-                print(post_date)
                 word_list = post_date.split()  # list of words
-                hour = word_list[-2]
-                hour_list = ["hour","hours","minute","minutes","second","seconds"]
+                hour = word_list[-1]
+                hour_list = ["ago"]
                 if hour in hour_list:
                     modified_date = datetime.date.today()
                 else:
                     time_date = datetime.datetime.strptime(post_date, '%d %b %Y')
-                    modified_date = time_date.strftime('%Y-%m-%d')
+                    prod_date= time_date.strftime('%Y-%m-%d')
+                    match = re.search('\d{4}-\d{2}-\d{2}', prod_date)
+                    product_date = datetime.datetime.strptime(match.group(), '%Y-%m-%d').date()
+                    modified_date = product_date.strftime('%m/%d/%Y')
                 if not selected_date_list:
+                    thread_list.append(complete_url)
+                    product_list.append(product_name.text)
                     date_list.append(modified_date)
-                    print(modified_date)
+                    print("date_list", date_list)
                     comment = issue_container.find("p", class_="uopin")
-                    issue_data = comment.text
-                    user_comment.append(issue_data)
-                    print(issue_data)
+                    if comment:
+                        issue_data = comment.text
+                        user_comment.append(issue_data)
                 else:
                     for date in selected_date_list:
                         if date == modified_date:
+                            thread_list.append(complete_url)
+                            product_list.append(product_name.text)
                             date_list.append(modified_date)
-                            print(modified_date)
+                            print("date_list",date_list)
                             comment = issue_container.find("p", class_="uopin")
-                            issue_data = comment.text
-                            user_comment.append(issue_data)
-                            print(issue_data)
-
+                            if comment:
+                                issue_data = comment.text
+                                user_comment.append(issue_data)
 
     print(len(date_list),len(thread_list),len(user_comment),len(product_list))
 
     data_dictionary={"Product":product_list, "date":date_list,"Thread":thread_list,"comment":user_comment}
     data_frame = pd.DataFrame.from_dict(data_dictionary)
-    print(data_frame)
-
+    print("data frame",data_frame)
 
     file_writer = fileReaderWriter()
     # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
