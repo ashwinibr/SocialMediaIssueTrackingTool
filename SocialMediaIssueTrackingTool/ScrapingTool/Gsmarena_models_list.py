@@ -29,7 +29,9 @@ def pagination_for_mobile_brand_list(url):
 def get_models_names(list_page):
     mobile_model_name_list = []
     mobile_model_links_list = []
-    mobile_model_year_list=[]
+    mobile_model_year_list = []
+
+    model_dictionary={}
 
     for l in list_page:
         print("https://www.gsmarena.com/"+l)
@@ -38,15 +40,52 @@ def get_models_names(list_page):
 
         for mobile_model_container in soup.find_all("div", class_="makers"):
 
+            #print(mobile_model_container)
+            for l in mobile_model_container.find_all("li"):
+               # print(l)
+                mobile_model_year = l.find("img")
+                year_string = mobile_model_year.attrs["title"]
+                split_year = re.search("\.?([^\.]*Announced[^\.]*)", year_string)
+                #print(split_year)
+                if split_year is not None:
+                    pattern = re.compile(r"(\w+)$")
+                    has = pattern.search(split_year.group(1))
+                    #print(has.group(0))
+                    mobile_model_year_list.append(has.group(0))
 
-            for mobile_model in mobile_model_container.find_all("span"):
-                mobile_model_name_list.append(mobile_model.text)
-            for model_links in mobile_model_container.find_all("a"):
-                mobile_model_links_list.append(model_links.attrs['href'])
+                    mobile_model_name= l.find("span")
+                    #print(mobile_model_name.text)
+                    mobile_model_name_list.append(mobile_model_name.text)
 
-    print(mobile_model_year_list)
-    print(mobile_model_name_list)
-    data_tuple =(mobile_model_name_list,mobile_model_links_list)
-    return data_tuple
+                    model_links = l.find("a")
+                    #print(model_links.attrs['href'])
+                    mobile_model_links_list.append(model_links.attrs['href'])
+
+                else:
+                    print("announced is not present in the sentence")
+
+
+    dic_year = defaultdict(list)
+    dic_model_name=defaultdict(list)
+
+    i = 0
+    for key in mobile_model_year_list:
+        dic_year[key].append(mobile_model_name_list[i])
+        i += 1
+
+    j = 0
+    for mobile_name_key in mobile_model_name_list:
+        dic_model_name[mobile_name_key].append(mobile_model_links_list[j])
+        j += 1
+
+    #print(dic_year)
+    #print(dic_model_name)
+
+    #print(len(mobile_model_year_list))
+    #print(len(mobile_model_name_list))
+    #print(len(mobile_model_links_list))
+
+
+    return dic_year,dic_model_name
 
 
