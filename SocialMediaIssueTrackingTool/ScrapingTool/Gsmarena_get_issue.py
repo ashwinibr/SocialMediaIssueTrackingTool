@@ -43,12 +43,22 @@ def pagination_for_user_comment_links(review_opinion_link_list):
 
         number = []
         for link in soup.find_all("div", class_="sub-footer no-margin-bottom"):
+            print(link)
             for l in link.find_all("div", class_="nav-pages"):
-                for pagination_links in l.find_all("a"):
-                    number.append(pagination_links.text)
-        page = number[-2]
-        for i in range(1, int(page) + 1):
-            pagination_list.append(links[:-4] + "p" + str(i) + ".php")
+
+                if l.find("a"):
+                    for pagination_links in l.find_all("a"):
+                        number.append(pagination_links.text)
+                        print(pagination_links.text)
+
+                    page = number[-1]
+                    print(page)
+                    for i in range(1, int(page) + 1):
+                        pagination_list.append(links[:-4] + "p" + str(i) + ".php")
+                else:
+                    pagination_list.append(links)
+
+
     return pagination_list
 
 
@@ -98,7 +108,6 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                             thread_list.append(complete_url)
                             product_list.append(product_name.text)
                             date_list.append(modified_date)
-                            print("date_list",date_list)
                             comment = issue_container.find("p", class_="uopin")
                             if comment:
                                 issue_data = comment.text
