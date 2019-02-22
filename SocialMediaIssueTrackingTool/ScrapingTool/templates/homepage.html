@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<body class="homepage-contents">
+<body class="homepage-contents" onload="OnLoad()">
     <script type="text/javascript">
         function LoadMain() {
             var checkError = "{{errorvalue}}";
@@ -11,11 +11,20 @@
                 }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||  checkurl=="https://www.gsmarena.com") {
                     document.getElementById("homepage-form").action ="brand/";
                 }else if(checkError==""){
-                    document.getElementById("homepage-form").action ="series/";
+                    document.getElementById("homepage-form").action ="brand/";
                 }else{
                     document.getElementById("homepage-form").action ="";
                 }    
         }
+
+        function OnLoad() {
+            var checkError = "{{errorvalue}}";
+                if (checkError=="Invalid URL"){
+                document.getElementById("homepage-form").action ="";
+                }    
+
+        }
+
     </script>
     <div id="content-container" class="container">
         <form id="homepage-form" method="POST">

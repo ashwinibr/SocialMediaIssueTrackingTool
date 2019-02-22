@@ -35,7 +35,7 @@ def brand_view(request):
         response = redirect('homepage')
         logging.info("redirecting series page to home page view")
         return response
-
+    
     if request.POST.get('homepage_submit_btn'):
         main_url = request.POST.get('mainurl')
         status_code = fileReaderWriter.get_response_code(main_url)
@@ -47,7 +47,7 @@ def brand_view(request):
                 file.write(main_url)
         #else if invalid url entered,displays error
         else:
-            error_message = "Invalid URL "
+            error_message = "Invalid URL"
             logging.error("handling an error message for status code : %s",error_message)
             return render(request, "homepage.html",
                           {"errorvalue": error_message})
@@ -65,7 +65,7 @@ def brand_view(request):
     else:
         error_message = "Invalid URL"
         logging.error("handling an error message for empty brand name : %s", error_message)
-        return render(request, "brandselection.html",
+        return render(request, "homepage.html",
                       {"errorvalue": error_message})
 
 
