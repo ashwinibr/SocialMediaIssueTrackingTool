@@ -8,12 +8,12 @@ from django.views.decorators.csrf import csrf_exempt
 import logging
 
 from ScrapingTool.file_read_write import fileReaderWriter
-from ScrapingTool.get_issue_links import getIssueLinks
+from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.logics.DateFormateClass import dateFormate, dateListFunction
-from ScrapingTool.product_name_and_links import getProductNamesAndLinks
-from ScrapingTool.Gsmarena_brand_list import get_brand_names
-from ScrapingTool.Gsmarena_models_list import pagination_for_mobile_brand_list
-from ScrapingTool.Gsmarena_get_issue import main_method
+from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
+from ScrapingTool.gsmarena.Gsmarena_brand_list import get_brand_names
+from ScrapingTool.gsmarena.Gsmarena_models_list import pagination_for_mobile_brand_list
+from ScrapingTool.gsmarena.Gsmarena_get_issue import main_method
 
 logging.basicConfig(level=logging.DEBUG)
 

@@ -3,7 +3,6 @@ Fetching issue links
 input : getting product pagination links from issueLinksPagination() method of views
 output : Issue link for each product link
 '''
-from multiprocessing import pool
 
 import requests
 from bs4 import BeautifulSoup
@@ -11,8 +10,8 @@ from requests import RequestException
 import re,datetime
 import logging
 
-from ScrapingTool.product_name_and_links import getProductNamesAndLinks
-from ScrapingTool.scrap_data import scrapData
+from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
+from ScrapingTool.sonyforum.scrap_data import scrapData
 
 logging.basicConfig(level=logging.DEBUG)
 class getIssueLinks:
