@@ -9,9 +9,8 @@ from bs4 import BeautifulSoup
 from ScrapingTool.file_read_write import fileReaderWriter
 
 
-def main_method(model_link_list,model_name_list,list_of_dates):
+def main_method(model_link_list,list_of_dates):
 
-    print(model_name_list)
     print("main method")
     #url = ['https://www.gsmarena.com/apple_ipad_pro_12_9_(2018)-9387.php',
            #'https://www.gsmarena.com/apple_ipad_pro_11-9386.php',
@@ -31,6 +30,7 @@ def main_method(model_link_list,model_name_list,list_of_dates):
         review_issue.append(review_opinion_link_list[0])
     pagination_link_list = pagination_for_user_comment_links(review_issue)
     data_dictionary=get_issue_from_gsmarena(pagination_link_list,list_of_dates)
+    print(data_dictionary)
     return data_dictionary
 
 
@@ -67,6 +67,7 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
     user_comment=[]
     thread_list=[]
     product_list=[]
+    data_dictionary={}
 
     for li in pagination_link_list:
         complete_url="https://www.gsmarena.com/"+li
@@ -115,16 +116,16 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                             if comment:
                                 issue_data = comment.text
                                 user_comment.append(issue_data)
+        data_dictionary={"Product":product_list, "date":date_list,"Thread":thread_list,"comment":user_comment}
 
-    print(len(date_list),len(thread_list),len(user_comment),len(product_list))
-
-    data_dictionary={"Product":product_list, "date":date_list,"Thread":thread_list,"comment":user_comment}
-    data_frame = pd.DataFrame.from_dict(data_dictionary)
-    print("data frame",data_frame)
-
-    file_writer = fileReaderWriter()
-    # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
-    file_writer.write_data_using_pandas(data_dictionary)
+    #data_frame = pd.DataFrame.from_dict(data_dictionary)
+    #print("data frame",data_frame)
+    if not product_list:
+        data_dictionary={}
+    else:
+        file_writer = fileReaderWriter()
+        # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
+        file_writer.write_data_using_pandas(data_dictionary)
 
     return data_dictionary
 
