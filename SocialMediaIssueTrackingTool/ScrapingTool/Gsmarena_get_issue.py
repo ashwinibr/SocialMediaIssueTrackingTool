@@ -51,7 +51,7 @@ def pagination_for_user_comment_links(review_opinion_link_list):
                         number.append(pagination_links.text)
                         print(pagination_links.text)
 
-                    page = number[-1]
+                    page = number[-2]
                     print(page)
                     for i in range(1, int(page) + 1):
                         pagination_list.append(links[:-4] + "p" + str(i) + ".php")
