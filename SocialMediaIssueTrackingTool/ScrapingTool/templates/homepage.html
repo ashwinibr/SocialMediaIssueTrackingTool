@@ -5,35 +5,28 @@
     <script type="text/javascript">
         function LoadMain() {
             var checkError = "{{errorvalue}}";
-            var checkurl = document.getElementById("id_main_url").value;
+            var e = document.getElementById("id_main_url");
+            var checkurl = e.options[e.selectedIndex].text;
                 if (checkError=="" && checkurl=="https://talk.sonymobile.com"){
                     document.getElementById("homepage-form").action = "series/";                    
                 }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||  checkurl=="https://www.gsmarena.com") {
-                    document.getElementById("homepage-form").action ="brand/";
-                }else if(checkError==""){
                     document.getElementById("homepage-form").action ="brand/";
                 }else{
                     document.getElementById("homepage-form").action ="";
                 }    
         }
-
-        function OnLoad() {
-            var checkError = "{{errorvalue}}";
-                if (checkError=="Invalid URL"){
-                document.getElementById("homepage-form").action ="";
-                }    
-
-        }
-
     </script>
     <div id="content-container" class="container">
         <form id="homepage-form" method="POST">
             <div class="a">
                 <div name="form-container" class="form-container">
                     <h3>Enter URL:</h3>
-                    <input id="id_main_url" type="text" name="mainurl" value="https://talk.sonymobile.com" size="100" class="id_main_url"><br><br>
+                    <select name="mainurl" id="id_main_url" class="mainurl-dropdown">
+                        <option type="option" id="id_main_url" name="mainurl" value="https://talk.sonymobile.com">https://talk.sonymobile.com</option>
+                        <option type="option" id="id_main_url" name="mainurl" value="https://www.gsmarena.com/">https://www.gsmarena.com</option>
+                    </select>    
                     <input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
-                    <t id="errorvalue" style="color:red">{{errorvalue}}</t>
+                    <span id="errorvalue" style="color:red">{{errorvalue}}</span>
                 </div>
             </div>
         </form>

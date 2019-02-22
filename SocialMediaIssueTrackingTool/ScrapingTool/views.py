@@ -38,6 +38,7 @@ def brand_view(request):
     
     if request.POST.get('homepage_submit_btn'):
         main_url = request.POST.get('mainurl')
+        print(main_url)
         status_code = fileReaderWriter.get_response_code(main_url)
         logging.debug("Status code : %s",status_code)
 
@@ -263,6 +264,7 @@ def series_view(request):
 
     if request.POST.get('homepage_submit_btn'):
         main_url = request.POST.get('mainurl')
+        print(main_url)
         status_code = fileReaderWriter.get_response_code(main_url)
         logging.debug("Status code : %s",status_code)
 
