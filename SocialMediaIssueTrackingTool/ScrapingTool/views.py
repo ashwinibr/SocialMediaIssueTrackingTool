@@ -194,7 +194,9 @@ def mobile_view(request):
                                 selected_model_url = []
                                 for model in checklist:
                                     selected_model_url.append(main_url + "/" + mobile_dict[model][0])
-                                data_dictionary = main_method(selected_model_url, checklist,list_of_dates)
+                                data_dictionary = main_method(selected_model_url,list_of_dates)
+
+                                print(data_dictionary)
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -378,6 +380,9 @@ def product_view(request):
                                 print("++++++++++++++++++listdates",list_of_dates)
                                 #Fetching all the links of product pages by calling method issueLinksPagination() for selected product
                                 data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
+
+                                print(data_dictionary)
+
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
                                     logging.info(
