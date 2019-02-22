@@ -220,7 +220,7 @@ def mobile_view(request):
 
                             for model in checklist:
                                 selected_model_url.append(main_url + "/" + mobile_dict[model][0])
-                            main_method(selected_model_url, checklist,list_of_dates)
+                            main_method(selected_model_url,list_of_dates)
 
                             successmsg = "Data extracted successfully, Click download to get data in excel"
                             logging.info(
