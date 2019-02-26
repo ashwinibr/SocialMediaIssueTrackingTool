@@ -69,6 +69,7 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
     product_list=[]
     data_dictionary={}
 
+    #Fetching issue content from given link
     for li in pagination_link_list:
         complete_url="https://www.gsmarena.com/"+li
         http_request = requests.get(complete_url)
@@ -81,11 +82,13 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                 #thread_list.append(complete_url)
                 #product_list.append(product_name.text)
 
+                #Fetching date,the issue was posted
                 posted_date = issue_container.find("li", class_="upost")
                 post_date = posted_date.text
                 word_list = post_date.split()  # list of words
                 hour = word_list[-1]
                 hour_list = ["ago"]
+                #If issue posted today,then get todays date by using the last word in date,as date is (1 minute ago)
                 if hour in hour_list:
                     prod_date = datetime.date.today()
                     match = re.search('\d{4}-\d{2}-\d{2}', str(prod_date))
@@ -98,6 +101,7 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                     match = re.search('\d{4}-\d{2}-\d{2}', prod_date)
                     product_date = datetime.datetime.strptime(match.group(), '%Y-%m-%d').date()
                     modified_date = product_date.strftime('%m/%d/%Y')
+                #If no date selected by user
                 if not selected_date_list:
                     thread_list.append(complete_url)
                     product_list.append(product_name.text)
@@ -106,6 +110,7 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                     if comment:
                         issue_data = comment.text
                         user_comment.append(issue_data)
+                #if date selected by user
                 else:
                     for date in selected_date_list:
                         if date == modified_date:

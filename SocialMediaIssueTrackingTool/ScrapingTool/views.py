@@ -191,7 +191,7 @@ def mobile_view(request):
                             if fromdate <= todate:
                                 list_of_dates = dateListFunction(fromdate, todate)
                                 #list_of_dates = ['02/18/2019', '02/21/2019']
-                                # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
+                                # Fetching all the links of product pages by calling method main_method() for selected product
                                 selected_model_url = []
                                 for model in checklist:
                                     selected_model_url.append(main_url + "/" + mobile_dict[model][0])
