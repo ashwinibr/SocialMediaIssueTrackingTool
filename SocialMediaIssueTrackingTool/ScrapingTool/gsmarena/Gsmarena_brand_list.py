@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_brand_names(url):
+def get_brand_names():
+    url="https://www.gsmarena.com/"
     http_request = requests.get(url)
     soup = BeautifulSoup(http_request.content ,"html.parser")
 

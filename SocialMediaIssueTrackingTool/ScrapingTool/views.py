@@ -57,8 +57,7 @@ def brand_view(request):
     main_url = file_read.read_links_from_text_file(file)
     
     if (main_url=="https://www.gsmarena.com/" or main_url=="https://www.gsmarena.com"):
-
-        brand_list = get_brand_names(main_url)
+        brand_list = get_brand_names()
         brand_dict = dict(zip(brand_list[0],brand_list[1]))
         print(brand_dict)
         print(brand_list[0])
@@ -221,7 +220,7 @@ def mobile_view(request):
 
                             for model in checklist:
                                 selected_model_url.append(main_url + "/" + mobile_dict[model][0])
-                            main_method(selected_model_url,list_of_dates)
+                            main_method(selected_model_url, checklist,list_of_dates)
 
                             successmsg = "Data extracted successfully, Click download to get data in excel"
                             logging.info(
