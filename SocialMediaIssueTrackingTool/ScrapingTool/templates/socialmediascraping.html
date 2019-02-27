@@ -115,12 +115,15 @@
                     <fieldset>
                         <div class="product-lis">
                             <label> Select Product:</label>
-                            <select name="years" id="years-dropdown" class="years-dropdown">
-                                {% for year in announcedyear %}
-                                <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
-                                {%endfor %}
-                            </select>
-                            <button type="submit" id="years-button" name="updatelist" value='submit'>Update List</button>
+                                <div  id="years-dropdown" align="right">
+                                <label align="right">Filter By:</label>
+                                <select name="years" id="years-dropdown" class="years-dropdown">
+                                    {% for year in announcedyear %}
+                                    <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
+                                    {%endfor %}
+                                </select>
+                                <button type="submit" id="years-button" name="updatelist" value='submit'>Update List</button>
+                                </div>
                             <br><br>
                         </div>
 
@@ -129,7 +132,7 @@
                             <div class="a"><div class="loader" id="loader"></div></div>
                             <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
                             {% for names in productname %}
-                            <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()">{{names}}<br>
+                            <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}}<br>
                             {%endfor %}
                             </div>
                         </div>
