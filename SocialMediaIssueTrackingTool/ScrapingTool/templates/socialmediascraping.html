@@ -115,7 +115,7 @@
                     <fieldset>
                         <div class="product-lis">
                             <label> Select Product:</label>
-                                <div align="right" id="years-dropdown">
+                                <div  id="years-dropdown" align="right">
                                 <label align="right">Filter By:</label>
                                 <select name="years" id="years-dropdown" class="years-dropdown">
                                     {% for year in announcedyear %}
@@ -132,7 +132,7 @@
                             <div class="a"><div class="loader" id="loader"></div></div>
                             <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
                             {% for names in productname %}
-                            <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}} <br>
+                            <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}}<br>
                             {%endfor %}
                             </div>
                         </div>

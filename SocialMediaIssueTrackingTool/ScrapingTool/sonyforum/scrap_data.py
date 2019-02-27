@@ -72,7 +72,8 @@ class scrapData:
 
                         # Fetching Author_rank
                         rank = issue_container.find('div',
-                                                    class_='lia-message-author-rank lia-component-author-rank').get_text()
+                                                    class_='lia-message-author-rank lia-component-author-rank lia-component-message-view-widget-author-rank').get_text()
+                        print("rank",rank)
                         author = rank.split()
                         author_rank = ""
                         for author_list in author:
@@ -159,7 +160,9 @@ class scrapData:
                                 user_name_list.append(user_name)
 
                                 #Fetching Author_rank
-                                rank = issue_container.find('div', class_='lia-message-author-rank lia-component-author-rank').get_text()
+                                rank = issue_container.find('div',
+                                                            class_='lia-message-author-rank lia-component-author-rank lia-component-message-view-widget-author-rank').get_text()
+
                                 author = rank.split()
                                 author_rank = ""
                                 for author_list in author:
