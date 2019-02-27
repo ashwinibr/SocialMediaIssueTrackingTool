@@ -11,18 +11,21 @@ def pagination_for_mobile_brand_list(url):
     http_request = requests.get("https://www.gsmarena.com/"+url)
     soup = BeautifulSoup(http_request.content, "html.parser")
 
-    pagination_list=[]
+    pagination_list = []
+    number = []
 
-    number=[]
-    for link in soup.find_all("div", class_="nav-pages"):
-        for pagination_links in link.find_all("a"):
-            number.append(pagination_links.text)
+    if soup.find("div", class_="nav-pages"):
+        for link in soup.find_all("div", class_="nav-pages"):
+            for pagination_links in link.find_all("a"):
+                number.append(pagination_links.text)
+        number_of_page = number[-1]
+        search_digit = re.findall(r'\d+', url)
+        url = re.sub(search_digit[0], '', url)
+        for i in range(1, int(number_of_page) + 1):
+            pagination_list.append(url[:-4] + "f-" + search_digit[0] + "-0-p" + str(i) + ".php")
+    else:
+        pagination_list.append(url)
 
-    number_of_page=number[-1]
-    search_digit = re.findall(r'\d+', url)
-    url = re.sub(search_digit[0], '', url)
-    for i in range(1,int(number_of_page)+1):
-        pagination_list.append(url[:-4]+"f-"+search_digit[0]+"-0-p"+str(i)+".php")
     data_tuple = get_models_names(pagination_list)
     return data_tuple
 
