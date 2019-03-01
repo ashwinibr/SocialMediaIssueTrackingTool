@@ -2,6 +2,7 @@ import re
 from collections import defaultdict
 import requests
 from bs4 import BeautifulSoup
+from ScrapingTool.sqlite3_read_write import GetData_In_Dict, Write_to_DB
 
 
 def pagination_for_mobile_brand_list(url):
@@ -67,6 +68,7 @@ def get_models_names(list_page):
                 else:
                     print("announced is not present in the sentence")
 
+    model_dictionary={"Announced_Year":mobile_model_year_list, "Model_Name":mobile_model_name_list, "Model_Link":mobile_model_links_list}
 
     dic_year = defaultdict(list)
     dic_model_name=defaultdict(list)
@@ -83,11 +85,12 @@ def get_models_names(list_page):
 
     #print(dic_year)
     #print(dic_model_name)
-
     #print(len(mobile_model_year_list))
     #print(len(mobile_model_name_list))
     #print(len(mobile_model_links_list))
+    
 
+    Write_to_DB(model_dictionary,"Model_Names")
 
     return dic_year,dic_model_name
 

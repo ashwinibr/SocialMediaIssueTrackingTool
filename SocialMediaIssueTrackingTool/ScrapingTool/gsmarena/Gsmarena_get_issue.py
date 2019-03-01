@@ -49,8 +49,7 @@ def pagination_for_user_comment_links(review_opinion_link_list):
                 if l.find("a"):
                     for pagination_links in l.find_all("a"):
                         number.append(pagination_links.text)
-                        print(pagination_links.text)
-
+                        
                     page = number[-2]
                     print(page)
                     for i in range(1, int(page) + 1):

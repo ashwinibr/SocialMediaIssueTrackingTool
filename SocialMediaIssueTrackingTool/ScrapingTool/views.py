@@ -12,6 +12,7 @@ from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.logics.DateFormateClass import dateFormate, dateListFunction
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.gsmarena.Gsmarena_brand_list import get_brand_names
+from ScrapingTool.sqlite3_read_write import GetData_In_Dict, Write_to_DB, GetData_In_Tuple
 from ScrapingTool.gsmarena.Gsmarena_models_list import pagination_for_mobile_brand_list
 from ScrapingTool.gsmarena.Gsmarena_get_issue import main_method
 
@@ -92,8 +93,9 @@ def mobile_view(request):
     if request.POST.get('brand_submit'):
 
         print("Brand submit clicked") 
-        brand_list = get_brand_names()
-        brand_dict = dict(zip(brand_list[0],brand_list[1]))
+        #brand_list = get_brand_names()
+        #brand_dict = dict(zip(brand_list[0],brand_list[1]))
+        brand_dict = GetData_In_Dict("Mobile_Brands")
         logging.info("onclick of brand submit button")
         selected_brand = request.POST.getlist('brand[]')
         print(selected_brand)
@@ -103,6 +105,7 @@ def mobile_view(request):
             file.write(brand_url)
         
         mobile_list = pagination_for_mobile_brand_list(brand_url)
+        print(mobile_list)
         announced_year=['Latest Released']
         for key in mobile_list[0].keys():
             announced_year.append(key)
@@ -116,17 +119,13 @@ def mobile_view(request):
         print("updatelist button clicked")
         filter_value = request.POST.get('years')
         print(filter_value)
-        file_read = fileReaderWriter()
-        file = open("ScrapingTool/files/Series.txt", "r")
-        brand_url = file_read.read_links_from_text_file(file)
-        print(brand_url)
-        mobile_list = pagination_for_mobile_brand_list(brand_url)
+        mobile_list = GetData_In_Tuple("Model_Names")
+        print(mobile_list)
         announced_year=['Latest Released']
-        for key in mobile_list[0].keys():
-            announced_year.append(key)
+        for year in mobile_list[0]:
+            announced_year.append(year)
 
         if(filter_value) =='Latest Released':
-            print("condition matched")
             now = datetime.datetime.now()
             yearlist=[str(now.year),str(now.year-1),str(now.year-2)]
         else:
@@ -142,15 +141,11 @@ def mobile_view(request):
     if request.POST.get('social_media_button'):
         logging.info("onclick of social media submit button")
         print("Social media button clicked")
-
-        file_read = fileReaderWriter()
-        file = open("ScrapingTool/files/Series.txt", "r")
-        brand_url = file_read.read_links_from_text_file(file)
-        mobile_list = pagination_for_mobile_brand_list(brand_url)
+        mobile_list = GetData_In_Tuple("Model_Names")
         mobile_dict = mobile_list[1]
         
         announced_year=['Latest Released']
-        for key in mobile_list[0].keys():
+        for key in mobile_list[0]:
             announced_year.append(key)
         print(announced_year)
         
