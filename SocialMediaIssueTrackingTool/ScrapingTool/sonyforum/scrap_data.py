@@ -6,6 +6,7 @@ Output : Product name,user name,author rank,issue link,issue date,subject,conten
 import datetime
 import logging
 import re
+import pandas as pd
 
 import requests
 from bs4 import BeautifulSoup
@@ -29,6 +30,12 @@ class scrapData:
         product_name_list = []
         thread_link_list = []
         data_dictionary={}
+        category_list = []
+
+        excel_file = 'D:\Q& CS\Social media\social_keywords.xlsx'
+        dataset = pd.read_excel(excel_file)
+        df = pd.DataFrame(dataset)
+        data = df.get("Category")
 
 
         #creating csv file name social_media.csv
@@ -173,13 +180,24 @@ class scrapData:
 
                                 #Fetching Issue content
                                 try:
-                                    content = issue_container.find('div',class_='lia-message-body-content')
+                                    content = issue_container.find('div', class_='lia-message-body-content')
                                     if content:
                                         issue = content.get_text()
                                         issue_list.append(issue)
+                                        print(issue)
+                                        key = []
+                                        for keyword in data:
+                                            main = re.findall((r'\b' + keyword + r'\b'), issue, re.IGNORECASE)
+                                            if main:
+                                                key.append(keyword)
+                                            else:
+                                                pass
+                                        category_list.append(key)
                                     else:
+                                        print("else entered")
                                         issue = "No content refer issue thread"
                                         issue_list.append(issue)
+
                                 except:
                                     logging.error('An error occurred in getting the detailed issue' + url)
 
@@ -192,8 +210,10 @@ class scrapData:
 
 
             #Call dictionary to write the issue content
-            data_dictionary = {'Product': product_name_list, 'First User Name': user_name_list, 'Second User Name': author_rank_list,
-                'Thread Name': thread_name_list,"Links ":thread_link_list, 'Date': date_list, "Issue Detail": issue_list}
+            data_dictionary = {'Product': product_name_list, 'First User Name': user_name_list,
+                               'Second User Name': author_rank_list, 'Category': category_list,
+                               'Thread Name': thread_name_list, "Links ": thread_link_list, 'Date': date_list,
+                               "Issue Detail": issue_list}
 
 
         file_writer = fileReaderWriter()
