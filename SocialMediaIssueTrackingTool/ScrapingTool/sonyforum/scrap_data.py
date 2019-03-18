@@ -185,6 +185,7 @@ class scrapData:
                                         issue = content.get_text()
                                         issue_list.append(issue)
                                         print(issue)
+                                        #keyword fetch
                                         key = []
                                         for keyword in data:
                                             main = re.findall((r'\b' + keyword + r'\b'), issue, re.IGNORECASE)
