@@ -67,6 +67,12 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
     thread_list=[]
     product_list=[]
     data_dictionary={}
+    category_list = []
+
+    excel_file = 'D:\Q& CS\Social media\social_keywords.xlsx'
+    dataset = pd.read_excel(excel_file)
+    df = pd.DataFrame(dataset)
+    data = df.get("Category")
 
     #Fetching issue content from given link
     for li in pagination_link_list:
@@ -109,6 +115,17 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                     if comment:
                         issue_data = comment.text
                         user_comment.append(issue_data)
+                        key = []
+                        for keyword in data:
+                            main = re.findall((r'\b' + keyword + r'\b'), issue_data, re.IGNORECASE)
+                            if main:
+                                key.append(keyword)
+                            else:
+                                pass
+                        if key:
+                            category_list.append(key)
+                        else:
+                            category_list.append("other")
                 #if date selected by user
                 else:
                     for date in selected_date_list:
@@ -120,7 +137,19 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                             if comment:
                                 issue_data = comment.text
                                 user_comment.append(issue_data)
-        data_dictionary={"Product":product_list, "date":date_list,"Thread":thread_list,"comment":user_comment}
+                                key = []
+                                for keyword in data:
+                                    main = re.findall((r'\b' + keyword + r'\b'), issue_data, re.IGNORECASE)
+                                    if main:
+                                        key.append(keyword)
+                                    else:
+                                        pass
+                                if key:
+                                    category_list.append(key)
+                                else:
+                                    category_list.append("other")
+
+        data_dictionary={"Product":product_list, "date":date_list,"Thread":thread_list,"Category":category_list,"comment":user_comment}
 
     #data_frame = pd.DataFrame.from_dict(data_dictionary)
     #print("data frame",data_frame)
