@@ -110,6 +110,19 @@ class scrapData:
                             if content:
                                 issue = content.get_text()
                                 issue_list.append(issue)
+                                print(issue)
+                                # keyword fetch
+                                key = []
+                                for keyword in data:
+                                    main = re.findall((r'\b' + keyword + r'\b'), issue, re.IGNORECASE)
+                                    if main:
+                                        key.append(keyword)
+                                    else:
+                                        pass
+                                if key:
+                                    category_list.append(key)
+                                else:
+                                    category_list.append("other")
                             #If no content for particullar issue link
                             else:
                                 issue = "No content refer issue thread"
@@ -193,7 +206,10 @@ class scrapData:
                                                 key.append(keyword)
                                             else:
                                                 pass
-                                        category_list.append(key)
+                                        if key:
+                                            category_list.append(key)
+                                        else:
+                                            category_list.append("other")
                                     else:
                                         print("else entered")
                                         issue = "No content refer issue thread"
