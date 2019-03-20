@@ -19,7 +19,7 @@ class fileReaderWriter:
             writer = pd.ExcelWriter("ScrapingTool/files//FinalData.xlsx")
             # Load spreadsheet
             data_frame = pd.DataFrame.from_dict(data)
-            data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
+            #data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
             data_frame.to_excel(writer, 'Sheet1', index=False)
             logging.info("data is saved in excel")
             writer.save()
