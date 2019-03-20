@@ -69,7 +69,7 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
     data_dictionary={}
     category_list = []
 
-    excel_file = 'D:\Q& CS\Social media\social_keywords.xlsx'
+    excel_file = 'ScrapingTool/files/social_keywords.xlsx'
     dataset = pd.read_excel(excel_file)
     df = pd.DataFrame(dataset)
     data = df.get("Category")
