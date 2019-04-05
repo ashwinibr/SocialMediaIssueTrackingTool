@@ -9,6 +9,27 @@ def Write_to_DB(dictionary,table_name):
     conn.commit()
     conn.close()
 
+def Update_Issue_Count_For_Key(key):
+    conn = sqlite3.connect("db.sqlite3")
+    with conn:
+        cur = conn.cursor()
+    
+    insert_query = """SELECT Product, Date, count(Product) FROM Exported_Data WHERE Category like "%{}%" GROUP by Date,Product;""".format(key)  
+    cur.execute(insert_query)
+    result = cur.fetchall()
+    issue_dict = {'Product':[],'Date':[],'Category':[],'NrOfIssues':[]}
+    for r in result:
+        issue_dict['Product'].append(r[0])
+        issue_dict['Date'].append(r[1])
+        issue_dict['Category'].append(key)        
+        issue_dict['NrOfIssues'].append(r[2])
+
+    data_frame = pd.DataFrame.from_dict(issue_dict)
+    data_frame.to_sql('Issues_Count_By_Keyword', conn, if_exists="append", index=False)
+    conn.commit()
+    conn.close()
+
+
 def GetData_In_Dict(table_name):
     conn = sqlite3.connect("db.sqlite3")
     with conn:

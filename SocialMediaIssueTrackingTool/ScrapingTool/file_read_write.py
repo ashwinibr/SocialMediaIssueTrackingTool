@@ -7,7 +7,7 @@ import sqlite3
 import pandas as pd
 from pandas import ExcelWriter
 from openpyxl.workbook import Workbook
-
+from ScrapingTool.sqlite3_read_write import Update_Issue_Count_For_Key
 
 class fileReaderWriter:
     logging.basicConfig(level=logging.DEBUG)
@@ -19,10 +19,18 @@ class fileReaderWriter:
             writer = pd.ExcelWriter("ScrapingTool/files//FinalData.xlsx")
             # Load spreadsheet
             data_frame = pd.DataFrame.from_dict(data)
-            #data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
+            data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
             data_frame.to_excel(writer, 'Sheet1', index=False)
             logging.info("data is saved in excel")
             writer.save()
+            conn.commit()
+
+            excel_file = 'ScrapingTool/files/social_keywords.xlsx'
+            dataset = pd.read_excel(excel_file)
+            df = pd.DataFrame(dataset)
+            data = df.get("Category")
+            for keyward in data:
+                Update_Issue_Count_For_Key(keyward)
             conn.commit()
             conn.close()
 

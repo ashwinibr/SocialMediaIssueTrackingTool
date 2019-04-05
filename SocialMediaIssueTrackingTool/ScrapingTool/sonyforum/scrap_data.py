@@ -11,11 +11,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from requests import RequestException
-
-
 from ScrapingTool.file_read_write import fileReaderWriter
-
-
 
 class scrapData:
     logging.basicConfig(level=logging.DEBUG)
@@ -112,11 +108,13 @@ class scrapData:
                                 issue_list.append(issue)
                                 print(issue)
                                 # keyword fetch
-                                key = []
+                                #key = []
+                                key = ''
                                 for keyword in data:
                                     main = re.findall((r'\b' + keyword + r'\b'), issue, re.IGNORECASE)
                                     if main:
-                                        key.append(keyword)
+                                        #key.append(keyword)
+                                        key = str(keyword)+ ',' + str(key)
                                     else:
                                         pass
                                 if key:
@@ -199,11 +197,13 @@ class scrapData:
                                         issue_list.append(issue)
                                         print(issue)
                                         #keyword fetch
-                                        key = []
+                                        #key = []
+                                        key = ''
                                         for keyword in data:
                                             main = re.findall((r'\b' + keyword + r'\b'), issue, re.IGNORECASE)
                                             if main:
-                                                key.append(keyword)
+                                                #key.append(keyword)
+                                                key = str(keyword)+ ',' + str(key)
                                             else:
                                                 pass
                                         if key:
