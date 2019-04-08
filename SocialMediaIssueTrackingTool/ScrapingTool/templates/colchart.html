@@ -1,0 +1,41 @@
+
+  <html>
+  <head>
+  <script type="text/javascript"
+  src='https://www.google.com/jsapi?autoload={
+      "modules":[{
+        "name":"visualization",
+        "version":"1",
+        "packages":["corechart"]
+      }]
+    }'></script>
+
+  <script type="text/javascript">
+  google.setOnLoadCallback(drawPieChart);
+
+  function drawPieChart() {
+      var ColData = google.visualization.arrayToDataTable([
+        ["Date", "NrOfIssues"],
+      ["2019-04-03", 18],["2019-04-02", 15],["2019-04-01", 12],["04/08/2019", 8],["2019-04-04", 5]
+      ]);
+
+      var options = {
+        title: "Number of Comments By Tags",
+        curveType: "function",
+        legend: { position: "right" }
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('Col_chart'));
+
+      chart.draw(ColData, options);
+
+  }
+
+  </script>
+  </head>
+  <body>
+
+  <div id="Col_chart" style="width: 450px; height: 250px"></div>
+
+  </body>
+  </html>

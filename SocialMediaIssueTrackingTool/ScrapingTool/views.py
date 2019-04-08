@@ -15,6 +15,7 @@ from ScrapingTool.gsmarena.Gsmarena_brand_list import get_brand_names
 from ScrapingTool.sqlite3_read_write import GetData_In_Dict, Write_to_DB, GetData_In_Tuple
 from ScrapingTool.gsmarena.Gsmarena_models_list import pagination_for_mobile_brand_list
 from ScrapingTool.gsmarena.Gsmarena_get_issue import main_method
+from ScrapingTool.GoogleCharts.PieChart import Create_Pie_Chart, Create_Column_Chart
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -136,7 +137,9 @@ def mobile_view(request):
         for year in yearlist:
             mobile_list_display.extend(mobile_list[0][year])
         
-
+    if request.POST.get('dashboard_button'):
+        return render(request, "dashboard.html", {"piechart": "piechart.html", "colchart": "colchart.html"})        
+        
     #On click of social_media_button
     if request.POST.get('social_media_button'):
         logging.info("onclick of social media submit button")
@@ -196,6 +199,8 @@ def mobile_view(request):
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
+                                    Create_Pie_Chart()
+                                    Create_Column_Chart()
                                     logging.info(
                                         "displaying an success message after scraping data from website : %s",
                                         successmsg)

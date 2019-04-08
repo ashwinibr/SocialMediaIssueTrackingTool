@@ -115,11 +115,13 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                     if comment:
                         issue_data = comment.text
                         user_comment.append(issue_data)
-                        key = []
+                        #key = []
+                        key = ''
                         for keyword in data:
                             main = re.findall((r'\b' + keyword + r'\b'), issue_data, re.IGNORECASE)
                             if main:
-                                key.append(keyword)
+                                #key.append(keyword)
+                                key = str(keyword)+ ',' + str(key)                                
                             else:
                                 pass
                         if key:
@@ -137,11 +139,13 @@ def get_issue_from_gsmarena(pagination_link_list,selected_date_list):
                             if comment:
                                 issue_data = comment.text
                                 user_comment.append(issue_data)
-                                key = []
+                                #key = []
+                                key = ''
                                 for keyword in data:
                                     main = re.findall((r'\b' + keyword + r'\b'), issue_data, re.IGNORECASE)
                                     if main:
-                                        key.append(keyword)
+                                        #key.append(keyword)
+                                        key = str(keyword)+ ',' + str(key)
                                     else:
                                         pass
                                 if key:
