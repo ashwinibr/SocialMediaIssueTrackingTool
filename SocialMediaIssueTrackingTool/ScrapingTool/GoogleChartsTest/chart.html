@@ -1,0 +1,42 @@
+
+<html>
+<head>
+<script type="text/javascript"
+src='https://www.google.com/jsapi?autoload={
+    "modules":[{
+      "name":"visualization",
+      "version":"1",
+      "packages":["corechart"]
+    }]
+   }'></script>
+
+<script type="text/javascript">
+google.setOnLoadCallback(drawPieChart);
+
+function drawPieChart() {
+    var PieData = google.visualization.arrayToDataTable([
+      ["Category", "NrOfIssues"],
+     ["Headphone Jack", 5],["Screen", 5],["Touch", 4],["Battery", 3],["Headset", 3],["Performance", 3],["Camera", 2],["Display", 2],["Feature", 2],["Google", 2],["Photos", 2],["Ram", 2],["Abnormal", 1],["Accessory", 1],["Album", 1],["App", 1],["Functionality", 1],["Gallery", 1],["Google Play", 1],["Lock", 1],["Power", 1],["Power button", 1],["Screenshot", 1],["Sensor", 1],["System", 1],["USB", 1],["Vibration", 1]
+    ]);
+
+    var options = {
+      title: "Number of Comments By Tags",
+      curveType: "function",
+      legend: { position: "right" }
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('Pie_chart'));
+
+    chart.draw(PieData, options);
+
+}
+
+
+</script>
+</head>
+<body>
+
+<div id="Pie_chart" style="width: 900px; height: 500px"></div>
+
+</body>
+</html>
