@@ -21,7 +21,8 @@
                         fromdate.max = new Date().toISOString().split("T")[0];
                         todate.max = new Date().toISOString().split("T")[0];
                         document.getElementById("successmsg").innerHTML = '';
-                        document.getElementById("douwnload_button").style.visibility="hidden";
+                        document.getElementById("douwnload_button").style.visibility="hidden";                        
+                        document.getElementById("dashboard_button").style.visibility="hidden";
                         document.getElementById("errorvalue").innerHTML = '';                                          
                         document.getElementById("infomsg").innerHTML = '';                                          
 
@@ -36,7 +37,8 @@
                         document.getElementById("fromdate").disabled = true;
                         document.getElementById("todate").disabled = true;
                         document.getElementById("successmsg").innerHTML = '';
-                        document.getElementById("douwnload_button").style.visibility="hidden";                                        
+                        document.getElementById("douwnload_button").style.visibility="hidden";
+                        document.getElementById("dashboard_button").style.visibility="hidden";                                        
                     }
                     else{
                         document.getElementById("fromdate").disabled = false;
@@ -54,9 +56,11 @@
                     var checkSuccess = "{{successmsg}}";
                         if (checkSuccess==""){
                             document.getElementById("douwnload_button").style.visibility="hidden";
+                            document.getElementById("dashboard_button").style.visibility="hidden";
                         }
                         else{
                             document.getElementById("douwnload_button").style.visibility="visible";
+                            document.getElementById("dashboard_button").style.visibility="visible";
                         }
                 }
 

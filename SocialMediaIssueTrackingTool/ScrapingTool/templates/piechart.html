@@ -15,12 +15,12 @@
 
   function drawPieChart() {
       var PieData = google.visualization.arrayToDataTable([
-        ["Category", "NrOfIssues"],
-      ["Network", 8],["Headphone Jack", 5],["Screen", 5],["Touch", 4],["Battery", 3],["Headset", 3],["Performance", 3],["Camera", 2],["Display", 2],["Feature", 2],["Google", 2],["Photos", 2],["Ram", 2],["Abnormal", 1],["Accessory", 1],["Album", 1],["App", 1],["Functionality", 1],["Gallery", 1],["Google Play", 1],["Lock", 1],["Power", 1],["Power button", 1],["Screenshot", 1],["Sensor", 1],["System", 1],["USB", 1],["Vibration", 1]
+        ["Category", "Issues"],
+      ["Camera", 10],["Battery", 7],["Display", 6],["UI", 6],["NFC", 4],["Security", 4],["App", 2],["Connection", 2],["Fm Radio", 2],["Photos", 2],["Sensor", 2],["Update", 2],["Network", 1]
       ]);
 
       var options = {
-        title: "Number of Comments By Tags",
+        title: "Number of Issues By Category",
         curveType: "function",
         legend: { position: "right" }
       };
