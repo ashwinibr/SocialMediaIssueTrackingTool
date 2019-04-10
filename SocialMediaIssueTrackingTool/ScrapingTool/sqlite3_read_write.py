@@ -9,6 +9,29 @@ def Write_to_DB(dictionary,table_name):
     conn.commit()
     conn.close()
 
+def Get_Chart_Prod_List():
+    conn = sqlite3.connect("db.sqlite3")
+    with conn:
+        cur = conn.cursor()
+    
+    insert_query = """SELECT Product FROM Issues_Count_By_Keyword GROUP by Product;"""  
+    cur.execute(insert_query)
+    result = cur.fetchall()
+    prod_list = []
+    for r in result:
+        prod_list.append(r[0])
+    return prod_list
+
+def Delete_Issue_Count():
+    conn = sqlite3.connect("db.sqlite3")
+    with conn:
+        cur = conn.cursor()
+    
+    insert_query = """DELETE FROM Issues_Count_By_Keyword;"""  
+    cur.execute(insert_query)
+    conn.commit()
+    conn.close()
+
 def Update_Issue_Count_For_Key(key):
     conn = sqlite3.connect("db.sqlite3")
     with conn:

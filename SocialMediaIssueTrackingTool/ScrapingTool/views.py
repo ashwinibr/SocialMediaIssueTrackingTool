@@ -12,7 +12,7 @@ from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.logics.DateFormateClass import dateFormate, dateListFunction
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.gsmarena.Gsmarena_brand_list import get_brand_names
-from ScrapingTool.sqlite3_read_write import GetData_In_Dict, Write_to_DB, GetData_In_Tuple
+from ScrapingTool.sqlite3_read_write import GetData_In_Dict, Write_to_DB, GetData_In_Tuple, Get_Chart_Prod_List
 from ScrapingTool.gsmarena.Gsmarena_models_list import pagination_for_mobile_brand_list
 from ScrapingTool.gsmarena.Gsmarena_get_issue import main_method
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
@@ -199,9 +199,10 @@ def mobile_view(request):
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
-                                    GChart = CreateChart()
-                                    GChart.Create_Column_Chart()
-                                    GChart.Create_Pie_Chart()
+                                    ProdList = Get_Chart_Prod_List()
+                                    GChart = CreateChart(ProdList[0])
+                                    GChart.Create_Column_Chart(ProdList[0])
+                                    GChart.Create_Pie_Chart(ProdList[0])
                                     logging.info(
                                         "displaying an success message after scraping data from website : %s",
                                         successmsg)

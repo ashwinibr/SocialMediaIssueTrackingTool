@@ -7,7 +7,7 @@ import sqlite3
 import pandas as pd
 from pandas import ExcelWriter
 from openpyxl.workbook import Workbook
-from ScrapingTool.sqlite3_read_write import Update_Issue_Count_For_Key
+from ScrapingTool.sqlite3_read_write import Update_Issue_Count_For_Key, Delete_Issue_Count
 
 class fileReaderWriter:
     logging.basicConfig(level=logging.DEBUG)
@@ -29,6 +29,7 @@ class fileReaderWriter:
             dataset = pd.read_excel(excel_file)
             df = pd.DataFrame(dataset)
             data = df.get("Category")
+            Delete_Issue_Count()
             for keyward in data:
                 Update_Issue_Count_For_Key(keyward)
             conn.commit()

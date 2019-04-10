@@ -137,8 +137,6 @@ class scrapData:
                             if local_date:
                                 if local_date.has_attr('title'):
                                     issue_date = local_date['title'][1:11]
-
-
                                 else:
                                     pass
                             elif issue_local_date:
