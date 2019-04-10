@@ -15,7 +15,7 @@ from ScrapingTool.gsmarena.Gsmarena_brand_list import get_brand_names
 from ScrapingTool.sqlite3_read_write import GetData_In_Dict, Write_to_DB, GetData_In_Tuple
 from ScrapingTool.gsmarena.Gsmarena_models_list import pagination_for_mobile_brand_list
 from ScrapingTool.gsmarena.Gsmarena_get_issue import main_method
-from ScrapingTool.GoogleCharts.PieChart import Create_Pie_Chart, Create_Column_Chart
+from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -199,8 +199,9 @@ def mobile_view(request):
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
-                                    Create_Pie_Chart()
-                                    Create_Column_Chart()
+                                    GChart = CreateChart()
+                                    GChart.Create_Column_Chart()
+                                    GChart.Create_Pie_Chart()
                                     logging.info(
                                         "displaying an success message after scraping data from website : %s",
                                         successmsg)
@@ -223,6 +224,9 @@ def mobile_view(request):
                             main_method(selected_model_url,list_of_dates)
 
                             successmsg = "Data extracted successfully, Click download to get data in excel"
+                            GChart = CreateChart()
+                            GChart.Create_Column_Chart()
+                            GChart.Create_Pie_Chart()
                             logging.info(
                                 "displaying an success message after scraping data from website : %s",
                                 successmsg)

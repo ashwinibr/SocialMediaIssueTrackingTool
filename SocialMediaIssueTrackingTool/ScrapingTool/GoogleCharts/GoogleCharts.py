@@ -1,4 +1,21 @@
+import sqlite3
+from string import Template
 
+class CreateChart:
+    def __init__(self):
+        self.template=''
+        self.conn = sqlite3.connect('db.sqlite3')
+        self.cursor = ''
+        self.results = []
+
+
+    def Create_Column_Chart(self):
+        self.cursor = self.conn.execute("SELECT Date, sum(NrOfIssues) from Issues_Count_By_Keyword GROUP By Date ORDER BY Date ASC")
+
+        for row in self.cursor:
+            self.results.append({'Date': row[0], 'NrOfIssues': row[1]})
+        
+        self.template = '''
         {% extends 'base.html' %}
 
         {% block content %}
@@ -11,7 +28,7 @@
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ["Date", "Comments"],
-                    ["04/01/2019", 3],["04/02/2019", 5],["04/03/2019", 4],["04/04/2019", 1],["04/05/2019", 3],["04/07/2019", 3],["04/08/2019", 3],["04/09/2019", 2]
+                    $res
                 ]);
                 
                 var options = {
@@ -25,7 +42,21 @@
                 var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
                 chart.draw(data, options);
         }
-        </script>
+        </script>'''
+
+        with open('chart.html', 'w') as html:
+            data = ','.join(['["{Date}", {NrOfIssues}]'.format(**r) for r in self.results])
+            #html.write(Template(self.template).substitute(res=data))
+            self.template = Template(self.template).substitute(res=data)
+
+    def Create_Pie_Chart(self):
+        self.results=[]
+        self.cursor = self.conn.execute("SELECT Category, sum(NrOfIssues) from Issues_Count_By_Keyword GROUP By Category ORDER BY sum(NrOfIssues) DESC")
+        
+        for row in self.cursor:
+            self.results.append({'Category': row[0], 'NrOfIssues': row[1]})
+        print(self.results)
+        self.template = self.template + '''
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
             google.charts.load('current', {'packages':['corechart']});
@@ -34,7 +65,7 @@
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ["Category", "Comments"],
-                    ["Camera", 5],["Battery", 3],["Display", 3],["UI", 3],["NFC", 2],["Security", 2],["App", 1],["Connection", 1],["Fm Radio", 1],["Photos", 1],["Sensor", 1],["Update", 1]
+                    $res
                 ]);
                 
                 var options = {
@@ -45,7 +76,8 @@
                 var chart = new google.visualization.PieChart(document.getElementById("piechart_values"));
                 chart.draw(data, options);
         }
-        </script>
+        </script>'''
+        html_template = '''
         <body class="dashboard-contents">
             <div id="content-container" class="container">
                 <form id="dashboard-form" method="POST">
@@ -61,4 +93,15 @@
                 </form>
             </div>
         </body>
-        {% endblock content %}
+        {% endblock content %}'''
+        
+        with open('chart.html', 'w') as html:
+            data = ','.join(['["{Category}", {NrOfIssues}]'.format(**r) for r in self.results])
+            #html.write(Template(self.template).substitute(res=data))
+            self.template = Template(self.template).substitute(res=data)
+            self.template = self.template + html_template 
+            html.write(self.template)
+            
+x = CreateChart()
+x.Create_Column_Chart()
+x.Create_Pie_Chart()
