@@ -331,6 +331,24 @@ def product_view(request):
         logging.info("redirecting form social media view to series page view")
         return response
 
+    if request.POST.get('dash_back_button'):
+        response = redirect('series/')
+        logging.info("redirecting dashboard page to brand page view")
+        return response
+
+    if request.POST.get('dashboard_button'):
+        ProdList = Get_Chart_Prod_List()
+        return render(request, "dashboard.html", {"product_list": ProdList})  
+
+    if request.POST.get("gen_graph"):
+        SelProduct = request.POST.get("product")
+        print('Product Selected for Graph ' + SelProduct)
+        GChart = CreateChart(SelProduct)
+        GChart.Create_Column_Chart(SelProduct)
+        GChart.Create_Pie_Chart(SelProduct)
+        ProdList = Get_Chart_Prod_List()
+        return render(request, "dashboard.html", {"product_list": ProdList})
+
     file_read = fileReaderWriter()
     get_product_links = getProductNamesAndLinks()
 
@@ -408,6 +426,10 @@ def product_view(request):
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
+                                    ProdList = Get_Chart_Prod_List()
+                                    GChart = CreateChart(ProdList[0])
+                                    GChart.Create_Column_Chart(ProdList[0])
+                                    GChart.Create_Pie_Chart(ProdList[0])
                                     logging.info(
                                         "displaying an success message after scraping data from website : %s",
                                         successmsg)
@@ -425,6 +447,10 @@ def product_view(request):
                             list_of_dates = []
                             get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
+                            ProdList = Get_Chart_Prod_List()
+                            GChart = CreateChart(ProdList[0])
+                            GChart.Create_Column_Chart(ProdList[0])
+                            GChart.Create_Pie_Chart(ProdList[0])
                             logging.info(
                                 "displaying an success message after scraping data from website : %s",
                                 successmsg)

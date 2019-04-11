@@ -101,8 +101,8 @@ class CreateChart:
                                     </select>
                                     <button type="submit" id="product-button" name="gen_graph" value='submit'>Generate Graph</button>
                                 </div>                                
-                                <div id="columnchart_values" align="center" style="width: 900px; height: 600px"></div>
-                                <div id="piechart_values" align="center" style="width: 900px; height: 600px"></div>
+                                <div id="columnchart_values" align="center" style="width: 44%; height: 600px"></div>
+                                <div id="piechart_values" align="center" style="width: 44%; height: 600px"></div>
                                 <br><input type="submit" name="dash_back_button" id="dash_back_button" value="Back">
                             </div>
                         </div>

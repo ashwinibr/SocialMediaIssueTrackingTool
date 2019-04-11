@@ -11,7 +11,7 @@
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ["Date", "Comments"],
-                    ["04/11/2019", 2.0]
+                    ["2019-04-11", 1.0]
                 ]);
                 
                 var options = {
@@ -34,7 +34,7 @@
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ["Category", "Comments"],
-                    ["Fm Radio", 1.0],["NFC", 1.0]
+                    ["Touch", 1.0]
                 ]);
                 
                 var options = {
@@ -53,7 +53,7 @@
                         <div name="dashboard-container" class="dashboard-container">
                             <h1 align="center"> Dashboard </h1>
                             <div id="wrapper">
-                                <h2 align="center">Product: Samsung Galaxy M30 </h2>
+                                <h2 align="center">Product: Xperia 1 </h2>
                                 <div  id="prod-dropdown" align="right">
                                     <label align="right">Select Product:</label>
                                     <select name="product" id="product-dropdown" class="product-dropdown">
@@ -63,8 +63,8 @@
                                     </select>
                                     <button type="submit" id="product-button" name="gen_graph" value='submit'>Generate Graph</button>
                                 </div>                                
-                                <div id="columnchart_values" align="center" style="width: 900px; height: 600px"></div>
-                                <div id="piechart_values" align="center" style="width: 900px; height: 600px"></div>
+                                <div id="columnchart_values" align="center" style="width: 44%; height: 600px"></div>
+                                <div id="piechart_values" align="center" style="width: 44%; height: 600px"></div>
                                 <br><input type="submit" name="dash_back_button" id="dash_back_button" value="Back">
                             </div>
                         </div>
