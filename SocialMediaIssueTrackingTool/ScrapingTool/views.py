@@ -91,6 +91,11 @@ def mobile_view(request):
         logging.info("redirecting mobile page to brand page view")
         return response
 
+    if request.POST.get('dash_back_button'):
+        response = redirect('brand/')
+        logging.info("redirecting dashboard page to brand page view")
+        return response
+
     if request.POST.get('brand_submit'):
 
         print("Brand submit clicked") 
@@ -138,7 +143,8 @@ def mobile_view(request):
             mobile_list_display.extend(mobile_list[0][year])
         
     if request.POST.get('dashboard_button'):
-        return render(request, "dashboard.html", {"piechart": "piechart.html", "colchart": "colchart.html"})        
+        ProdList = Get_Chart_Prod_List()
+        return render(request, "dashboard.html", {"product_list": ProdList})        
         
     #On click of social_media_button
     if request.POST.get('social_media_button'):
@@ -225,9 +231,10 @@ def mobile_view(request):
                             main_method(selected_model_url,list_of_dates)
 
                             successmsg = "Data extracted successfully, Click download to get data in excel"
-                            GChart = CreateChart()
-                            GChart.Create_Column_Chart()
-                            GChart.Create_Pie_Chart()
+                            ProdList = Get_Chart_Prod_List()
+                            GChart = CreateChart(ProdList[0])
+                            GChart.Create_Column_Chart(ProdList[0])
+                            GChart.Create_Pie_Chart(ProdList[0])
                             logging.info(
                                 "displaying an success message after scraping data from website : %s",
                                 successmsg)
@@ -242,7 +249,7 @@ def mobile_view(request):
                     logging.error(
                             "displaying an error message to select product  : %s",
                             error_message)
-
+    
     elif request.POST.get("douwnload_button"):
         file_name = 'ScrapingTool/files/FinalData.xlsx'  # this should live elsewhere, definitely
         with open(file_name, 'rb') as f:
@@ -251,6 +258,15 @@ def mobile_view(request):
             response['Content-Disposition'] = 'attachment; filename=' + file_name
             response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             return response
+    
+    if request.POST.get("gen_graph"):
+        SelProduct = request.POST.get("product")
+        print('Product Selected for Graph ' + SelProduct)
+        GChart = CreateChart(SelProduct)
+        GChart.Create_Column_Chart(SelProduct)
+        GChart.Create_Pie_Chart(SelProduct)
+        ProdList = Get_Chart_Prod_List()
+        return render(request, "dashboard.html", {"product_list": ProdList})
     
     return render(request, "socialmediascraping.html",
                   {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
