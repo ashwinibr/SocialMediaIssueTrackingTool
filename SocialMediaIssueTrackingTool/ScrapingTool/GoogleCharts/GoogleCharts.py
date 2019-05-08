@@ -38,7 +38,7 @@ class CreateChart:
                     title: "Number of Issues By Date",
                     legend: { position: "right" },
                     bar: {groupWidth: "75%"},
-                    hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:90 },
+                    hAxis: {title: "Date", groupByRowLabel: true, slantedText:true, slantedTextAngle:90 },
                     vAxis: {title: "Nr of Issues"}
                 };
 
