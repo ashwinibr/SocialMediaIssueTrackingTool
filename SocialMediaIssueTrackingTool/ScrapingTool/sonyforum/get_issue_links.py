@@ -18,6 +18,7 @@ class getIssueLinks:
 
     def get_issue_link(self,product_links_list,Date_list):
         issue_links_list = []
+        get_value_from_scrap_data =[]
         try:
             for url in product_links_list:
                 req = requests.get(url)
@@ -90,7 +91,8 @@ class getIssueLinks:
             #Fetch scrap data
             scrap_data=scrapData()
             print("link_list %s ",issue_links_list)
-            get_value_from_scrap_data=scrap_data.get_issue_data(getIssueLinks().remove_dupilcate_link(issue_links_list),Date_list)
+            if issue_links_list:
+                get_value_from_scrap_data=scrap_data.get_issue_data(getIssueLinks().remove_dupilcate_link(issue_links_list),Date_list)
             return get_value_from_scrap_data
 
         except RequestException as e:
