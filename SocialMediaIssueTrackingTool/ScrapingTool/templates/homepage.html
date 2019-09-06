@@ -9,7 +9,7 @@
             var checkurl = e.options[e.selectedIndex].text;
                 if (checkError=="" && checkurl=="https://talk.sonymobile.com"){
                     document.getElementById("homepage-form").action = "series/";                    
-                }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||  checkurl=="https://www.gsmarena.com") {
+                }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||  checkurl=="https://www.gsmarena.com" || checkurl == "https://androidforums.com") {
                     document.getElementById("homepage-form").action ="brand/";
                 }else{
                     document.getElementById("homepage-form").action ="";
@@ -24,6 +24,7 @@
                     <select name="mainurl" id="id_main_url" class="mainurl-dropdown">
                         <option type="option" id="id_main_url" name="mainurl" value="https://talk.sonymobile.com">https://talk.sonymobile.com</option>
                         <option type="option" id="id_main_url" name="mainurl" value="https://www.gsmarena.com/">https://www.gsmarena.com</option>
+                        <option type="option" id="id_main_url" name="mainurl" value="https://androidforums.com/">https://androidforums.com</option>
                     </select>    
                     <input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
                     <span id="errorvalue" style="color:red">{{errorvalue}}</span>
