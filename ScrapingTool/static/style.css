@@ -1,0 +1,223 @@
+.newspaper {
+
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+    -webkit-column-width: 100px; /* Chrome, Safari, Opera */
+    -moz-column-width: 100px; /* Firefox */
+    column-width: 100px;
+  }
+  
+  .loader {
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  div.a {
+      text-align: center;
+  }
+  
+  div.b {
+      text-align: left;
+  }
+  
+  div.c {
+      text-align: right;
+  }
+  
+  div.c {
+      text-align: justify;
+  }
+  .url-card{
+    opacity: .9;
+    width: 800px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .scraping-card{
+    opacity: .9;
+    margin-top:20px;
+    margin-bottom: 20px;
+    position: absolute;
+  }
+
+  .dashboard-card{
+    opacity: 1;
+    margin: 0;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  body {
+    background-color: AliceBlue;
+    background-image: url("/static/image/background-2462430_1920.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 10px;
+  }
+  
+  /* Style the header */
+  .header {
+    background-color: #66b3ff;
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .header h1 {
+    font-size: 40px;
+  }
+  
+  h3 {
+    font-size: 20px;
+  }
+  
+  select.series-dropdown{
+    align-items: center;
+    width: 30%;
+    padding: 10px 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  
+  select.brand-dropdown{
+    align-items: center;
+    width: 30%;
+    padding: 10px 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  
+  select.mainurl-dropdown{
+    align-items: center;
+    width: 20%;
+    padding: 10px 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  .navbar{
+    height: 80px;
+    background-color: #1d75f8;
+  }
+  .card{
+      background-color: #3597f86e;
+  }
+  .card-header{
+    background-color: #1d75f8b2;
+  }
+  
+  .input-group{
+    width: 20%;
+  }
+  .main-url{
+    width: 50%;
+    margin-left: 200px;
+    margin-top: 50px;  
+  }
+
+
+  input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+    padding: 10px 15px;
+    margin: 8px 8px;
+    box-sizing: border-box;
+  }
+  
+  input[type=radio] {
+    width: 2%;
+    padding: 10px 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+
+
+  input[type=submit] {
+    width: 15%;
+    background-color: #2e8eee;
+    color: white;
+    padding: 7px 16px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  input[type=submit]:hover {
+    background-color: #0066cc;
+  }
+  
+  div.form-container {
+    opacity: 0.9;
+    border-radius: 5px;
+    background-color: #cce5ff;
+    padding: 20px;
+  }
+  
+  div.dashboard-container {
+    opacity: 1.0;
+    border-radius: 5px;
+    background-color: #cce5ff;
+    padding: 20px;
+  }
+  
+  
+  div.center{
+    opacity: 1.0;
+    filter: alpha(opacity=100); /* For IE8
+  and earlier */
+  }
+  
+  #wrapper {
+      width: 100%;
+      border: 1px solid black;
+      overflow: hidden; /* will contain if #first is longer than #second */
+  }
+  
+  #columnchart_values {
+      margin: 0 20px;
+      float:left; /* add this */
+      border: 1px solid #0066cc;
+      padding: 30px
+  }
+  
+  #piechart_values {
+      border: 1px solid #0066cc;
+      overflow: hidden; /* if you don't want #second to wrap below #first */
+      padding: 30px
+  }
+  
+  #dash_back_button{
+    margin: 8px 20px;
+    align-items: center;
+  }
+  

@@ -4,9 +4,7 @@
         <div class="social-media-container-product-list">
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>jQuery UI Datepicker - Default functionality</title>
             <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-            <link rel="stylesheet" href="/resources/demos/style.css">
             <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
             <script>
@@ -104,54 +102,66 @@
                         }
                 }
             </script>
-            <title>Social Media Tracking Tool</title>                      
-            <form id="socialmedia-form" method="POST">
-                <div name="form-container" class="form-container" action="">
-                    <fieldset>
-                        <div class="b">
-                            <label for="fromdate">  From Date: </label><input type="text" name="fromdate"id="fromdate"> 
-                            <t id="errorfrom" style="color:red"></t><br><br>
-                            <label for="todate">   To Date: </label><input type="text" name="todate" id="todate" onblur="checkTextFieldFrom();">
-                            <t id="errorto" style="color:red"></t><br><br>
-                            <input type="checkbox" id="alldates" name="alldates" onchange="clearDateErr()"> Select all Dates<br><br>
-                            <br><br>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <div class="product-lis">
-                            <label> Select Product:</label>
-                                <div  id="years-dropdown" align="right">
-                                <label align="right">Filter By:</label>
-                                <select name="years" id="years-dropdown" class="years-dropdown">
-                                    {% for year in announcedyear %}
-                                    <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
-                                    {%endfor %}
-                                </select>
-                                <button type="submit" id="years-button" name="updatelist" value='submit'>Update List</button>
+            <div id="content-container" class="container-fluid scraping-card">
+                <div class="card">                
+                    <form id="socialmedia-form" method="POST">
+                        <div name="form-container" class="form-container" action="">
+                            <fieldset>
+                                <div class="align-left">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">From Date:</span> 
+                                        </div>
+                                        <input type="date" class="form-control" name="fromdate"id="fromdate">
+                                    </div>
+                                    <span id="errorfrom" style="color:red"></span>        
+                                    <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">To Date:</span> 
+                                            </div>
+                                        <input type="date" class="form-control" name="todate" id="todate" onblur="checkTextFieldFrom();">
+                                    </div>
+                                    <span id="errorto" style="color:red"></span><br>
+                                    <input type="checkbox" id="alldates" name="alldates" onchange="clearDateErr()"> Select all Dates<br><br>
                                 </div>
-                            <br><br>
-                        </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="product-lis">
+                                    <label> Select Product:</label>
+                                        <div  id="years-dropdown" align="right">
+                                        <label align="right">Filter By:</label>
+                                        <select name="years" id="years-dropdown" class="years-dropdown">
+                                            {% for year in announcedyear %}
+                                            <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
+                                            {%endfor %}
+                                        </select>
+                                        <button type="submit" id="years-button" name="updatelist" value='submit'>Update List</button>
+                                        </div>
+                                    <br><br>
+                                </div>
 
-                        <div class="b">
-                            <div class="newspaper">
-                            <div class="a"><div class="loader" id="loader"></div></div>
-                            <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
-                            {% for names in productname %}
-                            <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}}<br>
-                            {%endfor %}
-                            </div>
+                                <div class="b">
+                                    <div class="newspaper">
+                                    <div class="a"><div class="loader" id="loader"></div></div>
+                                    <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
+                                    {% for names in productname %}
+                                    <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}}<br>
+                                    {%endfor %}
+                                    </div>
+                                </div>
+                                <br>
+                            </fieldset>
+                            <br><input type="submit" name="back_button" id="back_button" value="Back">
+                            <input type="submit" name="social_media_button" value="Submit" onclick="Loader()">
+                            <input type="submit" name="douwnload_button" id="douwnload_button" value="Download">
+                            <input type="submit" name="dashboard_button" id="dashboard_button" value="Go to Dashboard">
+                            <t id="errorvalue" style="color:red">{{errorvalue}}</t>
+                            <t id="successmsg" style="color:green">{{successmsg}}</t>
+                            <t id="infomsg" style="color:#ff7f27">{{infomsg}}</t>
                         </div>
-                        <br>
-                    </fieldset>
-                    <br><input type="submit" name="back_button" id="back_button" value="Back">
-                    <input type="submit" name="social_media_button" value="Submit" onclick="Loader()">
-                    <input type="submit" name="douwnload_button" id="douwnload_button" value="Download">
-                    <input type="submit" name="dashboard_button" id="dashboard_button" value="Go to Dashboard">
-                    <t id="errorvalue" style="color:red">{{errorvalue}}</t>
-                    <t id="successmsg" style="color:green">{{successmsg}}</t>
-                    <t id="infomsg" style="color:#ff7f27">{{infomsg}}</t>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </body>
 {% endblock content %}

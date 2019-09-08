@@ -14,22 +14,25 @@
         }
 
     </script>
-    <div id="content-container" class="container">
-        <form id="series-form" method="POST">
-                <div name="form-container" class="form-container">
-                        <div class="a">
-                            <h3>Select Series:</h3>
-                            <select name="series[]" class="series-dropdown">
-                                {% for series in productseries %}
-                                <option type = "option" name="series[]" value="{{series}}">{{series}}</option><br>
-                                {%endfor %}
-                            </select><br>
-                            <br><input type="submit" name="back_button" id="back_button" value="Back">                            
-                            <input type="submit" name="series_button" value="Submit" onclick="LoadMain()">
-                            <t style="color:red">{{errorvalue}}</t>                  
-                        </div>
+    <div id="content-container" class="container-fluid url-card">
+        <div class="card text-center">
+            <form id="series-form" method="POST">
+                <div class="card-header text-white">
+                    <h3><b>Select Series</b></h3>
                 </div>
-        </form>
+                <div class="input-group mb-3 main-url">
+                    <select name="series[]" class="form-control">
+                        {% for series in productseries %}
+                        <option type = "option" name="series[]" value="{{series}}">{{series}}</option><br>
+                        {%endfor %}
+                    </select><br>
+                </div>
+                    <br><input type="submit" name="back_button" id="back_button" value="Back">                            
+                    <input type="submit" name="series_button" value="Submit" onclick="LoadMain()">
+                    <t style="color:red">{{errorvalue}}</t>                  
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 

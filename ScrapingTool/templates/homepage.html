@@ -16,21 +16,23 @@
                 }    
         }
     </script>
-    <div id="content-container" class="container">
-        <form id="homepage-form" method="POST">
-            <div class="a">
-                <div name="form-container" class="form-container">
-                    <h3>Enter URL:</h3>
-                    <select name="mainurl" id="id_main_url" class="mainurl-dropdown">
+    <div id="content-container" class="container-fluid url-card">
+        <div class="card text-center">
+            <form id="homepage-form" method="POST">
+                <div class="card-header text-white">
+                    <h3><b>Select URL</b></h3>
+                </div>
+                <div class="input-group mb-3 main-url">
+                    <select name="mainurl" id="id_main_url" class="form-control">
                         <option type="option" id="id_main_url" name="mainurl" value="https://talk.sonymobile.com">https://talk.sonymobile.com</option>
                         <option type="option" id="id_main_url" name="mainurl" value="https://www.gsmarena.com/">https://www.gsmarena.com</option>
                         <option type="option" id="id_main_url" name="mainurl" value="https://androidforums.com/">https://androidforums.com</option>
-                    </select>    
-                    <input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
-                    <span id="errorvalue" style="color:red">{{errorvalue}}</span>
+                    </select>                
                 </div>
-            </div>
-        </form>
+                <input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
+                <span id="errorvalue" style="color:red">{{errorvalue}}</span>
+            </form>            
+        </div>
     </div>
 </body>
 
