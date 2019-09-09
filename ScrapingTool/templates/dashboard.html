@@ -11,7 +11,7 @@
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ["Date", "Comments"],
-                    ["09/04/2019", 17.0],["09/05/2019", 3.0],["09/06/2019", 7.0]
+                    ["2019-09-05", 1.0],["2019-09-06", 4.0]
                 ]);
                 
                 var options = {
@@ -34,7 +34,7 @@
             function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ["Category", "Comments"],
-                    ["Battery", 8.0],["Camera", 5.0],["Sensor", 4.0],["Display", 3.0],["Ram", 2.0],["Storage", 2.0],["Headphone Jack", 1.0],["NFC", 1.0],["Screen", 1.0]
+                    ["Touch", 3.0],["Camera", 1.0],["Feature", 1.0]
                 ]);
                 
                 var options = {
@@ -51,10 +51,10 @@
                 <div class="card text-center">
                     <form id="dashboard-form" method="POST">
                         <div class="card-header text-white">
-                            <h1 align="center"> Dashboard </h1>
+                            <h2 align="center"> Dashboard </h2>
                         </div>
                         <div id="wrapper">
-                            <h2 align="center">Product: Samsung Galaxy M30s </h2>
+                            <h3 align="center"><b>Product: Xperia 5 </b></h3>
                             <div  id="prod-dropdown" align="right">
                                 <label align="right">Select Product:</label>
                                 <select name="product" id="product-dropdown" class="product-dropdown">

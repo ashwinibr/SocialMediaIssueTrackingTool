@@ -85,29 +85,29 @@ class CreateChart:
         </script>'''
         html_template = '''
         <body class="dashboard-contents">
-            <div id="content-container" class="container">
-                <form id="dashboard-form" method="POST">
-                    <div class="content-container">
-                        <div name="dashboard-container" class="dashboard-container">
-                            <h1 align="center"> Dashboard </h1>
-                            <div id="wrapper">
-                                <h2 align="center">Product: $prod </h2>
-                                <div  id="prod-dropdown" align="right">
-                                    <label align="right">Select Product:</label>
-                                    <select name="product" id="product-dropdown" class="product-dropdown">
-                                        {% for product in product_list %}
-                                        <option type = "option" name="product" value="{{product}}">{{product}}</option><br>
-                                        {%endfor %}
-                                    </select>
-                                    <button type="submit" id="product-button" name="gen_graph" value='submit'>Generate Graph</button>
-                                </div>                                
-                                <div id="columnchart_values" align="center" style="width: 44%; height: 600px"></div>
-                                <div id="piechart_values" align="center" style="width: 44%; height: 600px"></div>
-                                <br><input type="submit" name="dash_back_button" id="dash_back_button" value="Back">
-                            </div>
+            <div id="content-container" class="container-fluid dashboard-card">
+                <div class="card text-center">
+                    <form id="dashboard-form" method="POST">
+                        <div class="card-header text-white">
+                            <h2 align="center"> Dashboard </h2>
                         </div>
-                    </div>
-                </form>
+                        <div id="wrapper">
+                            <h3 align="center"><b>Product: $prod </b></h3>
+                            <div  id="prod-dropdown" align="right">
+                                <label align="right">Select Product:</label>
+                                <select name="product" id="product-dropdown" class="product-dropdown">
+                                    {% for product in product_list %}
+                                    <option type = "option" name="product" value="{{product}}">{{product}}</option><br>
+                                    {%endfor %}
+                                </select>
+                                <button type="submit" id="product-button" name="gen_graph" value='submit'>Generate Graph</button>
+                            </div>                                
+                            <div id="columnchart_values" align="center" style="width: 48%; height: 600px"></div>
+                            <div id="piechart_values" align="center" style="width: 48%; height: 600px"></div>
+                            <br><input type="submit" name="dash_back_button" id="dash_back_button" value="Back">
+                        </div>
+                    </form>
+                </div>
             </div>
         </body>
         {% endblock content %}'''
