@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
   <meta charset="utf-8">
@@ -6,6 +7,7 @@
   <link rel="stylesheet" href="/static/fontawesome-free-5.10.2-web/css/all.min.css">
   <link rel="stylesheet" href="/static/style.css">
   <title>{% block title %}CPRTT{% endblock %}</title>
+  <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" />
 </head>
 <body>
   <div class="navbar navbar-light">
