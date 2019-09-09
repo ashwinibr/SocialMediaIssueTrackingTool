@@ -62,7 +62,7 @@
   }
 
   .scraping-card{
-    opacity: .9;
+    opacity: 1;
     margin-top:20px;
     margin-bottom: 20px;
     position: absolute;
@@ -125,7 +125,7 @@
     background-color: #1d75f8;
   }
   .card{
-      background-color: #3597f86e;
+      background-color: #3597f89c;
   }
   .card-header{
     background-color: #1d75f8b2;
