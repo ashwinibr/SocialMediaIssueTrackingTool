@@ -1,10 +1,10 @@
 import datetime
 
 
-def dateListFunction(formdate, todate):
+def date_format_change(formdate, todate):
     date_list = []
 
-    from_dt, to_dt = dateFormate(formdate, todate)
+    from_dt, to_dt = dateFormat(formdate, todate)
 
     for dt in daterange(from_dt, to_dt):
         date_list.append(dt.strftime("%m/%d/%Y"))
@@ -18,7 +18,7 @@ def daterange(fromdate, todate):
 
 
 # Converting From and To date in date formate from string formate.
-def dateFormate(from_date, to_date):
+def dateFormat(from_date, to_date):
     todate = datetime.datetime.strptime(to_date, "%Y-%m-%d")
     fromdate = datetime.datetime.strptime(from_date, "%Y-%m-%d")
 

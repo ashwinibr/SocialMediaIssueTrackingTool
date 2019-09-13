@@ -8,6 +8,7 @@ def get_brand_name_from_gsmarena(soup,mobile_brand_list,mobile_brand_links_list)
             mobile_brand_list.append(list_of_brands.text)
             for brand_links in list_of_brands.find_all("a"):
                 mobile_brand_links_list.append(brand_links.attrs['href'])
+
     brand_dict ={"Brand_Name":mobile_brand_list, "Link":mobile_brand_links_list}
     Write_to_DB(brand_dict,"Mobile_Brands")
     return mobile_brand_list,mobile_brand_links_list
@@ -19,9 +20,8 @@ def get_brand_name_from_androidforum(soup,mobile_brand_list,mobile_brand_links_l
 
             for brand_name in list_of_brands.find_all("span"):
                 mobile_brand_list.append(brand_name.text)
-            for brand_links in list_of_brands.find_all("a"):
-                mobile_brand_links_list.append(brand_links.attrs['href'])
-    print(mobile_brand_list)
+                mobile_brand_links_list.append(brand_name.attrs['href'])
+
     brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
     Write_to_DB(brand_dict, "Mobile_Brands")
     return mobile_brand_list, mobile_brand_links_list

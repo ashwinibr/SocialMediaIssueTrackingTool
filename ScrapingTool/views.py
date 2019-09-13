@@ -9,10 +9,9 @@ import logging
 
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.consumer_product_scraping.forum_scraping import \
-    get_brand_names, get_models_names
+    get_brand_names, get_models_names, get_data_from_url
 from ScrapingTool.file_read_write import fileReaderWriter
-from ScrapingTool.gsmarena.Gsmarena_get_issue import main_method
-from ScrapingTool.logics.DateFormateClass import dateListFunction, dateFormate
+from ScrapingTool.logics.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
@@ -114,11 +113,15 @@ def mobile_view(request):
 
         with open("ScrapingTool/files/series.txt", "w") as file:
             file.write(brand_url)
+
+        logging.info("<<<<<<<<< Get mobile names from User selected Brand name >>>>>>>>>>>")
+        #Model list contains year and model name
         mobile_list = get_models_names(brand_url)
 
+        # Getting year from the list
         for key in mobile_list[0].keys():
             announced_year.append(key)
-        now = datetime.datetime.now()
+
         yearlist = [str(now.year), str(now.year - 1), str(now.year - 2)]
 
         if "All" in announced_year:
@@ -128,19 +131,24 @@ def mobile_view(request):
                 mobile_list_display.extend(mobile_list[0][year])
 
     if request.POST.get('updatelist'):
+        logging.info("<<<<<<<<< Onclick of update list >>>>>>>>>>>")
         filter_value = request.POST.get('years')
         mobile_list = GetData_In_Tuple("Model_Names")
         announced_year = ['Latest Released']
+
         for year in mobile_list[0]:
             announced_year.append(year)
 
         if (filter_value) == 'Latest Released':
-            now = datetime.datetime.now()
             yearlist = [str(now.year), str(now.year - 1), str(now.year - 2)]
         else:
             yearlist = [filter_value]
-        for year in yearlist:
-            mobile_list_display.extend(mobile_list[0][year])
+
+        if "All" in announced_year:
+            mobile_list_display.extend(mobile_list[0]["All"])
+        else:
+            for year in yearlist:
+                mobile_list_display.extend(mobile_list[0][year])
 
     if request.POST.get('dashboard_button'):
         ProdList = Get_Chart_Prod_List()
@@ -154,11 +162,13 @@ def mobile_view(request):
         announced_year = ['Latest Released']
         for key in mobile_list[0]:
             announced_year.append(key)
-        print(announced_year)
 
         yearlist = [str(now.year), str(now.year - 1), str(now.year - 2)]
-        for year in yearlist:
-            mobile_list_display.extend(mobile_list[0][year])
+        if "All" in announced_year:
+            mobile_list_display.extend(mobile_list[0]["All"])
+        else:
+            for year in yearlist:
+                mobile_list_display.extend(mobile_list[0][year])
 
         file_read = fileReaderWriter()
         file = open("ScrapingTool/files/mainurl.txt", "r")
@@ -182,21 +192,20 @@ def mobile_view(request):
                               error_message)
             else:
                 # Fetch products selected by user-checklist
-                checklist = request.POST.getlist('product[]')
-                logging.debug("User selected product list : %s", checklist)
+                selected_model_name = request.POST.getlist('product[]')
+                logging.info("<<<<<<< User selected product list : %s >>>>>>>>>>>>>>", selected_model_name)
 
-                if checklist:
+                if selected_model_name:
+                    selected_model_url = []
+                    for model in selected_model_name:
+                        selected_model_url.append(main_url + "/" + mobile_dict[model][0])
                     if fromdate and todate:
                         if fromdate <= todate:
-                            list_of_dates = dateListFunction(fromdate, todate)
-                            selected_model_url = []
-                            for model in checklist:
-                                selected_model_url.append(main_url + "/" + mobile_dict[model][0])
-                            data_dictionary = main_method(selected_model_url, list_of_dates)
+                            selected_dates = date_format_change(fromdate, todate)
 
-                            print(data_dictionary)
+                            data_information = get_data_from_url(main_url,selected_model_url,selected_dates)
 
-                            if data_dictionary:
+                            if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
                                 ProdList = Get_Chart_Prod_List()
                                 GChart = CreateChart(ProdList[0])
@@ -216,27 +225,26 @@ def mobile_view(request):
                                 error_message)
                     elif request.POST.get("alldates") == "on":
                         print("on")
-                        list_of_dates = []
-                        selected_model_url = []
+                        selected_dates = []
+                        data_information = get_data_from_url(main_url, selected_model_url, selected_dates)
 
-                        for model in checklist:
-                            selected_model_url.append(main_url + "/" + mobile_dict[model][0])
-                        main_method(selected_model_url, list_of_dates)
-
-                        successmsg = "Data extracted successfully, Click download to get data in excel"
-                        ProdList = Get_Chart_Prod_List()
-                        GChart = CreateChart(ProdList[0])
-                        GChart.Create_Column_Chart(ProdList[0])
-                        GChart.Create_Pie_Chart(ProdList[0])
-                        logging.info(
-                            "displaying an success message after scraping data from website : %s",
-                            successmsg)
+                        if data_information:
+                            successmsg = "Data extracted successfully, Click download to get data in excel"
+                            ProdList = Get_Chart_Prod_List()
+                            GChart = CreateChart(ProdList[0])
+                            GChart.Create_Column_Chart(ProdList[0])
+                            GChart.Create_Pie_Chart(ProdList[0])
+                            logging.info(
+                                "displaying an success message after scraping data from website ")
+                        else:
+                            info_msg = "Info:No data for selected date"
+                            logging.warning("there is no data for selected product with selected date %s",
+                                            info_msg)
                     else:
                         error_message = "Error: Please select the date before submit"
                         logging.error(
                             "displaying an error message to select date  : %s",
                             error_message)
-                # Else if product not selected,displays error
                 else:
                     error_message = "Error: Please select the product"
                     logging.error(
@@ -409,9 +417,9 @@ def product_view(request):
                     # If product selected and there is respective link for that enter  if condition
                     if product_links_list:
                         if fromdate and todate:
-                            start_date, end_date = dateFormate(fromdate, todate)
+                            start_date, end_date = dateFormat(fromdate, todate)
                             if start_date <= end_date:
-                                list_of_dates = dateListFunction(fromdate, todate)
+                                list_of_dates = date_format_change(fromdate, todate)
                                 print("++++++++++++++++++listdates", list_of_dates)
                                 # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
                                 data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates,

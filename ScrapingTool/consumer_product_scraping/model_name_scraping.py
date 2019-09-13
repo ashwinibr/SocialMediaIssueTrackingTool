@@ -1,20 +1,21 @@
 import re
 from collections import defaultdict
 
+from ScrapingTool.common import GSMARENA_URL
 from ScrapingTool.parser import parse
 from ScrapingTool.sqlite3_read_write import Write_to_DB
 
 
 def get_models_names_from_gsmarena(soup,url):
 
-    list_page = pagination_for_mobile_brand_list(soup,url)
+    list_page = pagination_for_mobile_brand_list_from_gsmarena(soup,url)
 
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
 
     for l in list_page:
-        url="https://www.gsmarena.com/"+l
+        url = GSMARENA_URL+l
         soup = parse(url)
         for mobile_model_container in soup.find_all("div", class_="makers"):
             for l in mobile_model_container.find_all("li"):
@@ -52,6 +53,24 @@ def get_models_names_from_gsmarena(soup,url):
 
     return dic_year,dic_model_name
 
+def pagination_for_mobile_brand_list_from_gsmarena(soup,url):
+    pagination_list = []
+    number = []
+
+    if soup.find("div", class_="nav-pages"):
+        for link in soup.find_all("div", class_="nav-pages"):
+            for pagination_links in link.find_all("a"):
+                number.append(pagination_links.text)
+        number_of_page = number[-1]
+        search_digit = re.findall(r'\d+', url)
+        url = re.sub(search_digit[0], '', url)
+        for i in range(1, int(number_of_page) + 1):
+            pagination_list.append(url[:-4] + "f-" + search_digit[0] + "-0-p" + str(i) + ".php")
+    else:
+        pagination_list.append(url)
+    return pagination_list
+
+
 def get_models_names_from_android_forum(soup):
     mobile_model_name_list = []
     mobile_model_links_list = []
@@ -84,19 +103,4 @@ def get_models_names_from_android_forum(soup):
     return dic_year,dic_model_name
 
 
-def pagination_for_mobile_brand_list(soup,url):
-    pagination_list = []
-    number = []
 
-    if soup.find("div", class_="nav-pages"):
-        for link in soup.find_all("div", class_="nav-pages"):
-            for pagination_links in link.find_all("a"):
-                number.append(pagination_links.text)
-        number_of_page = number[-1]
-        search_digit = re.findall(r'\d+', url)
-        url = re.sub(search_digit[0], '', url)
-        for i in range(1, int(number_of_page) + 1):
-            pagination_list.append(url[:-4] + "f-" + search_digit[0] + "-0-p" + str(i) + ".php")
-    else:
-        pagination_list.append(url)
-    return pagination_list
