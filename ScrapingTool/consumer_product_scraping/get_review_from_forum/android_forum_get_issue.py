@@ -93,10 +93,15 @@ def pagination_for_user_comment_links(model_url):
     http_request = requests.get(model_url)
     soup = BeautifulSoup(http_request.content, "html.parser")
 
-    for link in soup.find_all("div", class_="PageNav"):
-        for l in link.find_all("nav"):
-            for li in l.find_all("a"):
-                pagination_list.append(li.attrs['href'])
+    for node in soup.find_all("div", class_="PageNav"):
+        child_node = node.find("span", class_="pageNavHeader")
+        page_header_text = (child_node.text).split(" ")
+        page_number = page_header_text[len(page_header_text)-1]
+        for num in range(int(page_number)):
+            num = num + 1
+            url = model_url + "page-" + str(num)
+            pagination_list.append(model_url)
+
     return pagination_list
 
 
