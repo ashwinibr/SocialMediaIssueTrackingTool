@@ -100,7 +100,7 @@ def pagination_for_user_comment_links(model_url):
         for num in range(int(page_number)):
             num = num + 1
             url = model_url + "page-" + str(num)
-            pagination_list.append(model_url)
+            pagination_list.append(url)
 
     return pagination_list
 
