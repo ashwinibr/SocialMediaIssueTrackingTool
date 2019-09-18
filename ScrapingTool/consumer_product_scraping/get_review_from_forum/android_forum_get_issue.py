@@ -43,7 +43,7 @@ def android_forum_get_issue(selected_model_links,selected_dates):
                 converted_date = datetime.datetime.strptime(remove_time, '%b %d, %Y').strftime('%m/%d/%Y')
                 child_node = node.find("div", class_="messageContent")
                 if not selected_dates:
-                    date_list.append(converted_date)
+                    date_list.append(converted_date.strip('\u200e'))
                     heading_name_list.append(thread_name)
                     product_list.append(thread_list[1][0])
                     url_list.append(complete_url)
@@ -53,8 +53,8 @@ def android_forum_get_issue(selected_model_links,selected_dates):
 
                 else:
                     for date in selected_dates:
-                        if date == converted_date:
-                            date_list.append(converted_date)
+                        if date == converted_date.strip('\u200e'):
+                            date_list.append(converted_date.strip('\u200e'))
                             heading_name_list.append(thread_name)
                             product_list.append(thread_list[1][0])
                             url_list.append(complete_url)

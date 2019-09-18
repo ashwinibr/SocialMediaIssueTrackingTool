@@ -91,12 +91,12 @@ class scrapData:
                             if local_date:
                                 if local_date.has_attr('title'):
                                     issue_date = local_date['title'][1:11]
-                                    date_list.append(issue_date)
+                                    date_list.append(issue_date.strip('\u200e'))
                                 else:
                                     pass
                             elif issue_local_date:
                                 issue_date = issue_local_date.get_text()
-                                date_list.append(issue_date)
+                                date_list.append(issue_date.strip('\u200e'))
                         except ValueError:
                             logging.error("error for scraping date in scrapData class")
 
@@ -145,7 +145,7 @@ class scrapData:
                         except ValueError:
                             logging.error("error for scraping date in scrapData class")
 
-                        match = re.search('\d{4}-\d{2}-\d{2}', issue_date)
+                        match = re.search('\d{4}-\d{2}-\d{2}', issue_date.strip('\u200e'))
                         product_date = datetime.datetime.strptime(match.group(), '%Y-%m-%d').date()
                         format_product_date = product_date.strftime('%m/%d/%Y')
 
@@ -156,7 +156,7 @@ class scrapData:
                             #print("date %s", date)
                             if date == format_product_date:
 
-                                date_list.append(issue_date)
+                                date_list.append(issue_date.strip('\u200e'))
                                 thread_link_list.append(url)
 
                                 print("checking %s", url)

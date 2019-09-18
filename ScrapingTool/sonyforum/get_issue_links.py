@@ -43,7 +43,7 @@ class getIssueLinks:
                             #If From and To date selected by user
                             if Date_list:
                                 for date in Date_list:
-                                    if date == format_product_date:
+                                    if date == format_product_date.strip('\u200e'):
                                         # Pagination code: If each issue has more than one page enter this code
                                         if product_container.find("ul", class_="lia-list-standard-inline"):
                                             issue_request = requests.get(issue_url)

@@ -45,7 +45,7 @@ def get_issue_from_gsmarena(selected_model_links,selected_dates):
                 if not selected_dates:
                     url_list.append(complete_url)
                     product_list.append(product_name.text)
-                    date_list.append(modified_date)
+                    date_list.append(modified_date.strip('\u200e'))
                     issue_data, category = generic_category_filter(child_node)
                     user_comment_list.append(issue_data)
                     category_list.append(category)
@@ -53,10 +53,10 @@ def get_issue_from_gsmarena(selected_model_links,selected_dates):
                 # if date selected by user
                 else:
                     for date in selected_dates:
-                        if date == modified_date:
+                        if date == modified_date.strip('\u200e'):
                             url_list.append(complete_url)
                             product_list.append(product_name.text)
-                            date_list.append(modified_date)
+                            date_list.append(modified_date.strip('\u200e'))
                             child_node = issue_container.find("p", class_="uopin")
                             issue_data, category = generic_category_filter(child_node)
                             user_comment_list.append(issue_data)
