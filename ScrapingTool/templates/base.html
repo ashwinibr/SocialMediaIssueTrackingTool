@@ -15,6 +15,12 @@
         <img src="/static/image/icon.jpg" width="50" height="50" class="d-inline-block align-center rounded-circle" alt="">
         <font color="white" style="font-size:25px">Consumer Product Review Tracking Tool</font>
     </fieldset>
+    <form id="form-navbar" method="POST">
+        <div class="btn-group btn-group-lg align-right" role="group" >
+          <button type="submit" name='home_button' value="Submit" class="btn btn-primary" onclick="LoadMain()">Home</button>
+          <button type="submit" name='back_button' value="Submit" class="btn btn-primary" onclick="LoadMain()">Back</button>
+        </div>
+    </form>
   </div>
   <main>
     {% block content %}

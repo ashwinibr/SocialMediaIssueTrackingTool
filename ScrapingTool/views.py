@@ -45,6 +45,12 @@ def brand_view(request):
         logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
         return response
 
+    if request.POST.get('home_button'):
+        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        response = redirect('homepage')
+        logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
+        return response
+
     if request.POST.get('homepage_submit_btn'):
         logging.info("<<<<<<<<< Onclick of Submit button in homepage view >>>>>>>>>>>")
         main_url = request.POST.get('mainurl')
@@ -96,6 +102,12 @@ def mobile_view(request):
     if request.POST.get('back_button'):
         response = redirect('brand/')
         logging.info("<<<<<<<<< BackButton clicked in mobile model name page to brand page view  >>>>>>>>>>>")
+        return response
+
+    if request.POST.get('home_button'):
+        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        response = redirect('homepage')
+        logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('dash_back_button'):
@@ -284,6 +296,12 @@ def series_view(request):
         logging.info("redirecting series page to home page view")
         return response
 
+    if request.POST.get('home_button'):
+        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        response = redirect('homepage')
+        logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
+        return response
+
     if request.POST.get('homepage_submit_btn'):
         main_url = request.POST.get('mainurl')
         print(main_url)
@@ -296,7 +314,7 @@ def series_view(request):
                 file.write(main_url)
         # else if invalid url entered,displays error
         else:
-            error_message = "Invalid URL "
+            error_message = "Unable to Connect to URL"
             logging.error("handling an error message for status code : %s", error_message)
             return render(request, "homepage.html",
                           {"errorvalue": error_message})
@@ -332,9 +350,10 @@ def product_view(request):
         logging.info("redirecting form social media view to series page view")
         return response
 
-    if request.POST.get('dash_back_button'):
-        response = redirect('series/')
-        logging.info("redirecting dashboard page to brand page view")
+    if request.POST.get('home_button'):
+        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        response = redirect('homepage')
+        logging.info("<<<<<<<<< Redirecting from Product Page to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('dashboard_button'):
