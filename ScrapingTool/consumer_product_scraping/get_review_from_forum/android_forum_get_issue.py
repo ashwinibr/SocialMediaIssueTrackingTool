@@ -1,4 +1,6 @@
 import datetime
+from collections import defaultdict
+
 import requests
 
 from bs4 import BeautifulSoup
@@ -16,36 +18,37 @@ def android_forum_get_issue(selected_model_links,selected_dates):
     category_list = []
     user_comment_list = []
     heading_name_list = []
-
     for model_url in selected_model_links:
         pagination_url_list=[]
         pagination_list = pagination_for_user_comment_links(model_url)
         if pagination_list:
             for url in pagination_list:
-                complete_url = ANDROID_FORUM_URL + url
-                pagination_url_list.append(complete_url)
+                pagination_url_list.append(url)
         else:
             pagination_url_list.append(model_url)
 
-        thread_list=get_thread_link_from_android_forum(pagination_url_list)
-        for url in thread_list[0]:
-            complete_url = ANDROID_FORUM_URL + url
+        dic_thread_name = get_thread_link_from_android_forum(pagination_url_list)
+        for thread_url, thread_name in dic_thread_name.items():
+            complete_url = ANDROID_FORUM_URL + thread_url
             soup = parse(complete_url)
             soup_node = soup.find("div", class_="mainContainer_noSidebar")
-            thread_name =""
-            for node in soup_node.find_all("h1"):
-                thread_name = node.text
+            #product_name =""
+            #for node in soup_node.find_all("h1"):
+                #product_name = node.text
             for node in soup.find_all("div",class_="messageInfo primaryContent"):
+
                 child_node_date = node.find("a", class_="datePermalink")
                 comment_date = child_node_date.text
+
                 strip_date=comment_date.strip()
                 remove_time = strip_date[0:12]
                 converted_date = datetime.datetime.strptime(remove_time, '%b %d, %Y').strftime('%m/%d/%Y')
+
                 child_node = node.find("div", class_="messageContent")
                 if not selected_dates:
                     date_list.append(converted_date.strip('\u200e'))
-                    heading_name_list.append(thread_name)
-                    product_list.append(thread_list[1][0])
+                    heading_name_list.append(thread_name[0])
+                    product_list.append(thread_name[1])
                     url_list.append(complete_url)
                     issue_data, category=generic_category_filter(child_node)
                     user_comment_list.append(issue_data)
@@ -53,10 +56,10 @@ def android_forum_get_issue(selected_model_links,selected_dates):
 
                 else:
                     for date in selected_dates:
-                        if date == converted_date.strip('\u200e'):
+                        if date == converted_date:
                             date_list.append(converted_date.strip('\u200e'))
-                            heading_name_list.append(thread_name)
-                            product_list.append(thread_list[1][0])
+                            heading_name_list.append(thread_name[0])
+                            product_list.append(thread_name[1])
                             url_list.append(complete_url)
                             issue_data, category = generic_category_filter(child_node)
                             user_comment_list.append(issue_data)
@@ -76,22 +79,30 @@ def android_forum_get_issue(selected_model_links,selected_dates):
 
 def get_thread_link_from_android_forum(pagination_url_list):
     thread_link_list = []
+    thread_name_list = []
     product_name_list = []
+    dic_thread_name = defaultdict(list)
 
     for url in pagination_url_list:
         soup = parse(url)
-        product_name = ((soup.find("div", class_="titleBar")).text).strip()
+        product_name = (soup.find("div", class_="channel_title")).get_text()
         for thread in soup.find_all("div", class_="listBlock main"):
             for link in thread.find_all("a",class_="PreviewTooltip"):
                 thread_link_list.append(link.attrs['href'])
+                thread_name_list.append(link.get_text())
                 product_name_list.append(product_name)
-    return thread_link_list,product_name_list
+    i = 0
+    for key in thread_link_list:
+        dic_thread_name[key].append(thread_name_list[i])
+        dic_thread_name[key].append(product_name_list[i])
+        i += 1
+
+    return dic_thread_name
 
 
 def pagination_for_user_comment_links(model_url):
     pagination_list = []
-    http_request = requests.get(model_url)
-    soup = BeautifulSoup(http_request.content, "html.parser")
+    soup = parse(model_url)
 
     for node in soup.find_all("div", class_="PageNav"):
         child_node = node.find("span", class_="pageNavHeader")
@@ -103,6 +114,3 @@ def pagination_for_user_comment_links(model_url):
             pagination_list.append(url)
 
     return pagination_list
-
-
-
