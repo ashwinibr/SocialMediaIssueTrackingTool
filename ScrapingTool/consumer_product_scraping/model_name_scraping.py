@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from ScrapingTool.common import GSMARENA_URL
+from ScrapingTool.common import GSMARENA_URL, ANDROID_PIT_FORUM_URL
 from ScrapingTool.parser import parse
 from ScrapingTool.sqlite3_read_write import Write_to_DB
 
@@ -84,8 +84,6 @@ def get_models_names_from_android_forum(soup):
             mobile_model_year_list.append("All")
             model_links = l.find("a")
             mobile_model_links_list.append(model_links.attrs['href'])
-    print(mobile_model_name_list)
-    print(mobile_model_links_list)
     model_dictionary = {"Announced_Year": mobile_model_year_list, "Model_Name": mobile_model_name_list,
                         "Model_Link": mobile_model_links_list}
 
@@ -101,6 +99,67 @@ def get_models_names_from_android_forum(soup):
         dic_model_name[mobile_name_key].append(mobile_model_links_list[j])
         j += 1
     return dic_year,dic_model_name
+
+
+def get_models_names_from_android_pit_forum(soup,url):
+    mobile_model_name_list = []
+    mobile_model_links_list = []
+    mobile_model_year_list = []
+    dic_model_name = defaultdict(list)
+    dic_year = defaultdict(list)
+    sub_cat_link = []
+    if soup.find("a", class_="forumSubcategory"):
+        for subCatLink in soup.find_all("a", class_="forumSubcategory"):
+            sub_cat_link.append("https://www.androidpit.com" + subCatLink.attrs["href"])
+
+    if not sub_cat_link:
+        soup = parse(url)
+        product = soup.find("div", class_="forumHeadingWithFavorite")
+        product_name = product.find("h1")
+        mobile_model_name_list.append(product_name.text)
+        mobile_model_links_list.append(url)
+        mobile_model_year_list.append("All")
+
+    else:
+        for forumLink in sub_cat_link:
+            soup = parse(forumLink)
+            product = soup.find("div", class_="forumHeadingWithFavorite")
+            product_name_head = product.find("h1")
+            if soup.find("a", class_ = "forumSubcategory"):
+                for subCatLink in soup.find_all("a", class_ = "forumSubcategory"):
+                    product_name = subCatLink.find("h3")
+                    if "/" in product_name.text:
+                        mobile_model_name_list.append(product_name_head.text)
+                        mobile_model_links_list.append(subCatLink.attrs["href"])
+                        mobile_model_year_list.append("All")
+                    else:
+                        mobile_model_name_list.append(product_name.text)
+                        mobile_model_links_list.append("https://www.androidpit.com" +subCatLink.attrs["href"])
+                        mobile_model_year_list.append("All")
+            else:
+                soup = parse(forumLink)
+                product = soup.find("div", class_ = "forumHeadingWithFavorite")
+                product_name = product.find("h1")
+
+                mobile_model_name_list.append(product_name.text)
+                mobile_model_links_list.append(forumLink)
+                mobile_model_year_list.append("All")
+
+    model_dictionary = {"Announced_Year": mobile_model_year_list, "Model_Name": mobile_model_name_list,
+                        "Model_Link": mobile_model_links_list}
+
+    Write_to_DB(model_dictionary, "Model_Names")
+
+    i = 0
+    for key in mobile_model_year_list:
+        dic_year[key].append(mobile_model_name_list[i])
+        i += 1
+
+    j = 0
+    for mobile_name_key in mobile_model_name_list:
+        dic_model_name[mobile_name_key].append(mobile_model_links_list[j])
+        j += 1
+    return dic_year, dic_model_name
 
 
 

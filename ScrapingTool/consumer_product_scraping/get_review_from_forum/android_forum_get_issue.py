@@ -31,10 +31,6 @@ def android_forum_get_issue(selected_model_links,selected_dates):
         for thread_url, thread_name in dic_thread_name.items():
             complete_url = ANDROID_FORUM_URL + thread_url
             soup = parse(complete_url)
-            soup_node = soup.find("div", class_="mainContainer_noSidebar")
-            #product_name =""
-            #for node in soup_node.find_all("h1"):
-                #product_name = node.text
             for node in soup.find_all("div",class_="messageInfo primaryContent"):
 
                 child_node_date = node.find("a", class_="datePermalink")

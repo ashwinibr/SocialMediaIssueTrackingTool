@@ -25,3 +25,18 @@ def get_brand_name_from_androidforum(soup,mobile_brand_list,mobile_brand_links_l
     brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
     Write_to_DB(brand_dict, "Mobile_Brands")
     return mobile_brand_list, mobile_brand_links_list
+
+
+def get_brand_name_from_androidpit_forum(soup,mobile_brand_list,mobile_brand_links_list):
+    string = ["General", "AndroidPIT Support (ONLY for the AndroidPIT site, AndroidPIT app and Buzzinga app)","Android",
+              "Android Developer","Other Android Devices and Services (Chromecast, Google Fit etc)","Android Tablets",
+              "Other Android Tablets","Wearable Android Devices","Miscellaneous"]
+
+    for forum_a_links in soup.find_all("a", {"class": "forumOverviewCategoryListLink"}):
+        for forum_name in forum_a_links.find_all("h2"):
+            if (forum_name.text).strip() not in string:
+                mobile_brand_list.append(forum_name.text)
+                mobile_brand_links_list.append(forum_a_links.attrs['href'])
+    brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
+    Write_to_DB(brand_dict, "Mobile_Brands")
+    return mobile_brand_list, mobile_brand_links_list
