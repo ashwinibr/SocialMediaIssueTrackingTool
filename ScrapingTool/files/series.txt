@@ -1,1 +1,1 @@
-/devices/list?m=samsung
+/forum/google-android-phones

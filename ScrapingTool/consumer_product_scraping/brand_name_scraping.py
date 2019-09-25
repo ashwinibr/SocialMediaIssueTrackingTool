@@ -1,7 +1,7 @@
 from ScrapingTool.sqlite3_read_write import Write_to_DB
+import ScrapingTool.mongo_read_write as mongo
 
-
-def get_brand_name_from_gsmarena(soup,mobile_brand_list,mobile_brand_links_list):
+def get_brand_name_from_gsmarena(req_id,soup,mobile_brand_list,mobile_brand_links_list):
 
     for mobile_brand_container in soup.find_all("div", class_="brandmenu-v2 light l-box clearfix"):
         for list_of_brands in mobile_brand_container.find_all("li"):
@@ -11,10 +11,12 @@ def get_brand_name_from_gsmarena(soup,mobile_brand_list,mobile_brand_links_list)
 
     brand_dict ={"Brand_Name":mobile_brand_list, "Link":mobile_brand_links_list}
     Write_to_DB(brand_dict,"Mobile_Brands")
+    collection_name = "Mobile_Brands" + req_id
+    mongo.Write_to_DB(brand_dict,collection_name)
     return mobile_brand_list,mobile_brand_links_list
 
 
-def get_brand_name_from_androidforum(soup,mobile_brand_list,mobile_brand_links_list):
+def get_brand_name_from_androidforum(req_id,soup,mobile_brand_list,mobile_brand_links_list):
     for mobile_brand_container in soup.find_all("div", class_="nodeInfo forumNodeInfo featuredNode brandNode"):
         for list_of_brands in mobile_brand_container.find_all("h3"):
 
@@ -24,10 +26,12 @@ def get_brand_name_from_androidforum(soup,mobile_brand_list,mobile_brand_links_l
 
     brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
     Write_to_DB(brand_dict, "Mobile_Brands")
+    collection_name = "Mobile_Brands" + req_id
+    mongo.Write_to_DB(brand_dict, collection_name)
     return mobile_brand_list, mobile_brand_links_list
 
 
-def get_brand_name_from_androidpit_forum(soup,mobile_brand_list,mobile_brand_links_list):
+def get_brand_name_from_androidpit_forum(req_id,soup,mobile_brand_list,mobile_brand_links_list):
     string = ["General", "AndroidPIT Support (ONLY for the AndroidPIT site, AndroidPIT app and Buzzinga app)","Android",
               "Android Developer","Other Android Devices and Services (Chromecast, Google Fit etc)","Android Tablets",
               "Other Android Tablets","Wearable Android Devices","Miscellaneous"]
@@ -39,4 +43,6 @@ def get_brand_name_from_androidpit_forum(soup,mobile_brand_list,mobile_brand_lin
                 mobile_brand_links_list.append(forum_a_links.attrs['href'])
     brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
     Write_to_DB(brand_dict, "Mobile_Brands")
+    collection_name = "Mobile_Brands" + req_id
+    mongo.Write_to_DB(brand_dict, collection_name)
     return mobile_brand_list, mobile_brand_links_list

@@ -16,6 +16,7 @@ from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
     Get_Chart_Prod_List
+import ScrapingTool.mongo_read_write as mongo
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
@@ -29,6 +30,7 @@ def homepage_view(request):
     """
     homepage_template = loader.get_template('homepage.html')
     logging.info("<<<<<<<<< Rendering in to the Home Page View >>>>>>>>>>>")
+    request.session['request_id'] = mongo.Create_Request_ID()
     return HttpResponse(homepage_template.render())
 
 
@@ -39,6 +41,10 @@ def brand_view(request):
     :param request:
     :return: Returning responce to the user
     """
+    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logging.info(logmsg)
+    req_id = str(request.session.get('request_id'))
+
     if request.POST.get('back_button'):
         logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
         response = redirect('homepage')
@@ -73,7 +79,7 @@ def brand_view(request):
     main_url = file_read.read_links_from_text_file(file)
 
     if main_url:
-        brand_list = get_brand_names(main_url)
+        brand_list = get_brand_names(req_id,main_url)
         logging.info("<<<<<<<List of Mobile Brand names >>>>>>> %s", brand_list[0])
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
@@ -91,7 +97,9 @@ def mobile_view(request):
        :param request:
        :return: Returning responce to the user
        """
-
+    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logging.info(logmsg)
+    req_id = str(request.session.get('request_id'))
     error_message = ""
     info_msg = ""
     successmsg = ""
@@ -102,6 +110,7 @@ def mobile_view(request):
     if request.POST.get('back_button'):
         response = redirect('brand/')
         logging.info("<<<<<<<<< BackButton clicked in mobile model name page to brand page view  >>>>>>>>>>>")
+        request.session['request_id'] = mongo.Create_Request_ID()
         return response
 
     if request.POST.get('home_button'):
@@ -128,7 +137,7 @@ def mobile_view(request):
 
         logging.info("<<<<<<<<< Get mobile names from User selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
-        mobile_list = get_models_names(brand_url)
+        mobile_list = get_models_names(req_id, brand_url)
 
         # Getting year from the list
         for key in mobile_list[0].keys():
@@ -215,7 +224,7 @@ def mobile_view(request):
                         if fromdate <= todate:
                             selected_dates = date_format_change(fromdate, todate)
 
-                            data_information = get_data_from_url(main_url,selected_model_url,selected_dates)
+                            data_information = get_data_from_url(req_id, main_url,selected_model_url,selected_dates)
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -238,7 +247,7 @@ def mobile_view(request):
                     elif request.POST.get("alldates") == "on":
                         print("on")
                         selected_dates = []
-                        data_information = get_data_from_url(main_url, selected_model_url, selected_dates)
+                        data_information = get_data_from_url(req_id, main_url, selected_model_url, selected_dates)
 
                         if data_information:
                             successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -289,6 +298,9 @@ def mobile_view(request):
 @csrf_exempt
 def series_view(request):
     print("in series view")
+    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logging.info(logmsg)
+    req_id = str(request.session.get('request_id'))
     series_list = []
 
     if request.POST.get('back_button'):
@@ -342,12 +354,16 @@ def product_view(request):
     info_msg = ""
     successmsg = ""
     product_names_list = []
+    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logging.info(logmsg)
+    req_id = str(request.session.get('request_id'))
 
     get_issue_link_obj = getIssueLinks()
 
     if request.POST.get('back_button'):
         response = redirect('series/')
         logging.info("redirecting form social media view to series page view")
+        request.session['request_id'] = mongo.Create_Request_ID()
         return response
 
     if request.POST.get('home_button'):

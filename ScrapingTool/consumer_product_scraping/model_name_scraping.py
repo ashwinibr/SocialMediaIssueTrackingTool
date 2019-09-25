@@ -4,9 +4,9 @@ from collections import defaultdict
 from ScrapingTool.common import GSMARENA_URL, ANDROID_PIT_FORUM_URL
 from ScrapingTool.parser import parse
 from ScrapingTool.sqlite3_read_write import Write_to_DB
+import ScrapingTool.mongo_read_write as mongo
 
-
-def get_models_names_from_gsmarena(soup,url):
+def get_models_names_from_gsmarena(req_id,soup,url):
 
     list_page = pagination_for_mobile_brand_list_from_gsmarena(soup,url)
 
@@ -50,6 +50,8 @@ def get_models_names_from_gsmarena(soup,url):
         j += 1
 
     Write_to_DB(model_dictionary,"Model_Names")
+    collection_name = "Model_Names" + req_id
+    mongo.Write_to_DB(model_dictionary, collection_name)
 
     return dic_year,dic_model_name
 
@@ -71,7 +73,7 @@ def pagination_for_mobile_brand_list_from_gsmarena(soup,url):
     return pagination_list
 
 
-def get_models_names_from_android_forum(soup):
+def get_models_names_from_android_forum(req_id,soup):
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
@@ -88,6 +90,8 @@ def get_models_names_from_android_forum(soup):
                         "Model_Link": mobile_model_links_list}
 
     Write_to_DB(model_dictionary, "Model_Names")
+    collection_name = "Model_Names" + req_id
+    mongo.Write_to_DB(model_dictionary, collection_name)
 
     i = 0
     for key in mobile_model_year_list:
@@ -101,7 +105,7 @@ def get_models_names_from_android_forum(soup):
     return dic_year,dic_model_name
 
 
-def get_models_names_from_android_pit_forum(soup,url):
+def get_models_names_from_android_pit_forum(req_id,soup,url):
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
@@ -149,6 +153,8 @@ def get_models_names_from_android_pit_forum(soup,url):
                         "Model_Link": mobile_model_links_list}
 
     Write_to_DB(model_dictionary, "Model_Names")
+    collection_name = "Model_Names" + req_id
+    mongo.Write_to_DB(model_dictionary, collection_name)
 
     i = 0
     for key in mobile_model_year_list:
