@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 import logging
-from imp import reload
+#from imp import reload
 
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.consumer_product_scraping.forum_scraping import \
@@ -19,7 +19,7 @@ from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLink
 #    Get_Chart_Prod_List
 import ScrapingTool.mongo_read_write as mongo
 
-reload(logging)
+#reload(logging)
 logging.basicConfig(filename='server.log', level=logging.DEBUG)
 
 @csrf_exempt
