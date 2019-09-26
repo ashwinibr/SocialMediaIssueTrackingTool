@@ -1,1 +1,1 @@
-/devices/list?m=lenovo
+samsung-phones-9.php
