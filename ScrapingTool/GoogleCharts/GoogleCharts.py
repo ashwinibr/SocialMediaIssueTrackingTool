@@ -1,23 +1,33 @@
-import sqlite3
+#import sqlite3
 from string import Template
+import ScrapingTool.mongo_read_write as mongo
 
 class CreateChart:
-    def __init__(self,Product):
+    def __init__(self, req_id, Product):
         self.template=''
-        self.conn = sqlite3.connect('db.sqlite3')
-        self.cursor = ''
         self.results = []
+        ##SQLite DB Option
+        #self.conn = sqlite3.connect('db.sqlite3')
+        #self.cursor = ''
 
 
-    def Create_Column_Chart(self, Product):
+    def Create_Column_Chart(self, req_id, Product):
         print('running GChart Col ' + Product)
-        query = "SELECT Date, sum(NrOfIssues) from Issues_Count_By_Keyword WHERE Product='{}' GROUP By Date ORDER BY Date ASC".format(Product)
-        
-        self.cursor = self.conn.execute(query)
 
-        for row in self.cursor:
-            self.results.append({'Date': row[0], 'NrOfIssues': row[1]})
+        ##SQLite DB Option
+        # query = "SELECT Date, sum(NrOfIssues) from Issues_Count_By_Keyword WHERE Product='{}' GROUP By Date ORDER BY Date ASC".format(Product)
+        
+        # self.cursor = self.conn.execute(query)
+
+        # for row in self.cursor:
+        #     self.results.append({'Date': row[0], 'NrOfIssues': row[1]})
+
+        ##MongoDB Option
+        collection_name = 'Exported_Data' + str(req_id)
+        self.results = mongo.Get_Chart_Data(collection_name,'Date')
         print(self.results)
+
+        ##Common For Both SQLite and Mongo
         self.template = '''
         {% extends 'base.html' %}
 
@@ -44,7 +54,7 @@ class CreateChart:
 
                 var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
                 chart.draw(data, options);
-        }
+            }
         </script>'''
 
         with open('ScrapingTool\\templates\\dashboard.html', 'w') as html:
@@ -52,16 +62,24 @@ class CreateChart:
             #html.write(Template(self.template).substitute(res=data))
             self.template = Template(self.template).substitute(res=data)
 
-    def Create_Pie_Chart(self, Product):
+    def Create_Pie_Chart(self, req_id, Product):
         print('running GChart Pie ' + Product)
-        self.results=[]
-        query = "SELECT Category, sum(NrOfIssues) from Issues_Count_By_Keyword WHERE Product='{}' GROUP By Category ORDER BY sum(NrOfIssues) DESC".format(Product)
+
+        ##SQLite DB Option
+        # self.results=[]
+        # query = "SELECT Category, sum(NrOfIssues) from Issues_Count_By_Keyword WHERE Product='{}' GROUP By Category ORDER BY sum(NrOfIssues) DESC".format(Product)
         
-        self.cursor = self.conn.execute(query)
+        # self.cursor = self.conn.execute(query)
         
-        for row in self.cursor:
-            self.results.append({'Category': row[0], 'NrOfIssues': row[1]})
+        # for row in self.cursor:
+        #     self.results.append({'Category': row[0], 'NrOfIssues': row[1]})
+
+        ##MongoDB Option
+        collection_name = 'Exported_Data' + str(req_id)
+        self.results = mongo.Get_Chart_Data(collection_name,'Category')
+        print(self.results)
         
+        ##Common For Both SQLite and Mongo
         self.template = self.template + '''
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
@@ -81,7 +99,7 @@ class CreateChart:
 
                 var chart = new google.visualization.PieChart(document.getElementById("piechart_values"));
                 chart.draw(data, options);
-        }
+            }
         </script>'''
         html_template = '''
         <body class="dashboard-contents">

@@ -7,7 +7,7 @@ import sqlite3
 import pandas as pd
 from pandas import ExcelWriter
 from openpyxl.workbook import Workbook
-from ScrapingTool.sqlite3_read_write import Update_Issue_Count_For_Key, Delete_Issue_Count
+#from ScrapingTool.sqlite3_read_write import Update_Issue_Count_For_Key, Delete_Issue_Count
 import ScrapingTool.mongo_read_write as mongo
 
 class fileReaderWriter:
@@ -28,21 +28,21 @@ class fileReaderWriter:
             writer.save()
             logging.info("data is saved in excel")
 
-            # Load to SQL DB
-            conn = sqlite3.connect("db.sqlite3")
-            data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
-            conn.commit()
+            # # Load to SQL DB
+            # conn = sqlite3.connect("db.sqlite3")
+            # data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
+            # conn.commit()
 
-            # Create Issues_Count_By_Keyword Table in SQL
-            excel_file = 'ScrapingTool/files/social_keywords.xlsx'
-            dataset = pd.read_excel(excel_file)
-            df = pd.DataFrame(dataset)
-            data = df.get("Category")
-            Delete_Issue_Count()
-            for keyward in data:
-                Update_Issue_Count_For_Key(keyward)
-            conn.commit()
-            conn.close()
+            # # Create Issues_Count_By_Keyword Table in SQL
+            # excel_file = 'ScrapingTool/files/social_keywords.xlsx'
+            # dataset = pd.read_excel(excel_file)
+            # df = pd.DataFrame(dataset)
+            # data = df.get("Category")
+            # Delete_Issue_Count()
+            # for keyward in data:
+            #     Update_Issue_Count_For_Key(keyward)
+            # conn.commit()
+            # conn.close()
 
             # Create Issues_Count_By_Keyword Table in MongoDB
             new_table_name = 'Issues_Count_By_Keyword' + req_id

@@ -14,8 +14,8 @@ from ScrapingTool.file_read_write import fileReaderWriter
 from ScrapingTool.logics.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
-from ScrapingTool.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
-    Get_Chart_Prod_List
+#from ScrapingTool.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
+#    Get_Chart_Prod_List
 import ScrapingTool.mongo_read_write as mongo
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
@@ -126,7 +126,8 @@ def mobile_view(request):
 
     if request.POST.get('brand_submit'):
         logging.info("<<<<<<<<< Onclick of Submit button in brandselection view >>>>>>>>>>>")
-        brand_dict = GetData_In_Dict("Mobile_Brands")
+        collection_name = "Mobile_Brands" + str(req_id)
+        brand_dict = mongo.GetData_In_Dict(collection_name)
 
         selected_brand = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
@@ -154,7 +155,8 @@ def mobile_view(request):
     if request.POST.get('updatelist'):
         logging.info("<<<<<<<<< Onclick of update list >>>>>>>>>>>")
         filter_value = request.POST.get('years')
-        mobile_list = GetData_In_Tuple("Model_Names")
+        collection_name = "Model_Names" + str(req_id)
+        mobile_list = mongo.GetData_In_Tuple(collection_name)
         announced_year = ['Latest Released']
 
         for year in mobile_list[0]:
@@ -172,12 +174,14 @@ def mobile_view(request):
                 mobile_list_display.extend(mobile_list[0][year])
 
     if request.POST.get('dashboard_button'):
-        ProdList = Get_Chart_Prod_List()
+        collection_name = "Exported_Data" + str(req_id)
+        ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     if request.POST.get('social_media_button'):
         logging.info("onclick of social media submit button")
-        mobile_list = GetData_In_Tuple("Model_Names")
+        collection_name = "Model_Names" + str(req_id)
+        mobile_list = mongo.GetData_In_Tuple(collection_name)
         mobile_dict = mobile_list[1]
 
         announced_year = ['Latest Released']
@@ -228,10 +232,11 @@ def mobile_view(request):
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
-                                ProdList = Get_Chart_Prod_List()
-                                GChart = CreateChart(ProdList[0])
-                                GChart.Create_Column_Chart(ProdList[0])
-                                GChart.Create_Pie_Chart(ProdList[0])
+                                collection_name = "Exported_Data" + str(req_id)
+                                ProdList = mongo.Get_Chart_Prod_List(collection_name)
+                                GChart = CreateChart(req_id,ProdList[0])
+                                GChart.Create_Column_Chart(req_id,ProdList[0])
+                                GChart.Create_Pie_Chart(req_id,ProdList[0])
                                 logging.info(
                                     "displaying an success message after scraping data from website : %s",
                                     successmsg)
@@ -251,10 +256,11 @@ def mobile_view(request):
 
                         if data_information:
                             successmsg = "Data extracted successfully, Click download to get data in excel"
-                            ProdList = Get_Chart_Prod_List()
-                            GChart = CreateChart(ProdList[0])
-                            GChart.Create_Column_Chart(ProdList[0])
-                            GChart.Create_Pie_Chart(ProdList[0])
+                            collection_name = "Exported_Data" + str(req_id)
+                            ProdList = mongo.Get_Chart_Prod_List(collection_name)
+                            GChart = CreateChart(req_id,ProdList[0])
+                            GChart.Create_Column_Chart(req_id,ProdList[0])
+                            GChart.Create_Pie_Chart(req_id,ProdList[0])
                             logging.info(
                                 "displaying an success message after scraping data from website ")
                         else:
@@ -284,10 +290,11 @@ def mobile_view(request):
     if request.POST.get("gen_graph"):
         SelProduct = request.POST.get("product")
         print('Product Selected for Graph ' + SelProduct)
-        GChart = CreateChart(SelProduct)
-        GChart.Create_Column_Chart(SelProduct)
-        GChart.Create_Pie_Chart(SelProduct)
-        ProdList = Get_Chart_Prod_List()
+        GChart = CreateChart(req_id,SelProduct)
+        GChart.Create_Column_Chart(req_id,SelProduct)
+        GChart.Create_Pie_Chart(req_id,SelProduct)
+        collection_name = "Exported_Data" + str(req_id)
+        ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     return render(request, "socialmediascraping.html",
@@ -300,7 +307,7 @@ def series_view(request):
     print("in series view")
     logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
     logging.info(logmsg)
-    req_id = str(request.session.get('request_id'))
+    #req_id = str(request.session.get('request_id'))
     series_list = []
 
     if request.POST.get('back_button'):
@@ -373,16 +380,18 @@ def product_view(request):
         return response
 
     if request.POST.get('dashboard_button'):
-        ProdList = Get_Chart_Prod_List()
+        collection_name = "Exported_Data" + str(req_id)
+        ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     if request.POST.get("gen_graph"):
         SelProduct = request.POST.get("product")
         print('Product Selected for Graph ' + SelProduct)
-        GChart = CreateChart(SelProduct)
-        GChart.Create_Column_Chart(SelProduct)
-        GChart.Create_Pie_Chart(SelProduct)
-        ProdList = Get_Chart_Prod_List()
+        GChart = CreateChart(req_id,SelProduct)
+        GChart.Create_Column_Chart(req_id,SelProduct)
+        GChart.Create_Pie_Chart(req_id,SelProduct)
+        collection_name = "Exported_Data" + str(req_id)
+        ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     file_read = fileReaderWriter()
@@ -457,17 +466,18 @@ def product_view(request):
                                 list_of_dates = date_format_change(fromdate, todate)
                                 print("++++++++++++++++++listdates", list_of_dates)
                                 # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
-                                data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates,
+                                data_dictionary = get_issue_link_obj.issueLinksPagination(req_id, list_of_dates,
                                                                                           product_links_list)
 
                                 print(data_dictionary)
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
-                                    ProdList = Get_Chart_Prod_List()
-                                    GChart = CreateChart(ProdList[0])
-                                    GChart.Create_Column_Chart(ProdList[0])
-                                    GChart.Create_Pie_Chart(ProdList[0])
+                                    collection_name = "Exported_Data" + str(req_id)
+                                    ProdList = mongo.Get_Chart_Prod_List(collection_name)
+                                    GChart = CreateChart(req_id,ProdList[0])
+                                    GChart.Create_Column_Chart(req_id,ProdList[0])
+                                    GChart.Create_Pie_Chart(req_id,ProdList[0])
                                     logging.info(
                                         "displaying an success message after scraping data from website : %s",
                                         successmsg)
@@ -484,12 +494,13 @@ def product_view(request):
                         elif request.POST.get("alldates") == "on":
                             print("on")
                             list_of_dates = []
-                            get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
+                            get_issue_link_obj.issueLinksPagination(req_id, list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
-                            ProdList = Get_Chart_Prod_List()
-                            GChart = CreateChart(ProdList[0])
-                            GChart.Create_Column_Chart(ProdList[0])
-                            GChart.Create_Pie_Chart(ProdList[0])
+                            collection_name = "Exported_Data" + str(req_id)
+                            ProdList = mongo.Get_Chart_Prod_List(collection_name)
+                            GChart = CreateChart(req_id,ProdList[0])
+                            GChart.Create_Column_Chart(req_id,ProdList[0])
+                            GChart.Create_Pie_Chart(req_id,ProdList[0])
                             logging.info(
                                 "displaying an success message after scraping data from website : %s",
                                 successmsg)

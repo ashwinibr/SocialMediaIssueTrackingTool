@@ -81,6 +81,17 @@ def Get_Chart_Prod_List(table_name):
         prod_list.append(r['_id']['Product'])
     return prod_list
 
+def Get_Chart_Data(table_name,group_by_column):
+    collection = Create_Mongodb_Collection(table_name)
+
+    result = collection.aggregate([{"$group" : {"_id": {str(group_by_column): "$"+str(group_by_column)},"NrOfIssues": {"$sum": 1}}},{"$sort": {"NrOfIssues": -1}}])
+    result_list = []
+    for r in result:
+        temp_dict = r['_id']
+        temp_dict['NrOfIssues'] = r['NrOfIssues'] 
+        result_list.append(temp_dict)
+    return result_list
+
 def GetData_In_Dict(table_name):
     collection = Create_Mongodb_Collection(table_name)
 

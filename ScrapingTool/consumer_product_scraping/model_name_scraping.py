@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from ScrapingTool.common import GSMARENA_URL, ANDROID_PIT_FORUM_URL
 from ScrapingTool.parser import parse
-from ScrapingTool.sqlite3_read_write import Write_to_DB
+#from ScrapingTool.sqlite3_read_write import Write_to_DB
 import ScrapingTool.mongo_read_write as mongo
 
 def get_models_names_from_gsmarena(req_id,soup,url):
@@ -21,7 +21,7 @@ def get_models_names_from_gsmarena(req_id,soup,url):
             for l in mobile_model_container.find_all("li"):
                 mobile_model_year = l.find("img")
                 year_string = mobile_model_year.attrs["title"]
-                split_year = re.search("\.?([^\.]*Announced[^\.]*)", year_string)
+                split_year = re.search(r"\.?([^\.]*Announced[^\.]*)", year_string)
                 if split_year is not None:
                     pattern = re.compile(r"(\w+)$")
                     has = pattern.search(split_year.group(1))
@@ -49,7 +49,7 @@ def get_models_names_from_gsmarena(req_id,soup,url):
         dic_model_name[mobile_name_key].append(mobile_model_links_list[j])
         j += 1
 
-    Write_to_DB(model_dictionary,"Model_Names")
+    #Write_to_DB(model_dictionary,"Model_Names")
     collection_name = "Model_Names" + req_id
     mongo.Write_to_DB(model_dictionary, collection_name)
 
@@ -89,7 +89,7 @@ def get_models_names_from_android_forum(req_id,soup):
     model_dictionary = {"Announced_Year": mobile_model_year_list, "Model_Name": mobile_model_name_list,
                         "Model_Link": mobile_model_links_list}
 
-    Write_to_DB(model_dictionary, "Model_Names")
+    #Write_to_DB(model_dictionary, "Model_Names")
     collection_name = "Model_Names" + req_id
     mongo.Write_to_DB(model_dictionary, collection_name)
 
@@ -152,7 +152,7 @@ def get_models_names_from_android_pit_forum(req_id,soup,url):
     model_dictionary = {"Announced_Year": mobile_model_year_list, "Model_Name": mobile_model_name_list,
                         "Model_Link": mobile_model_links_list}
 
-    Write_to_DB(model_dictionary, "Model_Names")
+    #Write_to_DB(model_dictionary, "Model_Names")
     collection_name = "Model_Names" + req_id
     mongo.Write_to_DB(model_dictionary, collection_name)
 

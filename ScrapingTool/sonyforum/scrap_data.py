@@ -16,7 +16,7 @@ from ScrapingTool.file_read_write import fileReaderWriter
 class scrapData:
     logging.basicConfig(level=logging.DEBUG)
 
-    def get_issue_data(self,issue_link,selected_date_list):
+    def get_issue_data(self,req_id,issue_link,selected_date_list):
         #creating a list to store all the details
         author_rank_list = []
         user_name_list = []
@@ -145,7 +145,7 @@ class scrapData:
                         except ValueError:
                             logging.error("error for scraping date in scrapData class")
 
-                        match = re.search('\d{4}-\d{2}-\d{2}', issue_date.strip('\u200e'))
+                        match = re.search(r'\d{4}-\d{2}-\d{2}', issue_date.strip(r'\u200e'))
                         product_date = datetime.datetime.strptime(match.group(), '%Y-%m-%d').date()
                         format_product_date = product_date.strftime('%m/%d/%Y')
 
@@ -233,7 +233,7 @@ class scrapData:
 
         file_writer = fileReaderWriter()
         #Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
-        file_writer.write_data_using_pandas(data_dictionary)
+        file_writer.write_data_using_pandas(req_id,data_dictionary)
         return data_dictionary
 
 

@@ -1,4 +1,4 @@
-from ScrapingTool.sqlite3_read_write import Write_to_DB
+#from ScrapingTool.sqlite3_read_write import Write_to_DB
 import ScrapingTool.mongo_read_write as mongo
 
 def get_brand_name_from_gsmarena(req_id,soup,mobile_brand_list,mobile_brand_links_list):
@@ -10,7 +10,7 @@ def get_brand_name_from_gsmarena(req_id,soup,mobile_brand_list,mobile_brand_link
                 mobile_brand_links_list.append(brand_links.attrs['href'])
 
     brand_dict ={"Brand_Name":mobile_brand_list, "Link":mobile_brand_links_list}
-    Write_to_DB(brand_dict,"Mobile_Brands")
+    #Write_to_DB(brand_dict,"Mobile_Brands")
     collection_name = "Mobile_Brands" + req_id
     mongo.Write_to_DB(brand_dict,collection_name)
     return mobile_brand_list,mobile_brand_links_list
@@ -25,7 +25,7 @@ def get_brand_name_from_androidforum(req_id,soup,mobile_brand_list,mobile_brand_
                 mobile_brand_links_list.append(brand_name.attrs['href'])
 
     brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
-    Write_to_DB(brand_dict, "Mobile_Brands")
+    #Write_to_DB(brand_dict, "Mobile_Brands")
     collection_name = "Mobile_Brands" + req_id
     mongo.Write_to_DB(brand_dict, collection_name)
     return mobile_brand_list, mobile_brand_links_list
@@ -42,7 +42,7 @@ def get_brand_name_from_androidpit_forum(req_id,soup,mobile_brand_list,mobile_br
                 mobile_brand_list.append(forum_name.text)
                 mobile_brand_links_list.append(forum_a_links.attrs['href'])
     brand_dict = {"Brand_Name": mobile_brand_list, "Link": mobile_brand_links_list}
-    Write_to_DB(brand_dict, "Mobile_Brands")
+    #Write_to_DB(brand_dict, "Mobile_Brands")
     collection_name = "Mobile_Brands" + req_id
     mongo.Write_to_DB(brand_dict, collection_name)
     return mobile_brand_list, mobile_brand_links_list
