@@ -1,4 +1,4 @@
-# Create your views here.
+ # Create your views here.
 import datetime
 from django.http import HttpResponse
 
@@ -98,11 +98,38 @@ def mobile_view(request):
     now = datetime.datetime.now()
     mobile_list_display = []
     announced_year = []
+    
 
     if request.POST.get('back_button'):
-        response = redirect('brand/')
-        logging.info("<<<<<<<<< BackButton clicked in mobile model name page to brand page view  >>>>>>>>>>>")
-        return response
+        print(request.session.get('session'))
+        if(request.session.get('session')=='mobile-view'):
+            response = redirect('brand/')
+            logging.info("<<<<<<<<< BackButton clicked in mobile model name page to brand page view  >>>>>>>>>>>")
+            return response
+        else:
+            filter_value = 'Latest Released'
+            mobile_list = GetData_In_Tuple("Model_Names")
+            announced_year = ['Latest Released']
+
+            for year in mobile_list[0]:
+                announced_year.append(year)
+
+            if (filter_value) == 'Latest Released':
+                yearlist = [str(now.year), str(now.year - 1), str(now.year - 2)]
+            else:
+                yearlist = [filter_value]
+
+            if "All" in announced_year:
+                mobile_list_display.extend(mobile_list[0]["All"])
+            else:
+                for year in yearlist:
+                    mobile_list_display.extend(mobile_list[0][year])
+            successmsg = "Data extracted successfully, Click download to get data in excel"
+            request.session['session']='mobile-view' 
+            return render(request, "socialmediascraping.html",
+                    {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
+                    "infomsg": info_msg, 'announcedyear': announced_year})
+
 
     if request.POST.get('home_button'):
         logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
@@ -110,12 +137,8 @@ def mobile_view(request):
         logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
         return response
 
-    if request.POST.get('dash_back_button'):
-        response = redirect('brand/')
-        logging.info("<<<<<<<<< Redirecting dashboard page to brand page view >>>>>>>>>>>")
-        return response
-
     if request.POST.get('brand_submit'):
+        request.session['session']='mobile-view' 
         logging.info("<<<<<<<<< Onclick of Submit button in brandselection view >>>>>>>>>>>")
         brand_dict = GetData_In_Dict("Mobile_Brands")
 
@@ -164,6 +187,8 @@ def mobile_view(request):
 
     if request.POST.get('dashboard_button'):
         ProdList = Get_Chart_Prod_List()
+        request.session['session']='dashboard-view' 
+        print(request.session.get('session'))
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     if request.POST.get('social_media_button'):
