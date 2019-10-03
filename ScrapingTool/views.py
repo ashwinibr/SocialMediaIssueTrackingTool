@@ -78,7 +78,7 @@ def brand_view(request):
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
     else:
-        error_message = "Invalid URL"
+        error_message = "Unable to Connect to URL"
         logging.error("Handling an error message for empty brand name : %s", error_message)
         return render(request, "homepage.html", {"errorvalue": error_message})
 
@@ -355,7 +355,7 @@ def series_view(request):
         return render(request, "series.html",
                       {"productseries": series_list})
     else:
-        error_message = "Invalid URL"
+        error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty series dictionary : %s", error_message)
         return render(request, "homepage.html",
                       {"errorvalue": error_message})
@@ -529,7 +529,7 @@ def product_view(request):
                        "infomsg": info_msg})
 
     else:
-        error_message = "Invalid URL"
+        error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty product dictionary : %s", error_message)
         return render(request, "homepage.html",
                       {"errorvalue": error_message})

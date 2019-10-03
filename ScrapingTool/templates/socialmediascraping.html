@@ -1,31 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-    <body id="social-media-content-container" class="social-media-container" onload="DownloadOnOff(), YearsDropDownOnOff()">
+    <body id="social-media-content-container" class="social-media-container" onload="Datelimit(), DownloadOnOff(), YearsDropDownOnOff(), disble_selectAll()">
         <div class="social-media-container-product-list">
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
             <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-            <script>
-              $( function() {
-                if ($( "#fromdate" ).type!='date')
-                    $( "#fromdate" ).datepicker({ dateFormat: 'yy-mm-dd', maxDate: 0});                        
-                    $( "#todate" ).datepicker({ dateFormat: 'yy-mm-dd', maxDate: 0})
-                } );                                         
-            </script>            
             <script language="JavaScript">
                 function Datelimit() {
                         fromdate.max = new Date().toISOString().split("T")[0];
                         todate.max = new Date().toISOString().split("T")[0];
-                        document.getElementById("successmsg").innerHTML = '';
-                        document.getElementById("douwnload_button").style.visibility="hidden";                        
-                        document.getElementById("dashboard_button").style.visibility="hidden";
-                        document.getElementById("errorvalue").innerHTML = '';                                          
-                        document.getElementById("infomsg").innerHTML = '';                                          
-
                 }
-
                 function clearDateErr() {
                     if(document.getElementById("alldates").checked) {
                         document.getElementById("errorfrom").innerHTML = '';
@@ -44,9 +30,23 @@
                     }
                 }
 
+                function limitToDate(){
+                    var valueDatefrom =  new Date(document.getElementById('fromdate').value);
+                    var valueDateto =  new Date(document.getElementById('todate').value);
+                    var diff =  parseInt((valueDateto-valueDatefrom) / (1000 * 60 * 60 * 24), 10); 
+                    if(diff>15){
+                        alert("You have selected "+diff+' days, Please Select Date Range upto 15 Days!');
+                    }
+                }
+
                 function enable_dates() {
                         document.getElementById("fromdate").disabled = false;
                         document.getElementById("todate").disabled = false;
+                }
+
+                function disble_selectAll(){
+                    document.getElementById("select-all").style.display="none";
+                    document.getElementById("allproducts").style.display="none";
                 }
 
                 function DownloadOnOff() {
@@ -58,7 +58,7 @@
                         }
                         else{
                             document.getElementById("douwnload_button").style.visibility="visible";
-                            document.getElementById("dashboard_button").style.visibility="visible";
+                            document.getElementById("dashboard_button").style.display="none";
                         }
                 }
 
@@ -82,7 +82,6 @@
                         document.getElementById("errorfrom").innerHTML = 'Enter Valid Date';
                         document.getElementById("errorto").innerHTML = 'Enter Valid Date';
                     }
-
                 }
 
                 function Loader(){
@@ -101,6 +100,25 @@
                             document.getElementById("years-button").style.visibility="visible";
                         }
                 }
+
+                function checkBoxLimit() {
+                    var checkBoxGroup = document.forms['socialmedia-form']['product[]'];			
+                    var limit = 5;
+                    for (var i = 0; i < checkBoxGroup.length; i++) {
+                        checkBoxGroup[i].onclick = function() {
+                            var checkedcount = 0;
+                            for (var i = 0; i < checkBoxGroup.length; i++) {
+                                checkedcount += (checkBoxGroup[i].checked) ? 1 : 0;
+                            }
+                            if (checkedcount > limit) {
+                                console.log("You can select maximum of " + limit + " checkboxes.");
+                                alert("You can select maximum of " + limit + " checkboxes.");						
+                                this.checked = false;
+                            }
+                        }
+                    }
+                }
+
             </script>
             <div id="content-container" class="container-fluid scraping-card">
                 <div class="card">                
@@ -119,34 +137,34 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">To Date:</span> 
                                             </div>
-                                        <input type="date" class="form-control" name="todate" id="todate" onblur="checkTextFieldFrom();">
+                                        <input type="date" class="form-control" name="todate" id="todate" onblur="checkTextFieldFrom(); limitToDate();">
                                     </div>
                                     <span id="errorto" style="color:red"></span><br>
-                                    <input type="checkbox" id="alldates" name="alldates" onchange="clearDateErr()"> Select all Dates<br><br>
+                                    <div id="select-all" class="select-all">
+                                        <input type="checkbox" id="alldates" name="alldates" onchange="clearDateErr()"> Select all Dates<br><br>
+                                    </div>
                                 </div>
                             </fieldset>
                             <fieldset>
                                 <div class="product-lis">
                                     <label> Select Product:</label>
                                         <div  id="years-dropdown" align="right">
-                                        <label align="right">Filter By:</label>
-                                        <select name="years" id="years-dropdown" class="years-dropdown">
-                                            {% for year in announcedyear %}
-                                            <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
-                                            {%endfor %}
-                                        </select>
-                                        <button type="submit" id="years-button" name="updatelist" value='submit'>Update List</button>
+                                            <label align="right">Filter By:</label>
+                                            <select name="years" id="years-dropdown" class="years-dropdown">
+                                                {% for year in announcedyear %}
+                                                <option type = "option" name="years" value="{{year}}">{{year}}</option><br>
+                                                {%endfor %}
+                                            </select>
+                                            <button type="submit" id="years-button" name="updatelist" value='submit'>Update List</button>
                                         </div>
-                                    <br><br>
-                                </div>
-
-                                <div class="b">
-                                    <div class="newspaper">
-                                    <div class="a"><div class="loader" id="loader"></div></div>
-                                    <input type="checkbox" name="allproducts" onClick="toggle(this)"> Select All Products<br>
-                                    {% for names in productname %}
-                                    <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}}<br>
-                                    {%endfor %}
+                                        <div class="newspaper">
+                                        <div class="a"><div class="loader" id="loader"></div></div>
+                                        <span id="allproducts" class="allproducts">
+                                            <input type="checkbox" name="allproducts" onClick="toggle(this)">Select All Products
+                                        </span>
+                                        {% for names in productname %}
+                                        <input type = "checkbox" name="product[]" value="{{names}}" onchange="ProdSelection()"> {{names}}<br>
+                                        {%endfor %}
                                     </div>
                                 </div>
                                 <br>
@@ -159,6 +177,7 @@
                             <t id="infomsg" style="color:#ff7f27">{{infomsg}}</t>
                         </div>
                     </form>
+                    <script type="text/javascript">checkBoxLimit()</script>
                 </div>
             </div>
         </div>
