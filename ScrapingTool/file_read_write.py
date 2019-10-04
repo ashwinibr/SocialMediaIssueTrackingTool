@@ -49,6 +49,6 @@ class fileReaderWriter:
         try:
             conn = urllib.request.urlopen(url)
             return conn.getcode()
-        except:
-            logging.error("status code check")
+        except ConnectionRefusedError as e:
+            logging.error("status code check" , e)
             pass
