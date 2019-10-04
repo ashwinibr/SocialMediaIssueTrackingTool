@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <body id="social-media-content-container" class="social-media-container" onload="Datelimit(), DownloadOnOff(), YearsDropDownOnOff(), disble_selectAll()">
+    <body id="social-media-content-container" class="social-media-container" onload="disble_selectAll(), Datelimit(), DownloadOnOff(), YearsDropDownOnOff()">
         <div class="social-media-container-product-list">
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,8 +9,8 @@
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
             <script language="JavaScript">
                 function Datelimit() {
-                        fromdate.max = new Date().toISOString().split("T")[0];
-                        todate.max = new Date().toISOString().split("T")[0];
+                    fromdate.max = new Date().toISOString().split("T")[0];
+                    todate.max = new Date().toISOString().split("T")[0];
                 }
                 function clearDateErr() {
                     if(document.getElementById("alldates").checked) {
@@ -55,10 +55,25 @@
                         if (checkSuccess==""){
                             document.getElementById("douwnload_button").style.visibility="hidden";
                             document.getElementById("dashboard_button").style.visibility="hidden";
+                            var info = "{{infomsg}}"
+                            var error = "{{errorvalue}}"
+
+                            if(info){
+                                console.log(info);
+                                alert(info);    	
+                            }
+                            else if(error){
+                                console.log(error);
+                                alert(error);
+                            }
+                            else{}
                         }
                         else{
                             document.getElementById("douwnload_button").style.visibility="visible";
                             document.getElementById("dashboard_button").style.display="none";
+                            var success = "{{successmsg}}"
+                            console.log(success);
+                            alert(success);
                         }
                 }
 
