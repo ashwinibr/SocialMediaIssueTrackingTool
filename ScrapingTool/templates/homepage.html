@@ -33,10 +33,14 @@
                         <option type="option" id="id_main_url" name="mainurl" value="https://www.androidpit.com//">https://www.androidpit.com</option>
                     </select>
                 </div>
-                <div>
-                    <span id="errorvalue" style="color:red">{{errorvalue}}</span>                                       
-                </div>
                 <br><input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
+                {% if messages %}
+                {% for message in messages %}
+                <script>
+                    alert('{{ message }}');
+                </script>
+                {% endfor %}
+                {% endif %}
             </form>            
         </div>
     </div>

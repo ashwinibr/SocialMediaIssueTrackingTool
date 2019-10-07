@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 import logging
 
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
@@ -27,10 +28,10 @@ def homepage_view(request):
     :param request:
     :return: rendering homepage html to display user support view
     """
-    homepage_template = loader.get_template('homepage.html')
+    #homepage_template = loader.get_template('homepage.html')
     logging.info("<<<<<<<<< Rendering in to the Home Page View >>>>>>>>>>>")
-    return HttpResponse(homepage_template.render())
-
+    #return HttpResponse(homepage_template.render())
+    return render(request,'homepage.html')
 
 @csrf_exempt
 def brand_view(request):
@@ -63,10 +64,10 @@ def brand_view(request):
             with open("ScrapingTool/files/mainurl.txt", "w") as file:
                 file.write(main_url)
         else:
-            error_message = "Invalid URL"
+            error_message = "Unable to connect to URL"
             logging.error("handling an error message for status code : %s", error_message)
-            return render(request, "homepage.html",
-                          {"errorvalue": error_message})
+            messages.error(request,error_message)
+            return redirect('homepage')
 
     file_read = fileReaderWriter()
     file = open("ScrapingTool/files/mainurl.txt", "r")
@@ -80,7 +81,8 @@ def brand_view(request):
     else:
         error_message = "Unable to Connect to URL"
         logging.error("Handling an error message for empty brand name : %s", error_message)
-        return render(request, "homepage.html", {"errorvalue": error_message})
+        messages.error(request,'Unable to connect to URL')
+        return redirect('homepage')
 
 
 @csrf_exempt
@@ -341,8 +343,8 @@ def series_view(request):
         else:
             error_message = "Unable to Connect to URL"
             logging.error("handling an error message for status code : %s", error_message)
-            return render(request, "homepage.html",
-                          {"errorvalue": error_message})
+            messages.error(request,error_message)
+            return redirect('homepage')
 
     # Call get_dictionary_data() method to get series names
     series = getProductNamesAndLinks()
@@ -357,8 +359,8 @@ def series_view(request):
     else:
         error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty series dictionary : %s", error_message)
-        return render(request, "homepage.html",
-                      {"errorvalue": error_message})
+        messages.error(request,error_message)
+        return redirect('homepage')
 
 
 @csrf_exempt
@@ -531,8 +533,8 @@ def product_view(request):
     else:
         error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty product dictionary : %s", error_message)
-        return render(request, "homepage.html",
-                      {"errorvalue": error_message})
+        messages.error(request,error_message)
+        return redirect('homepage')
 
 
 
