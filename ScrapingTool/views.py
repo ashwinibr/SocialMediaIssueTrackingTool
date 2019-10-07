@@ -61,8 +61,7 @@ def brand_view(request):
         logging.debug("Connection status code : %s", status_code)
 
         if status_code == 200:
-            with open("ScrapingTool/files/mainurl.txt", "w") as file:
-                file.write(main_url)
+            request.session['mainurl'] = main_url
         else:
             logging.debug("Connection status code : %s", status_code)
             error_message = "Unable to connect to URL"
@@ -70,9 +69,7 @@ def brand_view(request):
             messages.error(request,error_message)
             return redirect('homepage')
 
-    file_read = fileReaderWriter()
-    file = open("ScrapingTool/files/mainurl.txt", "r")
-    main_url = file_read.read_links_from_text_file(file)
+    main_url = str(request.session.get('mainurl'))
 
     if main_url:
         brand_list = get_brand_names(main_url)
@@ -150,8 +147,7 @@ def mobile_view(request):
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
         brand_url = brand_dict[selected_brand[0]]
 
-        with open("ScrapingTool/files/series.txt", "w") as file:
-            file.write(brand_url)
+        request.session['series']=brand_url
 
         logging.info("<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
@@ -212,9 +208,7 @@ def mobile_view(request):
             for year in yearlist:
                 mobile_list_display.extend(mobile_list[0][year])
 
-        file_read = fileReaderWriter()
-        file = open("ScrapingTool/files/mainurl.txt", "r")
-        main_url = file_read.read_links_from_text_file(file)
+        main_url = str(request.session.get('mainurl'))
 
         todate = request.POST.get('todate')
         fromdate = request.POST.get('fromdate')
@@ -339,8 +333,7 @@ def series_view(request):
 
         # if valid url entered,write it in to url.txt file
         if status_code == 200:
-            with open("ScrapingTool/files/mainurl.txt", "w") as file:
-                file.write(main_url)
+            request.session['mainurl']=main_url
         # else if invalid url entered,displays error
         else:
             error_message = "Unable to Connect to URL"
@@ -350,7 +343,8 @@ def series_view(request):
 
     # Call get_dictionary_data() method to get series names
     series = getProductNamesAndLinks()
-    series_dictionary = series.get_dictionary_data()
+    url = str(request.session.get('mainurl'))+"/t5/Phones-Tablets/ct-p/Phones"
+    series_dictionary = series.get_dictionary_data(url)
     if series_dictionary:
         for series_name in series_dictionary.keys():
             logging.debug("iterate series names : %s", series_name)
@@ -398,25 +392,24 @@ def product_view(request):
         ProdList = Get_Chart_Prod_List()
         return render(request, "dashboard.html", {"product_list": ProdList})
 
-    file_read = fileReaderWriter()
+    #file_read = fileReaderWriter()
     get_product_links = getProductNamesAndLinks()
 
     # On click of series button
     if request.POST.get('series_button'):
         logging.info("series button clicked")
         series_list = request.POST.getlist('series[]')
-        with open("ScrapingTool/files/series.txt", "w") as file:
-            # Call get_dictionary_data() method to get series link for selected series name by user
-            series = getProductNamesAndLinks()
-            series_dictionary = series.get_dictionary_data()
-            for series_name, series_links in series_dictionary.items():
-                for list_of_series in series_list:
-                    if list_of_series == series_name:
-                        logging.debug("selected series link %s", series_links)
-                        file.write(series_links)
+        # Call get_dictionary_data() method to get series link for selected series name by user
+        series = getProductNamesAndLinks()
+        url = str(request.session.get('mainurl'))+"/t5/Phones-Tablets/ct-p/Phones"
+        series_dictionary = series.get_dictionary_data(url)
+        for series_name, series_links in series_dictionary.items():
+            for list_of_series in series_list:
+                if list_of_series == series_name:
+                    logging.debug("selected series link %s", series_links)
+                    request.session['series']=series_links
 
-    file = open("ScrapingTool/files/series.txt", "r")
-    series_url = file_read.read_links_from_text_file(file)
+    series_url = str(request.session.get('series'))
     logging.info("Series Selected By User : %s",series_url)
     product_data_dictionary = get_product_links.get_links_for_products(series_url)
 

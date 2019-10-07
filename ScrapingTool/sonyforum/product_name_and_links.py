@@ -93,12 +93,10 @@ class getProductNamesAndLinks:
 
 
 # Fetch Series names and link for selected product
-    def get_dictionary_data(self):
+    def get_dictionary_data(self,url):
         file_read = fileReaderWriter()
         get_product_links = getProductNamesAndLinks()
 
-        file_path = open("ScrapingTool/files/mainurl.txt", "r")
-        url = file_read.read_links_from_text_file(file_path) + "/t5/Phones-Tablets/ct-p/Phones"
         series_dictionary = get_product_links.get_product_series(url)
 
         return series_dictionary
