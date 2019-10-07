@@ -15,8 +15,9 @@ def parse(url):
     """
     try:
         print(url)
-        http_request = requests.get(url)
-        soup = BeautifulSoup(http_request.content, "html.parser")
+        http_response = requests.get(url)
+        http_response.close()
+        soup = BeautifulSoup(http_response.content, "html.parser")
     except Exception as e:
         logging.error("Raised Exception while parsing URL %s ", e)
     return soup

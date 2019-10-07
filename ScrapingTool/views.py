@@ -41,29 +41,30 @@ def brand_view(request):
     :return: Returning responce to the user
     """
     if request.POST.get('back_button'):
-        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        logging.info("<<<<<<<<< BackButton clicked in brand page  >>>>>>>>>>>")
         response = redirect('homepage')
-        logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
+        logging.info("<<<<<<<<< Redirecting from Brand Page to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('home_button'):
-        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        logging.info("<<<<<<<<< BackButton clicked in Brand page  >>>>>>>>>>>")
         response = redirect('homepage')
-        logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
+        logging.info("<<<<<<<<< Redirecting from Brand Page to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('homepage_submit_btn'):
-        logging.info("<<<<<<<<< Onclick of Submit button in homepage view >>>>>>>>>>>")
+        logging.info("<<<<<<<<< Submit button clicked in homepage view >>>>>>>>>>>")
         main_url = request.POST.get('mainurl')
-        logging.debug("Onclick of Submit button from Homepage View we are getting URL which is selcted from USER %s"
+        logging.debug("<<<<<< Connecting to user selected URL : %s >>>>>>>>"
                       , main_url)
         status_code = fileReaderWriter.get_response_code(main_url)
-        logging.debug("Status code : %s", status_code)
+        logging.debug("Connection status code : %s", status_code)
 
         if status_code == 200:
             with open("ScrapingTool/files/mainurl.txt", "w") as file:
                 file.write(main_url)
         else:
+            logging.debug("Connection status code : %s", status_code)
             error_message = "Unable to connect to URL"
             logging.error("handling an error message for status code : %s", error_message)
             messages.error(request,error_message)
@@ -75,12 +76,12 @@ def brand_view(request):
 
     if main_url:
         brand_list = get_brand_names(main_url)
-        logging.info("<<<<<<<List of Mobile Brand names >>>>>>> %s", brand_list[0])
+        logging.info("<<<<<<< Received List of Mobile Brand Names >>>>>>> %s", brand_list[0])
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
     else:
         error_message = "Unable to Connect to URL"
-        logging.error("Handling an error message for empty brand name : %s", error_message)
+        logging.error("handling an error message for empty brand name : %s", error_message)
         messages.error(request,'Unable to connect to URL')
         return redirect('homepage')
 
@@ -103,10 +104,11 @@ def mobile_view(request):
     
 
     if request.POST.get('back_button'):
-        print(request.session.get('session'))
+        logging.info("Session ID: %s", request.session.get('session'))
         if(request.session.get('session')=='mobile-view'):
             response = redirect('brand/')
-            logging.info("<<<<<<<<< BackButton clicked in mobile model name page to brand page view  >>>>>>>>>>>")
+            logging.info("<<<<<<<<< BackButton clicked in Mobile page >>>>>>>>>>>")
+            logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
             return response
         else:
             filter_value = 'Latest Released'
@@ -128,20 +130,20 @@ def mobile_view(request):
                     mobile_list_display.extend(mobile_list[0][year])
             successmsg = "Data extracted successfully, Click download to get data in excel"
             request.session['session']='mobile-view' 
-            return render(request, "socialmediascraping.html",
+            return render(request, "product.html",
                     {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
                     "infomsg": info_msg, 'announcedyear': announced_year})
 
 
     if request.POST.get('home_button'):
-        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
+        logging.info("<<<<<<<<< HomeButton clicked in Mobile Page  >>>>>>>>>>>")
         response = redirect('homepage')
         logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('brand_submit'):
         request.session['session']='mobile-view' 
-        logging.info("<<<<<<<<< Onclick of Submit button in brandselection view >>>>>>>>>>>")
+        logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
         brand_dict = GetData_In_Dict("Mobile_Brands")
 
         selected_brand = request.POST.getlist('brand[]')
@@ -151,7 +153,7 @@ def mobile_view(request):
         with open("ScrapingTool/files/series.txt", "w") as file:
             file.write(brand_url)
 
-        logging.info("<<<<<<<<< Get mobile names from User selected Brand name >>>>>>>>>>>")
+        logging.info("<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
         mobile_list = get_models_names(brand_url)
 
@@ -168,7 +170,7 @@ def mobile_view(request):
                 mobile_list_display.extend(mobile_list[0][year])
 
     if request.POST.get('updatelist'):
-        logging.info("<<<<<<<<< Onclick of update list >>>>>>>>>>>")
+        logging.info("<<<<<<<<< update list button clicked >>>>>>>>>>>")
         filter_value = request.POST.get('years')
         mobile_list = GetData_In_Tuple("Model_Names")
         announced_year = ['Latest Released']
@@ -188,13 +190,14 @@ def mobile_view(request):
                 mobile_list_display.extend(mobile_list[0][year])
 
     if request.POST.get('dashboard_button'):
+        logging.info("<<<<<<<<< dashboard button clicked >>>>>>>>>>>")
         ProdList = Get_Chart_Prod_List()
         request.session['session']='dashboard-view' 
-        print(request.session.get('session'))
+        logging.info("Session ID: %s", request.session.get('session'))
         return render(request, "dashboard.html", {"product_list": ProdList})
 
-    if request.POST.get('social_media_button'):
-        logging.info("onclick of social media submit button")
+    if request.POST.get('product_submit_button'):
+        logging.info("social media submit button clicked")
         mobile_list = GetData_In_Tuple("Model_Names")
         mobile_dict = mobile_list[1]
 
@@ -263,7 +266,6 @@ def mobile_view(request):
                                 "displaying an error message if user selected - to date<from date  : %s",
                                 error_message)
                     elif request.POST.get("alldates") == "on":
-                        print("on")
                         selected_dates = []
                         data_information = get_data_from_url(main_url, selected_model_url, selected_dates)
 
@@ -301,26 +303,26 @@ def mobile_view(request):
 
     if request.POST.get("gen_graph"):
         SelProduct = request.POST.get("product")
-        print('Product Selected for Graph ' + SelProduct)
+        logging.debug('Product Selected for Graph : %s', SelProduct)
         GChart = CreateChart(SelProduct)
         GChart.Create_Column_Chart(SelProduct)
         GChart.Create_Pie_Chart(SelProduct)
         ProdList = Get_Chart_Prod_List()
         return render(request, "dashboard.html", {"product_list": ProdList})
 
-    return render(request, "socialmediascraping.html",
+    return render(request, "product.html",
                   {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
                    "infomsg": info_msg, 'announcedyear': announced_year})
 
 
 @csrf_exempt
 def series_view(request):
-    print("in series view")
+    logging.info("<<<<<<Rendering in series view>>>>>>>")
     series_list = []
 
     if request.POST.get('back_button'):
         response = redirect('homepage')
-        logging.info("redirecting series page to home page view")
+        logging.info("<<<<<<redirecting series page to home page view>>>>?")
         return response
 
     if request.POST.get('home_button'):
@@ -331,7 +333,7 @@ def series_view(request):
 
     if request.POST.get('homepage_submit_btn'):
         main_url = request.POST.get('mainurl')
-        print(main_url)
+        logging.info('URL Selected By User: %s', main_url)
         status_code = fileReaderWriter.get_response_code(main_url)
         logging.debug("Status code : %s", status_code)
 
@@ -374,13 +376,13 @@ def product_view(request):
 
     if request.POST.get('back_button'):
         response = redirect('series/')
-        logging.info("redirecting form social media view to series page view")
+        logging.info("redirecting form product view to series page view")
         return response
 
     if request.POST.get('home_button'):
         logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
         response = redirect('homepage')
-        logging.info("<<<<<<<<< Redirecting from Product Page to Home Page View >>>>>>>>>>>")
+        logging.info("<<<<<<<<< Redirecting from product view to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('dashboard_button'):
@@ -389,7 +391,7 @@ def product_view(request):
 
     if request.POST.get("gen_graph"):
         SelProduct = request.POST.get("product")
-        print('Product Selected for Graph ' + SelProduct)
+        logging.info('Product Selected for Graph  : %s', SelProduct)
         GChart = CreateChart(SelProduct)
         GChart.Create_Column_Chart(SelProduct)
         GChart.Create_Pie_Chart(SelProduct)
@@ -401,7 +403,7 @@ def product_view(request):
 
     # On click of series button
     if request.POST.get('series_button'):
-        logging.info("onclick of series button")
+        logging.info("series button clicked")
         series_list = request.POST.getlist('series[]')
         with open("ScrapingTool/files/series.txt", "w") as file:
             # Call get_dictionary_data() method to get series link for selected series name by user
@@ -415,7 +417,7 @@ def product_view(request):
 
     file = open("ScrapingTool/files/series.txt", "r")
     series_url = file_read.read_links_from_text_file(file)
-    print(series_url)
+    logging.info("Series Selected By User : %s",series_url)
     product_data_dictionary = get_product_links.get_links_for_products(series_url)
 
     # fetching product name to be displayed on webpage
@@ -424,9 +426,9 @@ def product_view(request):
             logging.debug("scraping product names from website : %s", product_names)
             product_names_list.append(product_names)
 
-        # On click of social_media_button
-        if request.POST.get('social_media_button'):
-            logging.info("onclick of social media submit button")
+        # On click of product_submit_button
+        if request.POST.get('product_submit_button'):
+            logging.info("product submit button clicked")
 
             product_links_list = []
 
@@ -458,7 +460,7 @@ def product_view(request):
                     for product_name, product_links in product_data_dictionary.items():
                         for checklist_product_name in checklist:
                             if checklist_product_name == product_name:
-                                logging.debug("getting a selected product links %s: ", product_links)
+                                logging.debug("getting selected products links %s: ", product_links)
                                 product_links_list.append(product_links)
                     # If product selected and there is respective link for that enter  if condition
                     if product_links_list:
@@ -466,12 +468,12 @@ def product_view(request):
                             start_date, end_date = dateFormat(fromdate, todate)
                             if start_date <= end_date:
                                 list_of_dates = date_format_change(fromdate, todate)
-                                print("++++++++++++++++++listdates", list_of_dates)
+                                logging.debug("+++++list of dates %s:", list_of_dates)
                                 # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
                                 data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates,
                                                                                           product_links_list)
 
-                                print(data_dictionary)
+                                logging.debug("Data Dictionary %s:", data_dictionary)
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -493,7 +495,6 @@ def product_view(request):
                                     error_message)
 
                         elif request.POST.get("alldates") == "on":
-                            print("on")
                             list_of_dates = []
                             get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -518,6 +519,7 @@ def product_view(request):
 
         # On click of download button,to download Data excel sheet
         elif request.POST.get("douwnload_button"):
+            logging.info('Download Button Clicked')
             file_name = 'ScrapingTool/files/FinalData.xlsx'  # this should live elsewhere, definitely
             with open(file_name, 'rb') as f:
                 response = HttpResponse(f.read(),
@@ -526,7 +528,7 @@ def product_view(request):
                 response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 return response
 
-        return render(request, "socialmediascraping.html",
+        return render(request, "product.html",
                       {"productname": product_names_list, "errorvalue": error_message, "successmsg": successmsg,
                        "infomsg": info_msg})
 
