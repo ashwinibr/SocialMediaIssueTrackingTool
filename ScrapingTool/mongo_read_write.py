@@ -10,7 +10,7 @@ def Connect_To_Mongodb():
 
 def Create_Mongodb_Collection(collection_name):
     client = Connect_To_Mongodb()
-    db = client['test_data']
+    db = client['master_data']
     collection = db[collection_name]
     return collection
 
