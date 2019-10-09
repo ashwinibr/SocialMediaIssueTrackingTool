@@ -17,8 +17,8 @@ def Get_Chart_Prod_List():
     with conn:
         cur = conn.cursor()
     
-    insert_query = """SELECT Product FROM Issues_Count_By_Keyword GROUP by Product;"""  
-    cur.execute(insert_query)
+    sql_query = """SELECT Product FROM Issues_Count_By_Keyword GROUP by Product;"""  
+    cur.execute(sql_query)
     result = cur.fetchall()
     prod_list = []
     for r in result:
@@ -30,8 +30,8 @@ def Delete_Issue_Count():
     with conn:
         cur = conn.cursor()
     
-    insert_query = """DELETE FROM Issues_Count_By_Keyword;"""  
-    cur.execute(insert_query)
+    sql_query = """DELETE FROM Issues_Count_By_Keyword;"""  
+    cur.execute(sql_query)
     conn.commit()
     conn.close()
 
@@ -40,8 +40,8 @@ def Update_Issue_Count_For_Key(key):
     with conn:
         cur = conn.cursor()
     
-    insert_query = """SELECT Product, Date, count(Product) FROM Exported_Data WHERE Category like "%{}%" GROUP by Date,Product;""".format(key)  
-    cur.execute(insert_query)
+    sql_query = """SELECT Product, Date, count(Product) FROM Exported_Data WHERE Category like "%{}%" GROUP by Date,Product;""".format(key)  
+    cur.execute(sql_query)
     result = cur.fetchall()
     issue_dict = {'Product':[],'Date':[],'Category':[],'NrOfIssues':[]}
     for r in result:
@@ -55,6 +55,19 @@ def Update_Issue_Count_For_Key(key):
     conn.commit()
     conn.close()
 
+
+def Get_Keywards_List():
+    conn = sqlite3.connect(DATABASE_NAME)
+    with conn:
+        cur = conn.cursor()
+    
+    sql_query = """SELECT Category FROM Issue_Keywords;"""
+    cur.execute(sql_query)
+    result = cur.fetchall()
+    keywords = []
+    for key in result:
+        keywords.append(key[0])
+    return keywords
 
 def GetData_In_Dict(table_name):
     conn = sqlite3.connect(DATABASE_NAME)

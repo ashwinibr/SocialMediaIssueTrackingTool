@@ -5,7 +5,7 @@ import logging
 import urllib
 import sqlite3
 import pandas as pd
-from ScrapingTool.Models.sqlite3_read_write import Update_Issue_Count_For_Key, Delete_Issue_Count
+from ScrapingTool.Models.sqlite3_read_write import Update_Issue_Count_For_Key, Delete_Issue_Count, Get_Keywards_List
 
 class fileReaderWriter:
     logging.basicConfig(level=logging.DEBUG)
@@ -23,10 +23,7 @@ class fileReaderWriter:
             writer.save()
             conn.commit()
 
-            excel_file = 'ScrapingTool/Generic/files/social_keywords.xlsx'
-            dataset = pd.read_excel(excel_file)
-            df = pd.DataFrame(dataset)
-            data = df.get("Category")
+            data = Get_Keywards_List()
             Delete_Issue_Count()
             for keyward in data:
                 Update_Issue_Count_For_Key(keyward)

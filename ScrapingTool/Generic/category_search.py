@@ -1,10 +1,8 @@
 import re
-
-from ScrapingTool.Generic.parser import get_category
-
+from ScrapingTool.Models.sqlite3_read_write import Get_Keywards_List
 
 def generic_category_filter(child_node):
-    categories = get_category()
+    categories = Get_Keywards_List()
     issue_data = ""
     if child_node.text:
         issue_data = (child_node.text).strip()

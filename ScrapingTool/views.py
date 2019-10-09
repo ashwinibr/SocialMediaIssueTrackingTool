@@ -287,8 +287,9 @@ def mobile_view(request):
                         error_message)
 
     elif request.POST.get("douwnload_button"):
-        file_name = 'ScrapingTool/Generic/files/FinalData.xlsx'  # this should live elsewhere, definitely
-        with open(file_name, 'rb') as f:
+        file_path = 'ScrapingTool/Generic/files/'
+        file_name = 'FinalData.xlsx'  # this should live elsewhere, definitely
+        with open(file_path+file_name, 'rb') as f:
             response = HttpResponse(f.read(),
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename=' + file_name
@@ -513,8 +514,9 @@ def product_view(request):
         # On click of download button,to download Data excel sheet
         elif request.POST.get("douwnload_button"):
             logging.info('Download Button Clicked')
-            file_name = 'ScrapingTool/Generic/files/FinalData.xlsx'  # this should live elsewhere, definitely
-            with open(file_name, 'rb') as f:
+            file_path = 'ScrapingTool/Generic/files/'
+            file_name = 'FinalData.xlsx'  # this should live elsewhere, definitely
+            with open(file_path+file_name, 'rb') as f:
                 response = HttpResponse(f.read(),
                                         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = 'attachment; filename=' + file_name
