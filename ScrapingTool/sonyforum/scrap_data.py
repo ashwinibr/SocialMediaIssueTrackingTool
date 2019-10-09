@@ -11,7 +11,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from requests import RequestException
-from ScrapingTool.file_read_write import fileReaderWriter
+from ScrapingTool.Models.file_read_write import fileReaderWriter
 
 class scrapData:
     logging.basicConfig(level=logging.DEBUG)

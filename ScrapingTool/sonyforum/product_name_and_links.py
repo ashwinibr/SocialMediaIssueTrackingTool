@@ -1,10 +1,9 @@
-import pandas as pd
 import re
 
 import requests
 from bs4 import BeautifulSoup
 
-from ScrapingTool.file_read_write import fileReaderWriter
+from ScrapingTool.Models.file_read_write import fileReaderWriter
 
 
 class getProductNamesAndLinks:

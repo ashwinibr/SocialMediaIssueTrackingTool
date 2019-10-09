@@ -3,19 +3,19 @@ import datetime
 from django.http import HttpResponse
 
 from django.shortcuts import render, redirect
-from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 import logging
 
+from ScrapingTool.Generic.connection_status_code import get_response_code
+from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
-from ScrapingTool.consumer_product_scraping.forum_scraping import \
+from ScrapingTool.controller.main_scraper_module import \
     get_brand_names, get_models_names, get_data_from_url
-from ScrapingTool.file_read_write import fileReaderWriter
-from ScrapingTool.logics.DateFormateClass import date_format_change, dateFormat
+from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
-from ScrapingTool.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
+from ScrapingTool.Models.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
     Get_Chart_Prod_List
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
@@ -57,7 +57,7 @@ def brand_view(request):
         main_url = request.POST.get('mainurl')
         logging.debug("<<<<<< Connecting to user selected URL : %s >>>>>>>>"
                       , main_url)
-        status_code = fileReaderWriter.get_response_code(main_url)
+        status_code = get_response_code(main_url)
         logging.debug("Connection status code : %s", status_code)
 
         if status_code == 200:
@@ -109,7 +109,7 @@ def mobile_view(request):
             return response
         else:
             filter_value = 'Latest Released'
-            mobile_list = GetData_In_Tuple("Model_Names")
+            mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE)
             announced_year = ['Latest Released']
 
             for year in mobile_list[0]:
@@ -168,7 +168,7 @@ def mobile_view(request):
     if request.POST.get('updatelist'):
         logging.info("<<<<<<<<< update list button clicked >>>>>>>>>>>")
         filter_value = request.POST.get('years')
-        mobile_list = GetData_In_Tuple("Model_Names")
+        mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE)
         announced_year = ['Latest Released']
 
         for year in mobile_list[0]:
@@ -194,7 +194,7 @@ def mobile_view(request):
 
     if request.POST.get('product_submit_button'):
         logging.info("social media submit button clicked")
-        mobile_list = GetData_In_Tuple("Model_Names")
+        mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE)
         mobile_dict = mobile_list[1]
 
         announced_year = ['Latest Released']
@@ -328,7 +328,7 @@ def series_view(request):
     if request.POST.get('homepage_submit_btn'):
         main_url = request.POST.get('mainurl')
         logging.info('URL Selected By User: %s', main_url)
-        status_code = fileReaderWriter.get_response_code(main_url)
+        status_code = get_response_code(main_url)
         logging.debug("Status code : %s", status_code)
 
         # if valid url entered,write it in to url.txt file
