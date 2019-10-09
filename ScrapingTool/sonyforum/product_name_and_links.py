@@ -17,10 +17,11 @@ class getProductNamesAndLinks:
             series_names_list = []
 
             # passing URL to get the responce from website
-            req = requests.get(url)
+            response = requests.get(url)
+            response.close()
 
             # getting html code using Beautifull soup
-            soup = BeautifulSoup(req.content, "html.parser")
+            soup = BeautifulSoup(response.content, "html.parser")
 
             # Getting all the phone series links
             home_page_list = soup.find_all("a", class_="lia-link-navigation category-title")
@@ -49,10 +50,11 @@ class getProductNamesAndLinks:
                 product_name_list = []
 
                 # passing URL to get the responce from website
-                req = requests.get(series_url)
+                response = requests.get(series_url)
+                response.close()
 
                 # getting html code using Beautifull soup
-                soup = BeautifulSoup(req.content, "html.parser")
+                soup = BeautifulSoup(response.content, "html.parser")
 
                 # getting all the product name links and appending in to the list
                 home_page_list = soup.find_all("a", class_="lia-link-navigation lia-message-unread")
@@ -91,12 +93,10 @@ class getProductNamesAndLinks:
 
 
 # Fetch Series names and link for selected product
-    def get_dictionary_data(self):
+    def get_dictionary_data(self,url):
         file_read = fileReaderWriter()
         get_product_links = getProductNamesAndLinks()
 
-        file_path = open("ScrapingTool/files/mainurl.txt", "r")
-        url = file_read.read_links_from_text_file(file_path) + "/t5/Phones-Tablets/ct-p/Phones"
         series_dictionary = get_product_links.get_product_series(url)
 
         return series_dictionary

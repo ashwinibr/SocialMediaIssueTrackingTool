@@ -21,9 +21,10 @@ class getIssueLinks:
         get_value_from_scrap_data =[]
         try:
             for url in product_links_list:
-                req = requests.get(url)
+                response = requests.get(url)
+                response.close()
                     #parsing html code using html parser with the BeautifulSoup object
-                soup = BeautifulSoup(req.content, "html.parser")
+                soup = BeautifulSoup(response.content, "html.parser")
 
                 '''
                 Fetching Issue links using tag,id

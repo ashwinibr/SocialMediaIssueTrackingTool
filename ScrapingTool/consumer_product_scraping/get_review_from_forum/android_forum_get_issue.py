@@ -1,4 +1,5 @@
 import datetime
+import re
 from collections import defaultdict
 
 import requests
@@ -37,8 +38,10 @@ def android_forum_get_issue(req_id,selected_model_links,selected_dates):
                 comment_date = child_node_date.text
 
                 strip_date=comment_date.strip()
-                remove_time = strip_date[0:12]
-                converted_date = datetime.datetime.strptime(remove_time, '%b %d, %Y').strftime('%m/%d/%Y')
+                pattern = re.compile(
+                    "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}")
+                date = pattern.search(strip_date).group()
+                converted_date = datetime.datetime.strptime(date, '%b %d, %Y').strftime('%m/%d/%Y')
 
                 child_node = node.find("div", class_="messageContent")
                 if not selected_dates:
