@@ -42,13 +42,13 @@ def brand_view(request):
     """
     if request.POST.get('back_button'):
         logging.info("<<<<<<<<< BackButton clicked in brand page  >>>>>>>>>>>")
-        response = redirect('homepage')
+        response = redirect('home')
         logging.info("<<<<<<<<< Redirecting from Brand Page to Home Page View >>>>>>>>>>>")
         return response
 
     if request.POST.get('home_button'):
         logging.info("<<<<<<<<< BackButton clicked in Brand page  >>>>>>>>>>>")
-        response = redirect('homepage')
+        response = redirect('home')
         logging.info("<<<<<<<<< Redirecting from Brand Page to Home Page View >>>>>>>>>>>")
         return response
 
@@ -67,7 +67,7 @@ def brand_view(request):
             error_message = "Unable to connect to URL"
             logging.error("handling an error message for status code : %s", error_message)
             messages.error(request,error_message)
-            return redirect('homepage')
+            return redirect('home')
 
     main_url = str(request.session.get('mainurl'))
 
@@ -80,7 +80,7 @@ def brand_view(request):
         error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty brand name : %s", error_message)
         messages.error(request,'Unable to connect to URL')
-        return redirect('homepage')
+        return redirect('home')
 
 
 @csrf_exempt
@@ -134,7 +134,7 @@ def mobile_view(request):
 
     if request.POST.get('home_button'):
         logging.info("<<<<<<<<< HomeButton clicked in Mobile Page  >>>>>>>>>>>")
-        response = redirect('homepage')
+        response = redirect('home')
         logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
         return response
 
@@ -315,13 +315,13 @@ def series_view(request):
     series_list = []
 
     if request.POST.get('back_button'):
-        response = redirect('homepage')
+        response = redirect('home')
         logging.info("<<<<<<redirecting series page to home page view>>>>?")
         return response
 
     if request.POST.get('home_button'):
         logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
-        response = redirect('homepage')
+        response = redirect('home')
         logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
         return response
 
@@ -339,7 +339,7 @@ def series_view(request):
             error_message = "Unable to Connect to URL"
             logging.error("handling an error message for status code : %s", error_message)
             messages.error(request,error_message)
-            return redirect('homepage')
+            return redirect('home')
 
     # Call get_dictionary_data() method to get series names
     series = getProductNamesAndLinks()
@@ -356,7 +356,7 @@ def series_view(request):
         error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty series dictionary : %s", error_message)
         messages.error(request,error_message)
-        return redirect('homepage')
+        return redirect('home')
 
 
 @csrf_exempt
@@ -375,7 +375,7 @@ def product_view(request):
 
     if request.POST.get('home_button'):
         logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
-        response = redirect('homepage')
+        response = redirect('home')
         logging.info("<<<<<<<<< Redirecting from product view to Home Page View >>>>>>>>>>>")
         return response
 
@@ -529,7 +529,7 @@ def product_view(request):
         error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty product dictionary : %s", error_message)
         messages.error(request,error_message)
-        return redirect('homepage')
+        return redirect('home')
 
 
 

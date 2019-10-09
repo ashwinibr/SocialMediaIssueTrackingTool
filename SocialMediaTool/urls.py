@@ -24,6 +24,6 @@ from SocialMediaTool import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('scraping/', include('ScrapingTool.urls')),
+    path('', include('ScrapingTool.urls')),
     path('favicon\.ico', RedirectView.as_view(url='/static/image/favicon.ico')),
 ]
