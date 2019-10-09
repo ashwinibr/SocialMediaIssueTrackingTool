@@ -9,14 +9,14 @@ import logging
 #from imp import reload
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
-from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE
+from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE, EXPORTED_DATA_DATABASE_TABLE
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.controller.main_scraper_module import \
     get_brand_names, get_models_names, get_data_from_url
 from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
-import ScrapingTool.mongo_read_write as mongo
+import ScrapingTool.Models.mongo_read_write as mongo
 
 #reload(logging)
 logging.basicConfig(filename='server.log', level=logging.DEBUG)
@@ -197,7 +197,7 @@ def mobile_view(request):
 
     if request.POST.get('dashboard_button'):
         logging.info("<<<<<<<<< dashboard button clicked >>>>>>>>>>>")
-        collection_name = "Exported_Data" + str(req_id)
+        collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
         ProdList = mongo.Get_Chart_Prod_List(collection_name)
         request.session['session']='dashboard-view' 
         logging.info("Session ID: %s", request.session.get('session'))
@@ -255,7 +255,7 @@ def mobile_view(request):
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
-                                collection_name = "Exported_Data" + str(req_id)
+                                collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
                                 ProdList = mongo.Get_Chart_Prod_List(collection_name)
                                 GChart = CreateChart(req_id,ProdList[0])
                                 GChart.Create_Column_Chart(req_id,ProdList[0])
@@ -278,7 +278,7 @@ def mobile_view(request):
 
                         if data_information:
                             successmsg = "Data extracted successfully, Click download to get data in excel"
-                            collection_name = "Exported_Data" + str(req_id)
+                            collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
                             ProdList = mongo.Get_Chart_Prod_List(collection_name)
                             GChart = CreateChart(req_id,ProdList[0])
                             GChart.Create_Column_Chart(req_id,ProdList[0])
@@ -316,7 +316,7 @@ def mobile_view(request):
         GChart = CreateChart(req_id,SelProduct)
         GChart.Create_Column_Chart(req_id,SelProduct)
         GChart.Create_Pie_Chart(req_id,SelProduct)
-        collection_name = "Exported_Data" + str(req_id)
+        collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
         ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
@@ -403,7 +403,7 @@ def product_view(request):
         return response
 
     if request.POST.get('dashboard_button'):
-        collection_name = "Exported_Data" + str(req_id)
+        collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
         ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
@@ -413,7 +413,7 @@ def product_view(request):
         GChart = CreateChart(req_id,SelProduct)
         GChart.Create_Column_Chart(req_id,SelProduct)
         GChart.Create_Pie_Chart(req_id,SelProduct)
-        collection_name = "Exported_Data" + str(req_id)
+        collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
         ProdList = mongo.Get_Chart_Prod_List(collection_name)
         return render(request, "dashboard.html", {"product_list": ProdList})
 
@@ -495,7 +495,7 @@ def product_view(request):
 
                                 if data_dictionary:
                                     successmsg = "Data extracted successfully, Click download to get data in excel"
-                                    collection_name = "Exported_Data" + str(req_id)
+                                    collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
                                     ProdList = mongo.Get_Chart_Prod_List(collection_name)
                                     GChart = CreateChart(req_id,ProdList[0])
                                     GChart.Create_Column_Chart(req_id,ProdList[0])
@@ -517,7 +517,7 @@ def product_view(request):
                             list_of_dates = []
                             get_issue_link_obj.issueLinksPagination(req_id, list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
-                            collection_name = "Exported_Data" + str(req_id)
+                            collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
                             ProdList = mongo.Get_Chart_Prod_List(collection_name)
                             GChart = CreateChart(req_id,ProdList[0])
                             GChart.Create_Column_Chart(req_id,ProdList[0])

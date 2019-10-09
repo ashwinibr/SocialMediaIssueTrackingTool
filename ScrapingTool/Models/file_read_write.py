@@ -7,7 +7,7 @@ import sqlite3
 import pandas as pd
 from pandas import ExcelWriter
 from openpyxl.workbook import Workbook
-import ScrapingTool.mongo_read_write as mongo
+import ScrapingTool.Models.mongo_read_write as mongo
 
 class fileReaderWriter:
     logging.basicConfig(level=logging.DEBUG)

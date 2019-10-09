@@ -1,6 +1,6 @@
 #import sqlite3
 from string import Template
-import ScrapingTool.mongo_read_write as mongo
+import ScrapingTool.Models.mongo_read_write as mongo
 
 class CreateChart:
     def __init__(self, req_id, Product):
