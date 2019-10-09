@@ -9,7 +9,7 @@ import logging
 #from imp import reload
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
-from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE, EXPORTED_DATA_DATABASE_TABLE
+from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE, EXPORTED_DATA_DATABASE_TABLE,  FILE_PATH, FILE_NAME, XLSX
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.controller.main_scraper_module import \
     get_brand_names, get_models_names, get_data_from_url
@@ -301,12 +301,11 @@ def mobile_view(request):
                         error_message)
 
     elif request.POST.get("douwnload_button"):
-        file_path = 'ScrapingTool/Generic/files/'
-        file_name = 'FinalData.xlsx'  # this should live elsewhere, definitely
-        with open(file_path+file_name, 'rb') as f:
+        generated_file = FILE_NAME+req_id+XLSX
+        with open(FILE_PATH+generated_file, 'rb') as f:
             response = HttpResponse(f.read(),
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=' + file_name
+            response['Content-Disposition'] = 'attachment; filename=' + generated_file
             response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             return response
 
@@ -540,12 +539,11 @@ def product_view(request):
         # On click of download button,to download Data excel sheet
         elif request.POST.get("douwnload_button"):
             logging.info('Download Button Clicked')
-            file_path = 'ScrapingTool/Generic/files/'
-            file_name = 'FinalData.xlsx'  # this should live elsewhere, definitely
-            with open(file_path+file_name, 'rb') as f:
+            generated_file = FILE_NAME+req_id+XLSX
+            with open(FILE_PATH+generated_file, 'rb') as f:
                 response = HttpResponse(f.read(),
                                         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = 'attachment; filename=' + file_name
+                response['Content-Disposition'] = 'attachment; filename=' + generated_file
                 response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 return response
 

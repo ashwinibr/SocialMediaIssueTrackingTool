@@ -1,5 +1,5 @@
 #from ScrapingTool.sqlite3_read_write import Write_to_DB
-import ScrapingTool.mongo_read_write as mongo
+import ScrapingTool.Models.mongo_read_write as mongo
 from ScrapingTool.Generic.constant import BRAND_NAME_DICT_KEY, BRAND_LINK_DICT_KEY, MOBILE_BRANDS_DATABASE_TABLE
 
 def get_brand_name_from_gsmarena(req_id,soup,mobile_brand_list,mobile_brand_links_list):

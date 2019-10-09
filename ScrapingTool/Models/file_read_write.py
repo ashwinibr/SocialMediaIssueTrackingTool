@@ -8,6 +8,7 @@ import pandas as pd
 from pandas import ExcelWriter
 from openpyxl.workbook import Workbook
 import ScrapingTool.Models.mongo_read_write as mongo
+from ScrapingTool.Generic.constant import EXPORTED_DATA_DATABASE_TABLE, FILE_PATH, FILE_NAME, XLSX
 
 class fileReaderWriter:
     logging.basicConfig(level=logging.DEBUG)
@@ -15,10 +16,11 @@ class fileReaderWriter:
 #Writing all the details which is scaped from website in excel
     def write_data_using_pandas(self, req_id, data):
         try:
-            writer = pd.ExcelWriter("ScrapingTool/Generic/files/FinalData.xlsx")
+            file_name = FILE_PATH+FILE_NAME+req_id+XLSX
+            writer = pd.ExcelWriter(file_name)
 
             # Load to MongoDB
-            exported_data = 'Exported_Data' + req_id
+            exported_data = EXPORTED_DATA_DATABASE_TABLE + req_id
             mongo.Write_to_DB(data,exported_data)
 
             # Load to spreadsheet 

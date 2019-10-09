@@ -23,6 +23,7 @@ BRAND_NAME_DICT_KEY = "Brand_Name"
 BRAND_LINK_DICT_KEY = "Link"
 PRODUCT_DICT_KEY = "Product"
 
-
-
-
+#EXCEL FILE CONSTANT KEY'S
+FILE_PATH = 'ScrapingTool/Generic/files/'
+FILE_NAME = 'FinalData'
+XLSX = '.xlsx'

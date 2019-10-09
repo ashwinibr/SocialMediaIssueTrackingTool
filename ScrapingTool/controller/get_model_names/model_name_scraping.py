@@ -5,7 +5,7 @@ from collections import defaultdict
 from ScrapingTool.Generic.constant import GSMARENA_URL, MODEL_NAME_DICT_KEY, ANNOUNCED_YEAR_DICT_KEY, \
     MODEL_LINK_DICT_KEY, MODEL_NAME_DATABASE_TABLE, ANDROID_PIT_FORUM_URL
 from ScrapingTool.Generic.parser import parse
-import ScrapingTool.mongo_read_write as mongo
+import ScrapingTool.Models.mongo_read_write as mongo
 
 def get_models_names_from_gsmarena(req_id,soup,url):
 
