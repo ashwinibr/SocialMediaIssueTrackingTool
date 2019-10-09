@@ -28,7 +28,7 @@ class scrapData:
         data_dictionary={}
         category_list = []
 
-        excel_file = 'ScrapingTool/files/social_keywords.xlsx'
+        excel_file = 'ScrapingTool/Generic/files/social_keywords.xlsx'
         dataset = pd.read_excel(excel_file)
         df = pd.DataFrame(dataset)
         data = df.get("Category")

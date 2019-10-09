@@ -28,7 +28,7 @@ def get_category():
        This function is to get categories from .xlsx file.
        :return: returning category list
     """
-    excel_file_path = 'ScrapingTool/files/social_keywords.xlsx'
+    excel_file_path = 'ScrapingTool/Generic/files/social_keywords.xlsx'
     try:
         dataset = pd.read_excel(excel_file_path)
         dataframe = pd.DataFrame(dataset)

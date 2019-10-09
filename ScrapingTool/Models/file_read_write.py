@@ -14,7 +14,7 @@ class fileReaderWriter:
     def write_data_using_pandas(self, data):
         try:
             conn = sqlite3.connect("db.sqlite3")
-            writer = pd.ExcelWriter("ScrapingTool/files//FinalData.xlsx")
+            writer = pd.ExcelWriter("ScrapingTool/Generic/files/FinalData.xlsx")
             # Load spreadsheet
             data_frame = pd.DataFrame.from_dict(data)
             data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
@@ -23,7 +23,7 @@ class fileReaderWriter:
             writer.save()
             conn.commit()
 
-            excel_file = 'ScrapingTool/files/social_keywords.xlsx'
+            excel_file = 'ScrapingTool/Generic/files/social_keywords.xlsx'
             dataset = pd.read_excel(excel_file)
             df = pd.DataFrame(dataset)
             data = df.get("Category")
