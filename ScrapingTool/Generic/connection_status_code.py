@@ -1,11 +1,11 @@
 import logging
-import urllib
+import requests
 
 
 def get_response_code(url):
     try:
-        conn = urllib.request.urlopen(url)
-        return conn.getcode()
+        response = requests.head(url)
+        return response.status_code
     except ConnectionRefusedError as e:
-        logging.error("status code check", e)
+        logging.error("ConnectionRefusedError :%s", e)
         pass

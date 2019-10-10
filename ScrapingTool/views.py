@@ -234,7 +234,12 @@ def mobile_view(request):
                 if selected_model_name:
                     selected_model_url = []
                     for model in selected_model_name:
-                        selected_model_url.append(main_url + "/" + mobile_dict[model][0])
+                        print("selected product url")
+                        print(mobile_dict[model][0])
+                        if "gadgets.ndtv" in main_url:
+                            selected_model_url.append(mobile_dict[model][0])
+                        else:
+                            selected_model_url.append(main_url + "/" + mobile_dict[model][0])
                     if fromdate and todate:
                         if fromdate <= todate:
                             selected_dates = date_format_change(fromdate, todate)

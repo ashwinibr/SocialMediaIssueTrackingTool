@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 
-
+from ScrapingTool.Generic.connection_status_code import get_response_code
 
 
 def parse(url):
@@ -13,14 +13,24 @@ def parse(url):
     by using BeautifulSoup library we are fetching html parsed data
     :return: soup which contain parsed html data
     """
+
     try:
-        print(url)
-        http_response = requests.get(url)
-        soup = BeautifulSoup(http_response.content, "html.parser")
-        http_response.close()
+        status_code = get_response_code(url)
+
+        if status_code == 200:
+            http_response = requests.get(url)
+            soup = BeautifulSoup(http_response.content, "html.parser")
+            http_response.close()
+            print("soup", http_response)
+            return soup
+        else:
+            soup = ""
+            print("url is not successfully verified")
+            return soup
+
     except Exception as e:
         logging.error("Raised Exception while parsing URL %s ", e)
-    return soup
+
 
 
 def get_category():

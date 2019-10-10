@@ -25,6 +25,7 @@ def Get_Chart_Prod_List():
         prod_list.append(r[0])
     return prod_list
 
+
 def Delete_Issue_Count():
     conn = sqlite3.connect(DATABASE_NAME)
     with conn:

@@ -2,14 +2,11 @@
 FileReaderWriter class is to Read and write all data from excel
 '''
 import logging
-import urllib
 import sqlite3
 import pandas as pd
 from ScrapingTool.Models.sqlite3_read_write import Update_Issue_Count_For_Key, Delete_Issue_Count
 
 class fileReaderWriter:
-    logging.basicConfig(level=logging.DEBUG)
-
 #Writing all the details which is scaped from website in excel
     def write_data_using_pandas(self, data):
         try:
