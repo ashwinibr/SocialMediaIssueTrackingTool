@@ -12,6 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 from requests import RequestException
 from ScrapingTool.Models.file_read_write import fileReaderWriter
+from ScrapingTool.Models.sqlite3_read_write import Get_Keywards_List
 
 class scrapData:
     logging.basicConfig(level=logging.DEBUG)
@@ -27,11 +28,7 @@ class scrapData:
         thread_link_list = []
         data_dictionary={}
         category_list = []
-
-        excel_file = 'ScrapingTool/Generic/files/social_keywords.xlsx'
-        dataset = pd.read_excel(excel_file)
-        df = pd.DataFrame(dataset)
-        data = df.get("Category")
+        data = Get_Keywards_List()
 
 
         #creating csv file name social_media.csv

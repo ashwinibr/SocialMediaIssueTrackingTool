@@ -3,9 +3,13 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import logging
+<<<<<<< HEAD
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
 
+=======
+from ScrapingTool.Models.sqlite3_read_write import Get_Keywards_List
+>>>>>>> 4a22629009c0354d2ba1bab748442ab853033545
 
 def parse(url):
     """
@@ -21,31 +25,14 @@ def parse(url):
             http_response = requests.get(url)
             soup = BeautifulSoup(http_response.content, "html.parser")
             http_response.close()
-            print("soup", http_response)
-            return soup
         else:
             soup = ""
             print("url is not successfully verified")
-            return soup
 
     except Exception as e:
         logging.error("Raised Exception while parsing URL %s ", e)
+    return soup
 
 
-
-def get_category():
-    """
-       This function is to get categories from .xlsx file.
-       :return: returning category list
-    """
-    excel_file_path = 'ScrapingTool/Generic/files/social_keywords.xlsx'
-    try:
-        dataset = pd.read_excel(excel_file_path)
-        dataframe = pd.DataFrame(dataset)
-        data = dataframe.get("Category")
-    except IOError as e:
-        logging.error("Raised Exception while reading xml file %s ", e)
-
-    return data
 
 
