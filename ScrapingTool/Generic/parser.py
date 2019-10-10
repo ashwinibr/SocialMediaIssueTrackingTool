@@ -3,13 +3,9 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import logging
-<<<<<<< HEAD
+
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
-
-=======
-from ScrapingTool.Models.sqlite3_read_write import Get_Keywards_List
->>>>>>> 4a22629009c0354d2ba1bab748442ab853033545
 
 def parse(url):
     """
