@@ -4,7 +4,6 @@ from ScrapingTool.Models.sqlite3_read_write import Write_to_DB
 
 
 def get_brand_name_from_gsmarena(soup,mobile_brand_list,mobile_brand_links_list):
-
     for mobile_brand_container in soup.find_all("div", class_="brandmenu-v2 light l-box clearfix"):
         for list_of_brands in mobile_brand_container.find_all("li"):
             mobile_brand_list.append(list_of_brands.text)

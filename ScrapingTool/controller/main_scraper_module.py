@@ -9,13 +9,13 @@ from ScrapingTool.Generic.parser import parse
 from ScrapingTool.controller.get_review_from_forum.gadget360_get_issue import gadget360_get_issue
 
 
-def get_brand_names(url):
+def get_brand_names(request):
     """
 
     :param url:
     :return:
     """
-
+    url = request.session.get('mainurl')
     if ANDROID_FORUM_STRING in url:
         url = url+"devices/list/"
     elif ANDROID_PIT_FORUM_STRING in url:
@@ -55,14 +55,14 @@ def get_models_names(url):
     return model_name_dic
 
 
-def get_data_from_url(url,selected_model_url,selected_dates):
+def get_data_from_url(request,url,selected_model_url,selected_dates):
     data_dictionary = {}
     if ANDROID_FORUM_STRING in url:
-        data_dictionary = android_forum_get_issue(selected_model_url, selected_dates)
+        data_dictionary = android_forum_get_issue(request, selected_model_url, selected_dates)
     elif GSMARRENS_STRING in url:
-        data_dictionary = gsmarena_get_issue(selected_model_url, selected_dates)
+        data_dictionary = gsmarena_get_issue(request, selected_model_url, selected_dates)
     elif GADGETS_FORUM_STRING in url :
-        data_dictionary = gadget360_get_issue(selected_model_url, selected_dates)
+        data_dictionary = gadget360_get_issue(request, selected_model_url, selected_dates)
 
     return data_dictionary
 

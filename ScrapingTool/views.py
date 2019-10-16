@@ -8,7 +8,7 @@ from django.contrib import messages
 import logging
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
-from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE
+from ScrapingTool.Generic.constant import MODEL_NAME_DATABASE_TABLE, MOBILE_BRANDS_DATABASE_TABLE
 from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.controller.main_scraper_module import \
     get_brand_names, get_models_names, get_data_from_url
@@ -16,7 +16,7 @@ from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.Models.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
-    Get_Chart_Prod_List
+    Get_Chart_Prod_List, Get_RequestID
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
@@ -70,9 +70,8 @@ def brand_view(request):
             return redirect('home')
 
     main_url = str(request.session.get('mainurl'))
-
     if main_url:
-        brand_list = get_brand_names(main_url)
+        brand_list = get_brand_names(request)
         logging.info("<<<<<<< Received List of Mobile Brand Names >>>>>>> %s", brand_list[0])
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
@@ -141,14 +140,14 @@ def mobile_view(request):
     if request.POST.get('brand_submit'):
         request.session['session']='mobile-view' 
         logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
-        brand_dict = GetData_In_Dict("Mobile_Brands")
+        brand_dict = GetData_In_Dict(MOBILE_BRANDS_DATABASE_TABLE)
 
         selected_brand = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
         brand_url = brand_dict[selected_brand[0]]
 
         request.session['series']=brand_url
-
+        request.session['brand']= selected_brand[0]
         logging.info("<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
         mobile_list = get_models_names(brand_url)
@@ -230,7 +229,10 @@ def mobile_view(request):
                 # Fetch products selected by user-checklist
                 selected_model_name = request.POST.getlist('product[]')
                 logging.info("<<<<<<< User selected product list : %s >>>>>>>>>>>>>>", selected_model_name)
+                sel_brand = str(request.session.get('brand'))
 
+                req_id = Get_RequestID(main_url,sel_brand,selected_model_name)
+                request.session['req_id'] = req_id
                 if selected_model_name:
                     selected_model_url = []
                     for model in selected_model_name:
@@ -244,7 +246,7 @@ def mobile_view(request):
                         if fromdate <= todate:
                             selected_dates = date_format_change(fromdate, todate)
 
-                            data_information = get_data_from_url(main_url,selected_model_url,selected_dates)
+                            data_information = get_data_from_url(request,main_url,selected_model_url,selected_dates)
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -266,7 +268,7 @@ def mobile_view(request):
                                 error_message)
                     elif request.POST.get("alldates") == "on":
                         selected_dates = []
-                        data_information = get_data_from_url(main_url, selected_model_url, selected_dates)
+                        data_information = get_data_from_url(request,main_url, selected_model_url, selected_dates)
 
                         if data_information:
                             successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -293,7 +295,7 @@ def mobile_view(request):
 
     elif request.POST.get("douwnload_button"):
         file_path = 'ScrapingTool/Generic/files/'
-        file_name = 'FinalData.xlsx'  # this should live elsewhere, definitely
+        file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
         with open(file_path+file_name, 'rb') as f:
             response = HttpResponse(f.read(),
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

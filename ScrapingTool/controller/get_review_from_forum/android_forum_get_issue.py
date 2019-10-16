@@ -8,7 +8,7 @@ from ScrapingTool.Models.file_read_write import fileReaderWriter
 from ScrapingTool.Generic.parser import parse
 
 
-def android_forum_get_issue(selected_model_links,selected_dates):
+def android_forum_get_issue(request,selected_model_links,selected_dates):
 
     date_list = []
     url_list = []
@@ -68,7 +68,7 @@ def android_forum_get_issue(selected_model_links,selected_dates):
         data_dictionary={}
     else:
         file_writer = fileReaderWriter()
-        file_writer.write_data_using_pandas(data_dictionary)
+        file_writer.write_data_using_pandas(request,data_dictionary)
 
     return data_dictionary
 

@@ -8,10 +8,13 @@ from ScrapingTool.Models.sqlite3_read_write import Update_Issue_Count_For_Key, D
 
 class fileReaderWriter:
 #Writing all the details which is scaped from website in excel
-    def write_data_using_pandas(self, data):
+    def write_data_using_pandas(self, request, data):
         try:
             conn = sqlite3.connect("db.sqlite3")
-            writer = pd.ExcelWriter("ScrapingTool/Generic/files/FinalData.xlsx")
+            file_path = 'ScrapingTool/Generic/files/'
+            file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
+
+            writer = pd.ExcelWriter(file_path+file_name)
             # Load spreadsheet
             data_frame = pd.DataFrame.from_dict(data)
             data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)

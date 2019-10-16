@@ -7,7 +7,7 @@ from ScrapingTool.Generic.parser import parse
 from ScrapingTool.Models.file_read_write import fileReaderWriter
 
 
-def gadget360_get_issue(selected_model_url, selected_dates):
+def gadget360_get_issue(request,selected_model_url, selected_dates):
     date_list = []
     user_comment_list = []
     url_list = []
@@ -60,6 +60,6 @@ def gadget360_get_issue(selected_model_url, selected_dates):
         data_dictionary = {}
     else:
         file_writer = fileReaderWriter()
-        file_writer.write_data_using_pandas(data_dictionary)
+        file_writer.write_data_using_pandas(request,data_dictionary)
 
     return data_dictionary

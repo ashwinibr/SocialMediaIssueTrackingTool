@@ -4,7 +4,6 @@ from collections import defaultdict
 
 from ScrapingTool.Generic.constant import DATABASE_NAME
 
-
 def Write_to_DB(dictionary,table_name):
     conn = sqlite3.connect(DATABASE_NAME)
     data_frame = pd.DataFrame.from_dict(dictionary)
@@ -25,6 +24,23 @@ def Get_Chart_Prod_List():
         prod_list.append(r[0])
     return prod_list
 
+def Get_RequestID(url, brand, models_list):
+    conn = sqlite3.connect("db.sqlite3")
+    with conn:
+        cur = conn.cursor()
+
+    models_list_str =""
+    for model in models_list:
+        if(models_list_str==""):
+            models_list_str = model
+        else:
+            models_list_str = models_list_str+","+model   
+
+    cur.execute("INSERT INTO Request_Data VALUES(NULL,?,?,?)",(url,brand,models_list_str))
+    req_id = cur.lastrowid
+    conn.commit()
+    conn.close()
+    return req_id
 
 def Delete_Issue_Count():
     conn = sqlite3.connect(DATABASE_NAME)

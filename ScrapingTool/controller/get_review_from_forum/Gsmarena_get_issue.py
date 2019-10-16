@@ -7,7 +7,7 @@ from ScrapingTool.Models.file_read_write import fileReaderWriter
 from ScrapingTool.Generic.parser import parse
 
 
-def get_issue_from_gsmarena(selected_model_links,selected_dates):
+def get_issue_from_gsmarena(request,selected_model_links,selected_dates):
     date_list = []
     user_comment_list = []
     url_list = []
@@ -70,12 +70,12 @@ def get_issue_from_gsmarena(selected_model_links,selected_dates):
     else:
         file_writer = fileReaderWriter()
         # Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
-        file_writer.write_data_using_pandas(data_dictionary)
+        file_writer.write_data_using_pandas(request,data_dictionary)
 
     return data_dictionary
 
 
-def gsmarena_get_issue(model_link_list,list_of_dates):
+def gsmarena_get_issue(request,model_link_list,list_of_dates):
     review_issue = []
     for links in model_link_list:
         soup = parse(links)
@@ -85,7 +85,7 @@ def gsmarena_get_issue(model_link_list,list_of_dates):
                 review_opinion_link_list.append(review_button_link.attrs['href'])
         review_issue.append(review_opinion_link_list[0])
     pagination_link_list = pagination_for_user_comment_links(review_issue)
-    data_dictionary=get_issue_from_gsmarena(pagination_link_list,list_of_dates)
+    data_dictionary=get_issue_from_gsmarena(request,pagination_link_list,list_of_dates)
     return data_dictionary
 
 
