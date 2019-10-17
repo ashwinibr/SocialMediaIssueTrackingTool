@@ -74,7 +74,7 @@
                             document.getElementById("douwnload_button").style.visibility="visible";
                             document.getElementById("req_id").style.visibility="visible";  
                             document.getElementById("dashboard_button").style.display="none";
-                            var success = "{{successmsg}}"
+                            var success = "Request ID: {{ request.session.req_id }}"+"\n"+"{{successmsg}}"
                             console.log(success);
                             alert(success);
                         }

@@ -17,7 +17,7 @@ from ScrapingTool.Models.sqlite3_read_write import Get_Keywards_List
 class scrapData:
     logging.basicConfig(level=logging.DEBUG)
 
-    def get_issue_data(self,issue_link,selected_date_list):
+    def get_issue_data(self,request,issue_link,selected_date_list):
         #creating a list to store all the details
         author_rank_list = []
         user_name_list = []
@@ -230,7 +230,7 @@ class scrapData:
 
         file_writer = fileReaderWriter()
         #Call write_data_using_pandas() function to write scraped dat from dictionary to excel sheet
-        file_writer.write_data_using_pandas(data_dictionary)
+        file_writer.write_data_using_pandas(request,data_dictionary)
         return data_dictionary
 
 

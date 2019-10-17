@@ -100,8 +100,8 @@ def mobile_view(request):
     
 
     if request.POST.get('back_button'):
-        logging.info("Session ID: %s", request.session.get('session'))
-        if(request.session.get('session')=='mobile-view'):
+        logging.info("Session ID: %s", request.session.get('cur_view'))
+        if(request.session.get('cur_view')=='mobile-view'):
             response = redirect('brand/')
             logging.info("<<<<<<<<< BackButton clicked in Mobile page >>>>>>>>>>>")
             logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
@@ -125,7 +125,7 @@ def mobile_view(request):
                 for year in yearlist:
                     mobile_list_display.extend(mobile_list[0][year])
             successmsg = "Data extracted successfully, Click download to get data in excel"
-            request.session['session']='mobile-view' 
+            request.session['cur_view']='mobile-view' 
             return render(request, "product.html",
                     {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
                     "infomsg": info_msg, 'announcedyear': announced_year})
@@ -138,15 +138,13 @@ def mobile_view(request):
         return response
 
     if request.POST.get('brand_submit'):
-        request.session['session']='mobile-view' 
+        request.session['cur_view']='mobile-view' 
         logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
         brand_dict = GetData_In_Dict(MOBILE_BRANDS_DATABASE_TABLE)
 
         selected_brand = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
         brand_url = brand_dict[selected_brand[0]]
-
-        request.session['series']=brand_url
         request.session['brand']= selected_brand[0]
         logging.info("<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
@@ -187,8 +185,8 @@ def mobile_view(request):
     if request.POST.get('dashboard_button'):
         logging.info("<<<<<<<<< dashboard button clicked >>>>>>>>>>>")
         ProdList = Get_Chart_Prod_List()
-        request.session['session']='dashboard-view' 
-        logging.info("Session ID: %s", request.session.get('session'))
+        request.session['cur_view']='dashboard-view' 
+        logging.info("Current View: %s", request.session.get('cur_view'))
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     if request.POST.get('product_submit_button'):
@@ -407,6 +405,7 @@ def product_view(request):
     if request.POST.get('series_button'):
         logging.info("series button clicked")
         series_list = request.POST.getlist('series[]')
+        request.session['brand']=series_list[0]
         # Call get_dictionary_data() method to get series link for selected series name by user
         series = getProductNamesAndLinks()
         url = str(request.session.get('mainurl'))+"/t5/Phones-Tablets/ct-p/Phones"
@@ -435,6 +434,12 @@ def product_view(request):
 
             todate = request.POST.get('todate')
             fromdate = request.POST.get('fromdate')
+
+            sel_series = request.session.get('brand')
+            main_url = str(request.session.get('mainurl'))
+            print(main_url,sel_series[0],product_names_list)
+            req_id = Get_RequestID(main_url,sel_series,product_names_list)
+            request.session['req_id'] = req_id
 
             # Checking selection of dates
             # Checking if From ,To and All date is NOT selected
@@ -471,7 +476,7 @@ def product_view(request):
                                 list_of_dates = date_format_change(fromdate, todate)
                                 logging.debug("+++++list of dates %s:", list_of_dates)
                                 # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
-                                data_dictionary = get_issue_link_obj.issueLinksPagination(list_of_dates,
+                                data_dictionary = get_issue_link_obj.issueLinksPagination(request,list_of_dates,
                                                                                           product_links_list)
 
                                 logging.debug("Data Dictionary %s:", data_dictionary)
@@ -497,7 +502,7 @@ def product_view(request):
 
                         elif request.POST.get("alldates") == "on":
                             list_of_dates = []
-                            get_issue_link_obj.issueLinksPagination(list_of_dates, product_links_list)
+                            get_issue_link_obj.issueLinksPagination(request,list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
                             ProdList = Get_Chart_Prod_List()
                             GChart = CreateChart(ProdList[0])
@@ -522,7 +527,7 @@ def product_view(request):
         elif request.POST.get("douwnload_button"):
             logging.info('Download Button Clicked')
             file_path = 'ScrapingTool/Generic/files/'
-            file_name = 'FinalData.xlsx'  # this should live elsewhere, definitely
+            file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
             with open(file_path+file_name, 'rb') as f:
                 response = HttpResponse(f.read(),
                                         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
