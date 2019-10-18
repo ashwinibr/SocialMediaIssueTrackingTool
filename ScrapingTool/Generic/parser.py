@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import logging
-
+import time
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
 
@@ -19,16 +19,14 @@ def parse(url):
 
         if status_code == 200:
             http_response = requests.get(url)
-            soup = BeautifulSoup(http_response.content, "html.parser")
             http_response.close()
+            soup = BeautifulSoup(http_response.content, "html.parser")
         else:
-            soup = ""
-            print("url is not successfully verified")
+            soup = ""    
+            status_dict = {'301': 'Moved Temporarily', '401': 'Unauthorized', '403': 'Forbidden', '404': 'Not Found', '408': 'Request Timeout', '429': 'Too Many Requests', '503': 'Service Unavailable'}
+            status = status_dict[str(status_code)]
+            print("Connection Lost!! Status Code: "+str(status_code)+':'+status)
 
     except Exception as e:
         logging.error("Raised Exception while parsing URL %s ", e)
     return soup
-
-
-
-
