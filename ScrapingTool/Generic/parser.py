@@ -4,8 +4,28 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import time
+import numpy as np
 
 from ScrapingTool.Generic.connection_status_code import get_response_code
+
+
+def get_random_ua():
+    random_ua = ''
+    ua_file = 'ScrapingTool/Generic/files/ua_file.txt'
+    try:
+        with open(ua_file) as f:
+            lines = f.readlines()
+        if len(lines) > 0:
+            prng = np.random.RandomState()
+            index = prng.permutation(len(lines) - 1)
+            idx = np.asarray(index, dtype=np.integer)[0]
+            random_proxy = lines[int(idx)]
+    except Exception as ex:
+        print('Exception in random_ua')
+        print(str(ex))
+    finally:
+        return random_ua
+
 
 def parse(url):
     """
@@ -13,20 +33,23 @@ def parse(url):
     by using BeautifulSoup library we are fetching html parsed data
     :return: soup which contain parsed html data
     """
-
     try:
-        status_code = get_response_code(url)
-
-        if status_code == 200:
-            http_response = requests.get(url)
-            http_response.close()
-            soup = BeautifulSoup(http_response.content, "html.parser")
+        delays = [7, 4, 6, 2, 10, 19]
+        delay = np.random.choice(delays)
+        time.sleep(delay)
+        user_agent = get_random_ua()
+        headers = {
+                'user-agent': user_agent,
+            }
+        http_response = requests.get(url,headers=headers)
+        text_response = http_response.text
+        soup = BeautifulSoup(http_response.content, "html.parser")
+        http_response.close()
+    except Exception as ex:
+            print(str(ex))
+    finally:
+        if len(soup) > 0:
+            return soup
         else:
-            soup = ""    
-            status_dict = {'301': 'Moved Temporarily', '401': 'Unauthorized', '403': 'Forbidden', '404': 'Not Found', '408': 'Request Timeout', '429': 'Too Many Requests', '503': 'Service Unavailable'}
-            status = status_dict[str(status_code)]
-            print("Connection Lost!! Status Code: "+str(status_code)+':'+status)
-
-    except Exception as e:
-        logging.error("Raised Exception while parsing URL %s ", e)
-    return soup
+            return None
+    
