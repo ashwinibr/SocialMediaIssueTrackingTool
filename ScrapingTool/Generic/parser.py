@@ -40,6 +40,7 @@ def parse(url):
         user_agent = get_random_ua()
         headers = {
                 'user-agent': user_agent,
+                'referrer': 'https://google.com',
             }
         http_response = requests.get(url,headers=headers)
         text_response = http_response.text
@@ -47,6 +48,16 @@ def parse(url):
         http_response.close()
     except Exception as ex:
             print(str(ex))
+            user_agent = get_random_ua()
+            headers = {
+                    'user-agent': user_agent,
+                    'referrer': 'https://google.com',
+                }
+            cahe_url = 'http://webcache.googleusercontent.com/search?q=cache:'+url
+            http_response = requests.get(cahe_url,headers=headers)
+            text_response = http_response.text
+            soup = BeautifulSoup(http_response.content, "html.parser")
+            http_response.close()
     finally:
         if len(soup) > 0:
             return soup
