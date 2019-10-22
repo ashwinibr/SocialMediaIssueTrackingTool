@@ -23,6 +23,7 @@
                         document.getElementById("successmsg").innerHTML = '';
                         document.getElementById("douwnload_button").style.visibility="hidden";
                         document.getElementById("dashboard_button").style.visibility="hidden";                                        
+                        document.getElementById("req_id").style.visibility="hidden";                                        
                     }
                     else{
                         document.getElementById("fromdate").disabled = false;
@@ -55,6 +56,7 @@
                         if (checkSuccess==""){
                             document.getElementById("douwnload_button").style.visibility="hidden";
                             document.getElementById("dashboard_button").style.visibility="hidden";
+                            document.getElementById("req_id").style.visibility="hidden";  
                             var info = "{{infomsg}}"
                             var error = "{{errorvalue}}"
 
@@ -70,8 +72,9 @@
                         }
                         else{
                             document.getElementById("douwnload_button").style.visibility="visible";
+                            document.getElementById("req_id").style.visibility="visible";  
                             document.getElementById("dashboard_button").style.display="none";
-                            var success = "{{successmsg}}"
+                            var success = "Request ID: {{ request.session.req_id }}"+"\n"+"{{successmsg}}"
                             console.log(success);
                             alert(success);
                         }
@@ -187,6 +190,7 @@
                             <input type="submit" name="product_submit_button" value="Submit" onclick="Loader()">
                             <input type="submit" name="douwnload_button" id="douwnload_button" value="Download">
                             <input type="submit" name="dashboard_button" id="dashboard_button" value="Go to Dashboard">
+                            <span id="req_id" style="color:green">Request ID: {{ request.session.req_id }}-</span>
                             <t id="errorvalue" style="color:red">{{errorvalue}}</t>
                             <t id="successmsg" style="color:green">{{successmsg}}</t>
                             <t id="infomsg" style="color:#ff7f27">{{infomsg}}</t>

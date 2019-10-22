@@ -9,7 +9,9 @@
             var checkurl = e.options[e.selectedIndex].text;
                 if (checkError=="" && checkurl=="https://talk.sonymobile.com"){
                     document.getElementById("homepage-form").action = "series/";                    
-                }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||  checkurl=="https://www.gsmarena.com" || checkurl == "https://androidforums.com" || checkurl == "https://www.androidpit.com") {
+                }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||
+                checkurl=="https://www.gsmarena.com" || checkurl == "https://androidforums.com" ||
+                checkurl == "https://www.androidpit.com" || checkurl === "https://gadgets.ndtv.com") {
                     document.getElementById("homepage-form").action ="brand/";
                 }else{
                     document.getElementById("homepage-form").action ="";
@@ -30,6 +32,7 @@
                         <!--<option type="option" id="id_main_url" name="mainurl" value="https://talk.sonymobile.com">https://talk.sonymobile.com</option>//-->
                         <option type="option" id="id_main_url" name="mainurl" value="https://www.gsmarena.com/">https://www.gsmarena.com</option>
                         <option type="option" id="id_main_url" name="mainurl" value="https://androidforums.com/">https://androidforums.com</option>
+                        <option type="option" id="id_main_url" name="mainurl" value="https://gadgets.ndtv.com/">https://gadgets.ndtv.com</option>
                         <!--<option type="option" id="id_main_url" name="mainurl" value="https://www.androidpit.com//">https://www.androidpit.com</option>//-->
                     </select>
                 </div>

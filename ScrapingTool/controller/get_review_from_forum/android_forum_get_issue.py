@@ -8,7 +8,7 @@ from ScrapingTool.Models.file_read_write import fileReaderWriter
 from ScrapingTool.Generic.parser import parse
 
 
-def android_forum_get_issue(req_id,selected_model_links,selected_dates):
+def android_forum_get_issue(request,selected_model_links,selected_dates):
 
     date_list = []
     url_list = []
@@ -25,7 +25,7 @@ def android_forum_get_issue(req_id,selected_model_links,selected_dates):
         else:
             pagination_url_list.append(model_url)
 
-        dic_thread_name = get_thread_link_from_android_forum(pagination_url_list)
+        dic_thread_name = get_thread_link_from_android_forum(pagination_url_list,selected_dates)
         for thread_url, thread_name in dic_thread_name.items():
             complete_url = ANDROID_FORUM_URL + thread_url
             soup = parse(complete_url)
@@ -68,12 +68,12 @@ def android_forum_get_issue(req_id,selected_model_links,selected_dates):
         data_dictionary={}
     else:
         file_writer = fileReaderWriter()
-        file_writer.write_data_using_pandas(req_id,data_dictionary)
+        file_writer.write_data_using_pandas(request,data_dictionary)
 
     return data_dictionary
 
 
-def get_thread_link_from_android_forum(pagination_url_list):
+def get_thread_link_from_android_forum(pagination_url_list, selected_dates):
     thread_link_list = []
     thread_name_list = []
     product_name_list = []
@@ -83,10 +83,27 @@ def get_thread_link_from_android_forum(pagination_url_list):
         soup = parse(url)
         product_name = (soup.find("div", class_="channel_title")).get_text()
         for thread in soup.find_all("div", class_="listBlock main"):
-            for link in thread.find_all("a",class_="PreviewTooltip"):
-                thread_link_list.append(link.attrs['href'])
-                thread_name_list.append(link.get_text())
-                product_name_list.append(product_name)
+            for child_thread in thread.find_all("div", class_="secondRow"):
+                date = child_thread.find("abbr", class_="uix_DateTime")
+                thread_date = date.attrs['data-datestring']
+                strip_date = thread_date.strip()
+                pattern = re.compile(
+                    "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}")
+                date = pattern.search(strip_date).group()
+                converted_date = datetime.datetime.strptime(date, '%b %d, %Y').strftime('%m/%d/%Y')
+
+                for date in selected_dates:
+                    if date == converted_date:
+                        link = thread.find("a", class_="PreviewTooltip")
+                        thread_link_list.append(link.attrs['href'])
+                        thread_name_list.append(link.get_text())
+                        product_name_list.append(product_name)
+                    else:
+                        link = thread.find("a", class_="PreviewTooltip")
+                        thread_link_list.append(link.attrs['href'])
+                        thread_name_list.append(link.get_text())
+                        product_name_list.append(product_name)
+
     i = 0
     for key in thread_link_list:
         dic_thread_name[key].append(thread_name_list[i])

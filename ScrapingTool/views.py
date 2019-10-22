@@ -75,14 +75,11 @@ def brand_view(request):
             return redirect('home')
 
     main_url = str(request.session.get('mainurl'))
-
     if main_url:
-        brand_list = get_brand_names(req_id,main_url)
-        logging.info("<<<<<<< Received List of Mobile Brand names >>>>>>> %s", brand_list[0])
+        brand_list = get_brand_names(request)
+        logging.info("<<<<<<< Received List of Mobile Brand Names >>>>>>> %s", brand_list[0])
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
-    else:
-        error_message = "Unable to Connect to URL"
         logging.error("handling an error message for empty brand name : %s", error_message)
         messages.error(request,'Unable to connect to URL')
         return redirect('home')
@@ -108,8 +105,8 @@ def mobile_view(request):
     
 
     if request.POST.get('back_button'):
-        logging.info("Session ID: %s", request.session.get('session'))
-        if(request.session.get('session')=='mobile-view'):
+        logging.info("Session ID: %s", request.session.get('cur_view'))
+        if(request.session.get('cur_view')=='mobile-view'):
             response = redirect('brand/')
             request.session['req_id'] = mongo.Create_Request_ID()
             logging.info("<<<<<<<<< BackButton clicked in Mobile page >>>>>>>>>>>")
@@ -135,7 +132,7 @@ def mobile_view(request):
                 for year in yearlist:
                     mobile_list_display.extend(mobile_list[0][year])
             successmsg = "Data extracted successfully, Click download to get data in excel"
-            request.session['session']='mobile-view' 
+            request.session['cur_view']='mobile-view' 
             return render(request, "product.html",
                     {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
                     "infomsg": info_msg, 'announcedyear': announced_year})
@@ -147,7 +144,7 @@ def mobile_view(request):
         return response
 
     if request.POST.get('brand_submit'):
-        request.session['session']='mobile-view' 
+        request.session['cur_view']='mobile-view' 
         logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
         collection_name = "Mobile_Brands" + str(req_id)
         brand_dict = mongo.GetData_In_Dict(collection_name)
@@ -155,9 +152,7 @@ def mobile_view(request):
         selected_brand = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
         brand_url = brand_dict[selected_brand[0]]
-
-        request.session['series']=brand_url
-
+        request.session['brand']= selected_brand[0]
         logging.info("<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
         mobile_list = get_models_names(req_id, brand_url)
@@ -199,8 +194,8 @@ def mobile_view(request):
         logging.info("<<<<<<<<< dashboard button clicked >>>>>>>>>>>")
         collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
         ProdList = mongo.Get_Chart_Prod_List(collection_name)
-        request.session['session']='dashboard-view' 
-        logging.info("Session ID: %s", request.session.get('session'))
+        request.session['cur_view']='dashboard-view' 
+        logging.info("Current View: %s", request.session.get('cur_view'))
         return render(request, "dashboard.html", {"product_list": ProdList})
 
     if request.POST.get('product_submit_button'):
@@ -242,16 +237,22 @@ def mobile_view(request):
                 # Fetch products selected by user-checklist
                 selected_model_name = request.POST.getlist('product[]')
                 logging.info("<<<<<<< User selected product list : %s >>>>>>>>>>>>>>", selected_model_name)
+                sel_brand = str(request.session.get('brand'))
 
                 if selected_model_name:
                     selected_model_url = []
                     for model in selected_model_name:
-                        selected_model_url.append(main_url + "/" + mobile_dict[model][0])
+                        print("selected product url")
+                        print(mobile_dict[model][0])
+                        if "gadgets.ndtv" in main_url:
+                            selected_model_url.append(mobile_dict[model][0])
+                        else:
+                            selected_model_url.append(main_url + "/" + mobile_dict[model][0])
                     if fromdate and todate:
                         if fromdate <= todate:
                             selected_dates = date_format_change(fromdate, todate)
 
-                            data_information = get_data_from_url(req_id, main_url,selected_model_url,selected_dates)
+                            data_information = get_data_from_url(request,main_url,selected_model_url,selected_dates)
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -274,7 +275,7 @@ def mobile_view(request):
                                 error_message)
                     elif request.POST.get("alldates") == "on":
                         selected_dates = []
-                        data_information = get_data_from_url(req_id, main_url, selected_model_url, selected_dates)
+                        data_information = get_data_from_url(request,main_url, selected_model_url, selected_dates)
 
                         if data_information:
                             successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -301,11 +302,12 @@ def mobile_view(request):
                         error_message)
 
     elif request.POST.get("douwnload_button"):
-        generated_file = FILE_NAME+req_id+XLSX
-        with open(FILE_PATH+generated_file, 'rb') as f:
+        file_path = 'ScrapingTool/Generic/files/'
+        file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
+        with open(file_path+file_name, 'rb') as f:
             response = HttpResponse(f.read(),
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=' + generated_file
+            response['Content-Disposition'] = 'attachment; filename=' + file_name
             response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             return response
 
@@ -423,6 +425,7 @@ def product_view(request):
     if request.POST.get('series_button'):
         logging.info("series button clicked")
         series_list = request.POST.getlist('series[]')
+        request.session['brand']=series_list[0]
         # Call get_dictionary_data() method to get series link for selected series name by user
         series = getProductNamesAndLinks()
         url = str(request.session.get('mainurl'))+"/t5/Phones-Tablets/ct-p/Phones"
@@ -451,6 +454,12 @@ def product_view(request):
 
             todate = request.POST.get('todate')
             fromdate = request.POST.get('fromdate')
+
+            sel_series = request.session.get('brand')
+            main_url = str(request.session.get('mainurl'))
+            print(main_url,sel_series[0],product_names_list)
+            req_id = Get_RequestID(main_url,sel_series,product_names_list)
+            request.session['req_id'] = req_id
 
             # Checking selection of dates
             # Checking if From ,To and All date is NOT selected
@@ -487,7 +496,7 @@ def product_view(request):
                                 list_of_dates = date_format_change(fromdate, todate)
                                 logging.debug("+++++list of dates %s:", list_of_dates)
                                 # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
-                                data_dictionary = get_issue_link_obj.issueLinksPagination(req_id, list_of_dates,
+                                data_dictionary = get_issue_link_obj.issueLinksPagination(request,list_of_dates,
                                                                                           product_links_list)
 
                                 logging.debug("Data Dictionary %s:", data_dictionary)
@@ -514,7 +523,7 @@ def product_view(request):
 
                         elif request.POST.get("alldates") == "on":
                             list_of_dates = []
-                            get_issue_link_obj.issueLinksPagination(req_id, list_of_dates, product_links_list)
+                            get_issue_link_obj.issueLinksPagination(request,list_of_dates, product_links_list)
                             successmsg = "Data extracted successfully, Click download to get data in excel"
                             collection_name = EXPORTED_DATA_DATABASE_TABLE + str(req_id)
                             ProdList = mongo.Get_Chart_Prod_List(collection_name)
@@ -539,11 +548,12 @@ def product_view(request):
         # On click of download button,to download Data excel sheet
         elif request.POST.get("douwnload_button"):
             logging.info('Download Button Clicked')
-            generated_file = FILE_NAME+req_id+XLSX
-            with open(FILE_PATH+generated_file, 'rb') as f:
+            file_path = 'ScrapingTool/Generic/files/'
+            file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
+            with open(file_path+file_name, 'rb') as f:
                 response = HttpResponse(f.read(),
                                         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = 'attachment; filename=' + generated_file
+                response['Content-Disposition'] = 'attachment; filename=' + file_name
                 response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 return response
 

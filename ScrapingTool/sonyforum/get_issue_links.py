@@ -16,7 +16,7 @@ from ScrapingTool.sonyforum.scrap_data import scrapData
 logging.basicConfig(level=logging.DEBUG)
 class getIssueLinks:
 
-    def get_issue_link(self,req_id,product_links_list,Date_list):
+    def get_issue_link(self,request,product_links_list,Date_list):
         issue_links_list = []
         get_value_from_scrap_data =[]
         try:
@@ -93,7 +93,7 @@ class getIssueLinks:
             scrap_data=scrapData()
             print("link_list %s ",issue_links_list)
             if issue_links_list:
-                get_value_from_scrap_data=scrap_data.get_issue_data(req_id,getIssueLinks().remove_dupilcate_link(issue_links_list),Date_list)
+                get_value_from_scrap_data=scrap_data.get_issue_data(request,getIssueLinks().remove_dupilcate_link(issue_links_list),Date_list)
             return get_value_from_scrap_data
 
         except RequestException as e:
@@ -114,7 +114,7 @@ class getIssueLinks:
        Input:list_of_dates, product links_list
        Output:Scraped data for selected product and selected dates
        '''
-    def issueLinksPagination(self, req_id, list_of_dates, links_list):
+    def issueLinksPagination(self, request, list_of_dates, links_list):
         get_product_links = getProductNamesAndLinks()
         pagination_link_list = []
 
@@ -132,5 +132,5 @@ class getIssueLinks:
         logging.debug("list of product links including pagination links %s", pagination_link_list)
 
         # Fetch scraped data by passing product pagination links
-        get_value_from_issue_links = self.get_issue_link(req_id,pagination_link_list, list_of_dates)
+        get_value_from_issue_links = self.get_issue_link(request, pagination_link_list, list_of_dates)
         return get_value_from_issue_links

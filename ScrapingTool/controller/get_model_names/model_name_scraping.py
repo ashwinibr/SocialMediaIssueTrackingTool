@@ -173,4 +173,49 @@ def get_models_names_from_android_pit_forum(req_id,soup,url):
     return dic_year, dic_model_name
 
 
+def get_models_names_from_gadgets360(soup):
+
+    mobile_model_name_list = []
+    mobile_model_links_list = []
+    mobile_model_year_list = []
+    dic_model_name = defaultdict(list)
+    dic_year = defaultdict(list)
+
+    for mobile_model_container in soup.find_all("ul", class_="clearfix margin_t20"):
+        for link in mobile_model_container.find_all("a"):
+            l = link.get('href')
+            for product_name in link.find_all("strong"):
+                mobile_model_links_list.append(l)
+                mobile_model_name_list.append(product_name.text)
+                #year_request = requests.get(l)
+                #year_soup = bs4.BeautifulSoup(year_request.content, "html.parser")
+                #for release_date_container in year_soup.findAll("ul", class_="_flx _dt"):
+                    #for release_date in release_date_container.findAll("li"):
+                        #split_year = re.compile(r'\d{4}')
+                        #year = split_year.search(str(release_date))
+                        #if year:
+                            #mobile_model_year_list.append(year.group(0))
+                            #prev_year = year.group(0)
+                            #break
+                    #if year is None:
+                        #mobile_model_year_list.append(prev_year)
+                mobile_model_year_list.append("All")
+
+    model_dictionary = {ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
+                        MODEL_NAME_DICT_KEY: mobile_model_name_list,
+                        MODEL_LINK_DICT_KEY: mobile_model_links_list}
+
+    Write_to_DB(model_dictionary, MODEL_NAME_DATABASE_TABLE)
+
+    i = 0
+    for key in mobile_model_year_list:
+        dic_year[key].append(mobile_model_name_list[i])
+        i += 1
+
+    j = 0
+    for mobile_name_key in mobile_model_name_list:
+        dic_model_name[mobile_name_key].append(mobile_model_links_list[j])
+        j += 1
+    return dic_year, dic_model_name
+
 

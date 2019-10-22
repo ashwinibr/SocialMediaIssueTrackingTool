@@ -1,8 +1,14 @@
+import logging
+import requests
 import urllib
+
 
 def get_response_code(url):
     try:
-        conn = urllib.request.urlopen(url)
-        return conn.getcode()
+        response = requests.head(url)
+        return response.status_code
     except ConnectionRefusedError as e:
-        return e
+
+        logging.error("ConnectionRefusedError :%s", e)
+        pass
+

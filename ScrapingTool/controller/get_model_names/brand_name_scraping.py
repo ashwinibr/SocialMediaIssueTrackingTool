@@ -1,17 +1,17 @@
 #from ScrapingTool.sqlite3_read_write import Write_to_DB
 import ScrapingTool.Models.mongo_read_write as mongo
-from ScrapingTool.Generic.constant import BRAND_NAME_DICT_KEY, BRAND_LINK_DICT_KEY, MOBILE_BRANDS_DATABASE_TABLE
-
+from ScrapingTool.Generic.constant import BRAND_NAME_DICT_KEY, BRAND_LINK_DICT_KEY, MOBILE_BRANDS_DATABASE_TABLE, \
+    ANDROID_FORUM_URL, ANDROID_PIT_FORUM_URL, GSMARENA_URL
 def get_brand_name_from_gsmarena(req_id,soup,mobile_brand_list,mobile_brand_links_list):
 
     for mobile_brand_container in soup.find_all("div", class_="brandmenu-v2 light l-box clearfix"):
         for list_of_brands in mobile_brand_container.find_all("li"):
             mobile_brand_list.append(list_of_brands.text)
             for brand_links in list_of_brands.find_all("a"):
-                mobile_brand_links_list.append(brand_links.attrs['href'])
+                mobile_brand_links_list.append(GSMARENA_URL+brand_links.attrs['href'])
 
     brand_dict = {BRAND_NAME_DICT_KEY: mobile_brand_list, BRAND_LINK_DICT_KEY: mobile_brand_links_list}
-    collection_name = MOBILE_BRANDS_DATABASE_TABLE + req_id
+    collection_name = MOBILE_BRANDS_DATABASE_TABLE + str(req_id)
     mongo.Write_to_DB(brand_dict,collection_name)
     return mobile_brand_list,mobile_brand_links_list
 
@@ -22,10 +22,10 @@ def get_brand_name_from_androidforum(req_id,soup,mobile_brand_list,mobile_brand_
 
             for brand_name in list_of_brands.find_all("span"):
                 mobile_brand_list.append(brand_name.text)
-                mobile_brand_links_list.append(brand_name.attrs['href'])
+                mobile_brand_links_list.append(ANDROID_FORUM_URL+brand_name.attrs['href'])
 
     brand_dict = {BRAND_NAME_DICT_KEY: mobile_brand_list, BRAND_LINK_DICT_KEY: mobile_brand_links_list}
-    collection_name = MOBILE_BRANDS_DATABASE_TABLE + req_id
+    collection_name = MOBILE_BRANDS_DATABASE_TABLE + str(req_id)
     mongo.Write_to_DB(brand_dict, collection_name)
     return mobile_brand_list, mobile_brand_links_list
 
@@ -39,8 +39,21 @@ def get_brand_name_from_androidpit_forum(req_id,soup,mobile_brand_list,mobile_br
         for forum_name in forum_a_links.find_all("h2"):
             if (forum_name.text).strip() not in string:
                 mobile_brand_list.append(forum_name.text)
-                mobile_brand_links_list.append(forum_a_links.attrs['href'])
+                mobile_brand_links_list.append(ANDROID_PIT_FORUM_URL+forum_a_links.attrs['href'])
     brand_dict = {BRAND_NAME_DICT_KEY: mobile_brand_list, BRAND_LINK_DICT_KEY: mobile_brand_links_list}
-    collection_name = MOBILE_BRANDS_DATABASE_TABLE + req_id
+    collection_name = MOBILE_BRANDS_DATABASE_TABLE + str(req_id)
+    mongo.Write_to_DB(brand_dict, collection_name)
+    return mobile_brand_list, mobile_brand_links_list
+
+
+def get_brand_name_from_gadget360(req_id,soup, mobile_brand_list, mobile_brand_links_list):
+    for mobile_brand_container in soup.findAll("div", class_="subnav"):
+        for brand in mobile_brand_container.findAll("a"):
+            brand_link = brand.get('href')
+            mobile_brand_list.append(brand.text)
+            mobile_brand_links_list.append(brand_link)
+    print(mobile_brand_list)
+    brand_dict = {BRAND_NAME_DICT_KEY: mobile_brand_list, BRAND_LINK_DICT_KEY: mobile_brand_links_list}
+    collection_name = MOBILE_BRANDS_DATABASE_TABLE + str(req_id)
     mongo.Write_to_DB(brand_dict, collection_name)
     return mobile_brand_list, mobile_brand_links_list
