@@ -30,7 +30,7 @@ def homepage_view(request):
     """
     #homepage_template = loader.get_template('homepage.html')
     logging.info("<<<<<<<<< Rendering in to the Home Page View >>>>>>>>>>>")
-    request.session['request_id'] = mongo.Create_Request_ID()
+    request.session['req_id'] = mongo.Create_Request_ID()
     #return HttpResponse(homepage_template.render())
     return render(request,'homepage.html')
 
@@ -41,9 +41,9 @@ def brand_view(request):
     :param request:
     :return: Returning responce to the user
     """
-    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logmsg = "<<<<< Request ID: "+str(request.session.get('req_id'))+">>>>>"
     logging.info(logmsg)
-    req_id = str(request.session.get('request_id'))
+    req_id = str(request.session.get('req_id'))
 
     if request.POST.get('back_button'):
         logging.info("<<<<<<<<< BackButton clicked in brand page  >>>>>>>>>>>")
@@ -96,9 +96,9 @@ def mobile_view(request):
        :param request:
        :return: Returning responce to the user
        """
-    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logmsg = "<<<<< Request ID: "+str(request.session.get('req_id'))+">>>>>"
     logging.info(logmsg)
-    req_id = str(request.session.get('request_id'))
+    req_id = str(request.session.get('req_id'))
     error_message = ""
     info_msg = ""
     successmsg = ""
@@ -111,7 +111,7 @@ def mobile_view(request):
         logging.info("Session ID: %s", request.session.get('session'))
         if(request.session.get('session')=='mobile-view'):
             response = redirect('brand/')
-            request.session['request_id'] = mongo.Create_Request_ID()
+            request.session['req_id'] = mongo.Create_Request_ID()
             logging.info("<<<<<<<<< BackButton clicked in Mobile page >>>>>>>>>>>")
             logging.info("<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>")
             return response
@@ -327,9 +327,9 @@ def mobile_view(request):
 @csrf_exempt
 def series_view(request):
     logging.info("<<<<<<Rendering in series view>>>>>>>")
-    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logmsg = "<<<<< Request ID: "+str(request.session.get('req_id'))+">>>>>"
     logging.info(logmsg)
-    #req_id = str(request.session.get('request_id'))
+    #req_id = str(request.session.get('req_id'))
     series_list = []
 
     if request.POST.get('back_button'):
@@ -383,16 +383,16 @@ def product_view(request):
     info_msg = ""
     successmsg = ""
     product_names_list = []
-    logmsg = "<<<<< Request ID: "+str(request.session.get('request_id'))+">>>>>"
+    logmsg = "<<<<< Request ID: "+str(request.session.get('req_id'))+">>>>>"
     logging.info(logmsg)
-    req_id = str(request.session.get('request_id'))
+    req_id = str(request.session.get('req_id'))
 
     get_issue_link_obj = getIssueLinks()
 
     if request.POST.get('back_button'):
         response = redirect('series/')
         logging.info("redirecting form product view to series page view")
-        request.session['request_id'] = mongo.Create_Request_ID()
+        request.session['req_id'] = mongo.Create_Request_ID()
         return response
 
     if request.POST.get('home_button'):
