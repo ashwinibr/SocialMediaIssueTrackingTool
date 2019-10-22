@@ -173,7 +173,7 @@ def get_models_names_from_android_pit_forum(req_id,soup,url):
     return dic_year, dic_model_name
 
 
-def get_models_names_from_gadgets360(soup):
+def get_models_names_from_gadgets360(req_id,soup):
 
     mobile_model_name_list = []
     mobile_model_links_list = []
@@ -205,7 +205,8 @@ def get_models_names_from_gadgets360(soup):
                         MODEL_NAME_DICT_KEY: mobile_model_name_list,
                         MODEL_LINK_DICT_KEY: mobile_model_links_list}
 
-    Write_to_DB(model_dictionary, MODEL_NAME_DATABASE_TABLE)
+    collection_name = MODEL_NAME_DATABASE_TABLE + req_id
+    mongo.Write_to_DB(model_dictionary, collection_name)
 
     i = 0
     for key in mobile_model_year_list:
