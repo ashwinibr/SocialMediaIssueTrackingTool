@@ -458,8 +458,6 @@ def product_view(request):
             sel_series = request.session.get('brand')
             main_url = str(request.session.get('mainurl'))
             print(main_url,sel_series[0],product_names_list)
-            req_id = Get_RequestID(main_url,sel_series,product_names_list)
-            request.session['req_id'] = req_id
 
             # Checking selection of dates
             # Checking if From ,To and All date is NOT selected
