@@ -42,7 +42,7 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                     # Beautiful Soup Code
                 html_source = driver.page_source
                 new_user_review_container = BeautifulSoup(html_source, 'lxml')
-                for issue_container in new_user_review_container.find_all("li", class_="parent_review li_parent_0"):
+                for issue_container in new_user_review_container.find_all("li", class_=" parent_review li_parent_0"):
                     posted_date = issue_container.find("div", class_="_cmtname")
                     post_date = posted_date.find("span")
                     date_expr = r"(?:%s) ?\s(\d+)\, \d{4}" % '|'.join(calendar.month_abbr[1:])
@@ -76,7 +76,6 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
 
     data_dictionary = {"Product": product_list, "Date": date_list, "Link": url_list, "Category": category_list,
                        "comment": user_comment_list}
-    print(data_dictionary)
 
     if not product_list:
         data_dictionary = {}
