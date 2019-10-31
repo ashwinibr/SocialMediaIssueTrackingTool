@@ -72,7 +72,6 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                                 issue_data, category = generic_category_filter(child_node)
                                 user_comment_list.append(issue_data)
                                 category_list.append(category)
-                driver.close()
 
     data_dictionary = {"Product": product_list, "Date": date_list, "Link": url_list, "Category": category_list,
                        "comment": user_comment_list}

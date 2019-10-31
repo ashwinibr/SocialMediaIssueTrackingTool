@@ -87,12 +87,22 @@
                         checkboxes[i].checked = source.checked;
                     }
                 }
+
+                function ProdSelection(){
+                    document.getElementById("errorfrom").innerHTML = ''
+                    document.getElementById("errorto").innerHTML = '';
+                    document.getElementById("successmsg").innerHTML = '';
+                    document.getElementById("req_id").style.visibility="hidden";  
+                    document.getElementById("douwnload_button").style.visibility="hidden";
+                    document.getElementById("dashboard_button").style.visibility="hidden";
+                }
                       
                 function checkTextFieldFrom() {
                     var valueDatefrom = document.getElementById('fromdate').value;
                     document.getElementById("errorfrom").innerHTML = ''
                     document.getElementById("errorto").innerHTML = '';
                     document.getElementById("successmsg").innerHTML = '';
+                    document.getElementById("req_id").style.visibility="hidden";  
                     document.getElementById("douwnload_button").style.visibility="hidden";
                     document.getElementById("dashboard_button").style.visibility="hidden";
 
