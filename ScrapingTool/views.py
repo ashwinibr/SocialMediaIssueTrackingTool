@@ -43,7 +43,6 @@ def brand_view(request):
     """
     logmsg = "<<<<< Request ID: "+str(request.session.get('req_id'))+">>>>>"
     logging.info(logmsg)
-    req_id = str(request.session.get('req_id'))
 
     if request.POST.get('back_button'):
         logging.info("<<<<<<<<< BackButton clicked in brand page  >>>>>>>>>>>")
@@ -80,6 +79,8 @@ def brand_view(request):
         logging.info("<<<<<<< Received List of Mobile Brand Names >>>>>>> %s", brand_list[0])
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
+    else:
+        error_message = "Unable to connect to URL"
         logging.error("handling an error message for empty brand name : %s", error_message)
         messages.error(request,'Unable to connect to URL')
         return redirect('home')
@@ -237,7 +238,6 @@ def mobile_view(request):
                 # Fetch products selected by user-checklist
                 selected_model_name = request.POST.getlist('product[]')
                 logging.info("<<<<<<< User selected product list : %s >>>>>>>>>>>>>>", selected_model_name)
-                sel_brand = str(request.session.get('brand'))
 
                 if selected_model_name:
                     selected_model_url = []
