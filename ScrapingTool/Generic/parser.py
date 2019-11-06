@@ -19,13 +19,13 @@ def get_random_ua():
             prng = np.random.RandomState()
             index = prng.permutation(len(lines) - 1)
             idx = np.asarray(index, dtype=np.integer)[0]
-            random_proxy = lines[int(idx)]
+            random_ua = lines[int(idx)]
+            random_ua = random_ua.replace('\n', ' ').replace('\r', '')
     except Exception as ex:
         print('Exception in random_ua')
         print(str(ex))
     finally:
         return random_ua
-
 
 def parse(url):
     """
@@ -47,6 +47,7 @@ def parse(url):
         http_response.close()
     except Exception as ex:
             print(str(ex))
+            print("fetching from google webcahe")
             user_agent = get_random_ua()
             headers = {
                     'user-agent': user_agent,
