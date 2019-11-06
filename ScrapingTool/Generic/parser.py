@@ -43,7 +43,6 @@ def parse(url):
                 'referrer': 'https://google.com',
             }
         http_response = requests.get(url,headers=headers)
-        text_response = http_response.text
         soup = BeautifulSoup(http_response.content, "html.parser")
         http_response.close()
     except Exception as ex:
@@ -55,7 +54,6 @@ def parse(url):
                 }
             cahe_url = 'http://webcache.googleusercontent.com/search?q=cache:'+url
             http_response = requests.get(cahe_url,headers=headers)
-            text_response = http_response.text
             soup = BeautifulSoup(http_response.content, "html.parser")
             http_response.close()
     finally:
