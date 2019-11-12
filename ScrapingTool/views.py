@@ -16,7 +16,7 @@ from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.Models.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
-    Get_Chart_Prod_List, Get_RequestID
+    Get_Chart_Prod_List, Get_RequestID, Check_Existing_Data
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
@@ -70,8 +70,16 @@ def brand_view(request):
             return redirect('home')
 
     main_url = str(request.session.get('mainurl'))
+    from_url = request.POST.get('from-url')
     if main_url:
-        brand_list = get_brand_names(request)
+        if(from_url=='None'):
+            brand_list = get_brand_names(request)
+        else:
+            try:
+                brand_list = Check_Existing_Data(main_url)
+            except:
+                brand_list = get_brand_names(request)
+
         logging.info("<<<<<<< Received List of Mobile Brand Names >>>>>>> %s", brand_list[0])
         logging.info("Rendering to brandselection.html page to display brand names from user selcted URL")
         return render(request, "brandselection.html", {"brandlist": brand_list[0]})
@@ -98,7 +106,6 @@ def mobile_view(request):
     mobile_list_display = []
     announced_year = []
     
-
     if request.POST.get('back_button'):
         logging.info("Session ID: %s", request.session.get('cur_view'))
         if(request.session.get('cur_view')=='mobile-view'):
@@ -108,7 +115,9 @@ def mobile_view(request):
             return response
         else:
             filter_value = 'Latest Released'
-            mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE)
+            main_url = str(request.session.get('mainurl'))
+            from_url = request.POST.get('from-url')
+            mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
             announced_year = ['Latest Released']
 
             for year in mobile_list[0]:
@@ -140,15 +149,26 @@ def mobile_view(request):
     if request.POST.get('brand_submit'):
         request.session['cur_view']='mobile-view' 
         logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
-        brand_dict = GetData_In_Dict(MOBILE_BRANDS_DATABASE_TABLE)
-
+        main_url = str(request.session.get('mainurl'))
+        brand_dict = GetData_In_Dict(MOBILE_BRANDS_DATABASE_TABLE, main_url)
         selected_brand = request.POST.getlist('brand[]')
+        request.session['selected_brand'] = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
         brand_url = brand_dict[selected_brand[0]]
         request.session['brand']= selected_brand[0]
         logging.info("<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>")
         #Model list contains year and model name
-        mobile_list = get_models_names(brand_url)
+
+        main_url = str(request.session.get('mainurl'))
+        from_url = request.POST.get('from-url')
+        check_data_in_DB = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
+        if(from_url=='on'):
+            mobile_list = get_models_names(request,brand_url)
+        elif(len(check_data_in_DB[1])<=2):
+            mobile_list = get_models_names(request,brand_url)
+        else:
+            mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
+
 
         # Getting year from the list
         for key in mobile_list[0].keys():
@@ -165,7 +185,11 @@ def mobile_view(request):
     if request.POST.get('updatelist'):
         logging.info("<<<<<<<<< update list button clicked >>>>>>>>>>>")
         filter_value = request.POST.get('years')
-        mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE)
+        main_url = str(request.session.get('mainurl'))
+        from_url = request.POST.get('from-url')
+        selected_brand = request.POST.getlist('brand[]')
+
+        mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
         announced_year = ['Latest Released']
 
         for year in mobile_list[0]:
@@ -191,7 +215,9 @@ def mobile_view(request):
 
     if request.POST.get('product_submit_button'):
         logging.info("social media submit button clicked")
-        mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE)
+        main_url = str(request.session.get('mainurl'))
+        from_url = request.POST.get('from-url')
+        mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
         mobile_dict = mobile_list[1]
 
         announced_year = ['Latest Released']

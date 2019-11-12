@@ -47,7 +47,7 @@ def parse(url):
         http_response.close()
     except Exception as ex:
             print(str(ex))
-            print("fetching from google webcahe")
+            print("fetching from google web cache")
             user_agent = get_random_ua()
             headers = {
                     'user-agent': user_agent,
@@ -61,5 +61,6 @@ def parse(url):
         if len(soup) > 0:
             return soup
         else:
+            print("<<<<<<< URL not accessable >>>>>>")
             return None
     

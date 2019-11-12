@@ -33,6 +33,9 @@
                         {%endfor %}
                     </select>
                 </div>
+                <div id="from-url" class="from-url">
+                    <input type="checkbox" id="from-url" name="from-url" onchange="clearDateErr()"> Get Updated List From URL<br><br>
+                </div>
                 <input type="submit" name="brand_submit" value="Submit" onclick="LoadMain()">
                 <t style="color:red">{{errorvalue}}</t>
             </form>

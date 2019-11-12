@@ -3,19 +3,21 @@ import re
 from collections import defaultdict
 
 from ScrapingTool.Generic.constant import GSMARENA_URL, MODEL_NAME_DICT_KEY, ANNOUNCED_YEAR_DICT_KEY, \
-    MODEL_LINK_DICT_KEY, MODEL_NAME_DATABASE_TABLE, ANDROID_PIT_FORUM_URL
+    MODEL_LINK_DICT_KEY, MODEL_NAME_DATABASE_TABLE, ANDROID_PIT_FORUM_URL,  MAIN_URL_KEY, GADGETS_FORUM_URL, \
+    ANDROID_FORUM_URL, BRAND_NAME_KEY
 from ScrapingTool.Generic.parser import parse
 from ScrapingTool.Models.sqlite3_read_write import Write_to_DB
 
 
-def get_models_names_from_gsmarena(soup,url):
+def get_models_names_from_gsmarena(request,soup,url):
 
     list_page = pagination_for_mobile_brand_list_from_gsmarena(soup,url)
 
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
-
+    main_url = []
+    mobile_brand = request.session.get('brand')
     for l in list_page:
         url = GSMARENA_URL+l
         soup = parse(url)
@@ -29,19 +31,21 @@ def get_models_names_from_gsmarena(soup,url):
                 if split_year is not None:
                     pattern = re.compile(r"(\w+)$")
                     year = pattern.search(split_year.group(1))
+                    main_url.append(GSMARENA_URL)
                     mobile_model_year_list.append(year.group(0))
                     mobile_model_name_list.append(mobile_model_name.text)
                     mobile_model_links_list.append(model_links.attrs['href'])
 
                 else:
+                    main_url.append(GSMARENA_URL)
                     mobile_model_year_list.append("Other")
                     mobile_model_name_list.append(mobile_model_name.text)
                     mobile_model_links_list.append(model_links.attrs['href'])
 
-    model_dictionary = {ANNOUNCED_YEAR_DICT_KEY:mobile_model_year_list,
+    model_dictionary = {MAIN_URL_KEY:main_url, BRAND_NAME_KEY: mobile_brand,
+                      ANNOUNCED_YEAR_DICT_KEY:mobile_model_year_list,
                       MODEL_NAME_DICT_KEY:mobile_model_name_list,
                       MODEL_LINK_DICT_KEY:mobile_model_links_list}
-
     dic_year = defaultdict(list)
     dic_model_name=defaultdict(list)
 
@@ -78,12 +82,14 @@ def pagination_for_mobile_brand_list_from_gsmarena(soup,url):
     return pagination_list
 
 
-def get_models_names_from_android_forum(soup):
+def get_models_names_from_android_forum(request,soup):
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
     dic_model_name = defaultdict(list)
     dic_year = defaultdict(list)
+    main_url = []
+    mobile_brand = request.session.get('brand')
 
     for mobile_model_container in soup.find_all("ol", class_="deviceList uix_nodeStyle_3 section"):
         for l in mobile_model_container.find_all("h3", class_="nodeTitle"):
@@ -91,7 +97,10 @@ def get_models_names_from_android_forum(soup):
             mobile_model_year_list.append("All")
             model_links = l.find("a")
             mobile_model_links_list.append(model_links.attrs['href'])
-    model_dictionary = {ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
+            main_url.append(ANDROID_FORUM_URL)
+
+    model_dictionary = {MAIN_URL_KEY:main_url, BRAND_NAME_KEY: mobile_brand,
+                        ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
                         MODEL_NAME_DICT_KEY: mobile_model_name_list,
                         MODEL_LINK_DICT_KEY: mobile_model_links_list}
 
@@ -109,13 +118,16 @@ def get_models_names_from_android_forum(soup):
     return dic_year,dic_model_name
 
 
-def get_models_names_from_android_pit_forum(soup,url):
+def get_models_names_from_android_pit_forum(request,soup,url):
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
     dic_model_name = defaultdict(list)
     dic_year = defaultdict(list)
     sub_cat_link = []
+    main_url = []
+    mobile_brand = request.session.get('brand')
+
     if soup.find("a", class_="forumSubcategory"):
         for subCatLink in soup.find_all("a", class_="forumSubcategory"):
             sub_cat_link.append(ANDROID_PIT_FORUM_URL + subCatLink.attrs["href"])
@@ -137,10 +149,12 @@ def get_models_names_from_android_pit_forum(soup,url):
                 for subCatLink in soup.find_all("a", class_ = "forumSubcategory"):
                     product_name = subCatLink.find("h3")
                     if "/" in product_name.text:
+                        main_url.append(ANDROID_PIT_FORUM_URL)
                         mobile_model_name_list.append(product_name_head.text)
                         mobile_model_links_list.append(subCatLink.attrs["href"])
                         mobile_model_year_list.append("All")
                     else:
+                        main_url.append(ANDROID_PIT_FORUM_URL)
                         mobile_model_name_list.append(product_name.text)
                         mobile_model_links_list.append(ANDROID_PIT_FORUM_URL +subCatLink.attrs["href"])
                         mobile_model_year_list.append("All")
@@ -149,11 +163,13 @@ def get_models_names_from_android_pit_forum(soup,url):
                 product = soup.find("div", class_ = "forumHeadingWithFavorite")
                 product_name = product.find("h1")
 
+                main_url.append(ANDROID_PIT_FORUM_URL)
                 mobile_model_name_list.append(product_name.text)
                 mobile_model_links_list.append(forumLink)
                 mobile_model_year_list.append("All")
 
-    model_dictionary = {ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
+    model_dictionary = {MAIN_URL_KEY:main_url, BRAND_NAME_KEY: mobile_brand,
+                        ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
                         MODEL_NAME_DICT_KEY: mobile_model_name_list,
                         MODEL_LINK_DICT_KEY: mobile_model_links_list}
 
@@ -171,13 +187,15 @@ def get_models_names_from_android_pit_forum(soup,url):
     return dic_year, dic_model_name
 
 
-def get_models_names_from_gadgets360(soup):
+def get_models_names_from_gadgets360(request,soup):
 
     mobile_model_name_list = []
     mobile_model_links_list = []
     mobile_model_year_list = []
     dic_model_name = defaultdict(list)
     dic_year = defaultdict(list)
+    main_url = []
+    mobile_brand = request.session.get('brand')
 
     for mobile_model_container in soup.find_all("ul", class_="clearfix margin_t20"):
         for link in mobile_model_container.find_all("a"):
@@ -185,6 +203,8 @@ def get_models_names_from_gadgets360(soup):
             for product_name in link.find_all("strong"):
                 mobile_model_links_list.append(l)
                 mobile_model_name_list.append(product_name.text)
+                main_url.append(GADGETS_FORUM_URL)
+
                 #year_request = requests.get(l)
                 #year_soup = bs4.BeautifulSoup(year_request.content, "html.parser")
                 #for release_date_container in year_soup.findAll("ul", class_="_flx _dt"):
@@ -199,7 +219,8 @@ def get_models_names_from_gadgets360(soup):
                         #mobile_model_year_list.append(prev_year)
                 mobile_model_year_list.append("All")
 
-    model_dictionary = {ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
+    model_dictionary = {MAIN_URL_KEY:main_url, BRAND_NAME_KEY: mobile_brand,
+                        ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
                         MODEL_NAME_DICT_KEY: mobile_model_name_list,
                         MODEL_LINK_DICT_KEY: mobile_model_links_list}
 

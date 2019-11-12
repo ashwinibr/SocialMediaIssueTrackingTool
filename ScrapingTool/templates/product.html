@@ -35,6 +35,7 @@
                     var valueDatefrom =  new Date(document.getElementById('fromdate').value);
                     var valueDateto =  new Date(document.getElementById('todate').value);
                     var diff =  parseInt((valueDateto-valueDatefrom) / (1000 * 60 * 60 * 24), 10); 
+
                     if(diff>15){
                         alert("You have selected "+diff+' days, Please Select Date Range upto 15 Days!');
                     }
@@ -78,11 +79,11 @@
                 }
 
                 function toggle(source) {
-                var checkboxes = document.querySelectorAll('input[name="product[]"]');
-                for (var i = 0; i < checkboxes.length; i++) {
-                    if (checkboxes[i] != source)
-                        checkboxes[i].checked = source.checked;
-                    }
+                    var checkboxes = document.querySelectorAll('input[name="product[]"]');
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i] != source)
+                            checkboxes[i].checked = source.checked;
+                        }
                 }
 
                 function ProdSelection(){
@@ -159,10 +160,10 @@
                                     </div>
                                     <span id="errorfrom" style="color:red"></span>        
                                     <div class="input-group mb-2">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">To Date:</span> 
-                                            </div>
-                                        <input type="date" class="form-control" name="todate" id="todate" onblur="checkTextFieldFrom(); limitToDate();">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">To Date:</span> 
+                                        </div>
+                                        <input type="date" class="form-control" name="todate" id="todate" onblur="limitToDate(); checkTextFieldFrom();">
                                     </div>
                                     <span id="errorto" style="color:red"></span><br>
                                     <div id="select-all" class="select-all">

@@ -23,7 +23,8 @@ ANNOUNCED_YEAR_DICT_KEY = "Announced_Year"
 BRAND_NAME_DICT_KEY = "Brand_Name"
 BRAND_LINK_DICT_KEY = "Link"
 PRODUCT_DICT_KEY = "Product"
-
+MAIN_URL_KEY = "URL"
+BRAND_NAME_KEY = "Brand_Name"
 
 
 

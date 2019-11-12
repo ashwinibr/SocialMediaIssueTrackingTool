@@ -39,19 +39,19 @@ def get_brand_names(request):
     return mobile_brand_list,mobile_brand_links_list
 
 
-def get_models_names(url):
+def get_models_names(request,url):
     model_name_dic=()
 
     soup = parse(url)
 
     if GSMARRENS_STRING in url:
-        model_name_dic = get_models_names_from_gsmarena(soup,url)
+        model_name_dic = get_models_names_from_gsmarena(request,soup,url)
     elif ANDROID_FORUM_STRING in url:
-        model_name_dic = get_models_names_from_android_forum(soup)
+        model_name_dic = get_models_names_from_android_forum(request,soup)
     elif ANDROID_PIT_FORUM_STRING in url:
-        model_name_dic = get_models_names_from_android_pit_forum(soup,url)
+        model_name_dic = get_models_names_from_android_pit_forum(request,soup,url)
     elif GADGETS_FORUM_STRING in url:
-        model_name_dic = get_models_names_from_gadgets360(soup)
+        model_name_dic = get_models_names_from_gadgets360(request,soup)
     return model_name_dic
 
 
