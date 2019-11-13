@@ -36,8 +36,11 @@
                         <!--<option type="option" id="id_main_url" name="mainurl" value="https://www.androidpit.com//">https://www.androidpit.com</option>//-->
                     </select>
                 </div>
-                <div id="from-url" class="from-url">
-                    <input type="checkbox" id="from-url" name="from-url" onchange="clearDateErr()"> Get Updated List From URL<br><br>
+                <div id="from-url" class="from-url"  data-toggle="tooltip" data-placement="top" 
+                title="Uncheck this to get existing list from database! or check it to get updated list from URL!!">
+                    <input type="checkbox" id="from-url" name="from-url" onchange="clearDateErr()">
+                    Get Updated List From URL
+                    <i style="color: rgb(255, 215, 140)" class="fas fa-question-circle"></i><br><br>
                 </div>
                 <input type="submit" name="homepage_submit_btn" value="Submit" onclick="LoadMain()">
                 {% if messages %}
