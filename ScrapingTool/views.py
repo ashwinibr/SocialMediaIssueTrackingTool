@@ -16,7 +16,7 @@ from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
 from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
 from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.Models.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
-    Get_Chart_Prod_List, Get_RequestID, Check_Existing_Data
+    Get_Chart_Prod_List, Get_RequestID, Check_Existing_Data, Check_If_Data_Exist_In_DB
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
@@ -269,8 +269,16 @@ def mobile_view(request):
                     if fromdate and todate:
                         if fromdate <= todate:
                             selected_dates = date_format_change(fromdate, todate)
-
-                            data_information = get_data_from_url(request,main_url,selected_model_url,selected_dates)
+                            data_from_DB = Check_If_Data_Exist_In_DB(selected_model_url,fromdate,todate)
+                            db_date_list = list(dict.fromkeys(data_from_DB["Date"]))
+                            for dt in db_date_list:
+                                if(dt in selected_dates):
+                                    selected_dates.remove(dt)
+                            
+                            if selected_dates:
+                                data_information = get_data_from_url(request,main_url,selected_model_url,selected_dates)
+                            else:
+                                data_information = data_from_DB
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
@@ -389,7 +397,6 @@ def series_view(request):
         logging.error("handling an error message for empty series dictionary : %s", error_message)
         messages.error(request,error_message)
         return redirect('home')
-
 
 @csrf_exempt
 def product_view(request):

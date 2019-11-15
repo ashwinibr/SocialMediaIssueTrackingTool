@@ -54,7 +54,7 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                         # if no date are selected by user
                     if not selected_dates:
                         url_list.append(model_url)
-                        product_list.append(product_name.text)
+                        product_list.append(product_name.text.strip())
                         date_list.append(converted_date)
                         child_node = issue_container.find("div", class_="_cmttxt")
                         issue_data, category = generic_category_filter(child_node)
@@ -65,7 +65,7 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                         for date in selected_dates:
                             if date == converted_date:
                                 url_list.append(model_url)
-                                product_list.append(product_name.text)
+                                product_list.append(product_name.text.strip())
                                 date_list.append(converted_date)
                                 # fetching the issue comment
                                 child_node = issue_container.find("div", class_="_cmttxt")
