@@ -1,3 +1,5 @@
+import time
+
 from ScrapingTool.Generic.constant import *
 from ScrapingTool.controller.get_model_names.brand_name_scraping import *
 from ScrapingTool.controller.get_review_from_forum.Gsmarena_get_issue import gsmarena_get_issue
@@ -57,12 +59,28 @@ def get_models_names(request,url):
 
 def get_data_from_url(request,url,selected_model_url,selected_dates):
     data_dictionary = {}
+    start_time = time.time()
     if ANDROID_FORUM_STRING in url:
         data_dictionary = android_forum_get_issue(request, selected_model_url, selected_dates)
     elif GSMARRENS_STRING in url:
         data_dictionary = gsmarena_get_issue(request, selected_model_url, selected_dates)
     elif GADGETS_FORUM_STRING in url :
         data_dictionary = gadget360_get_issue(request, selected_model_url, selected_dates)
+    end_time = time.time()
+
+    execution_time_in_sec = end_time-start_time
+    execution_time = convert(execution_time_in_sec)
+
+    print("Time taken to fetch the data ",execution_time )
 
     return data_dictionary
 
+
+def convert(seconds):
+    seconds = seconds % (24 * 3600)
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+
+    return "%d:%02d:%02d" % (hour, minutes, seconds)
