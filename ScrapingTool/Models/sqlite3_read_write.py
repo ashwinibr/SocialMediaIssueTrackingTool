@@ -3,8 +3,6 @@ import pandas as pd
 from collections import defaultdict
 
 from ScrapingTool.Generic.constant import DATABASE_NAME, MOBILE_BRANDS_DATABASE_TABLE
-from datetime import datetime
-from ScrapingTool.Generic.DateFormateClass import *
 
 def Write_to_DB(dictionary,table_name):
     conn = sqlite3.connect(DATABASE_NAME)
@@ -22,38 +20,6 @@ def Write_to_DB(dictionary,table_name):
     cur.execute(sql_query)
     conn.commit()
     conn.close()
-
-def Check_If_Data_Exist_In_DB(selected_model_url,from_date,to_date):
-    conn = sqlite3.connect(DATABASE_NAME)
-    with conn:
-        cur = conn.cursor()
-    model_tuple_url = ()
-    for link in selected_model_url:
-        model_tuple_url = model_tuple_url + (link,) 
-
-    from_dt, to_dt = dateFormat(from_date, to_date)
-
-    sql_query = """SELECT DISTINCT * FROM Exported_Data WHERE Link in {} AND Date 
-    BETWEEN "{}" AND "{}";""".format(model_tuple_url,from_dt.strftime("%m/%d/%Y"), to_dt.strftime("%m/%d/%Y"))  
-    cur.execute(sql_query)
-    result = cur.fetchall()
-
-    product_list = []
-    date_list = []
-    url_list = []
-    category_list = []
-    user_comment_list = []
-
-    for req_id, product, row_date, link, category, comment in result:
-        product_list.append(product)
-        date_list.append(row_date)
-        url_list.append(link)
-        category_list.append(category)
-        user_comment_list.append(comment)
-
-    data_dictionary = {"Product": product_list, "Date": date_list, "Link": url_list, "Category": category_list,
-                       "comment": user_comment_list}
-    return data_dictionary
 
 def Get_Chart_Prod_List():
     conn = sqlite3.connect(DATABASE_NAME)

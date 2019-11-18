@@ -13,15 +13,13 @@ class fileReaderWriter:
             conn = sqlite3.connect("db.sqlite3")
             file_path = 'ScrapingTool/Generic/files/'
             file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
+
             writer = pd.ExcelWriter(file_path+file_name)
+            # Load spreadsheet
             data_frame = pd.DataFrame.from_dict(data)
-            data_frame.to_sql("Exported_Data",conn, if_exists="append", index=False)
+            data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
             data_frame.to_excel(writer, 'Sheet1', index=False)
             logging.info("data is saved in excel")
-
-            data["Request_ID"]=str(request.session.get('req_id'))
-            data_frame = pd.DataFrame.from_dict(data)
-            data_frame.to_sql("Exported_Data",conn, if_exists="append", index=False)
             writer.save()
             conn.commit()
 
