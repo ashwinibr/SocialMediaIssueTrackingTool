@@ -23,15 +23,20 @@
                     <h3><b>Select Series</b></h3>
                 </div>
                 <div class="input-group mb-3 main-url">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="url">{{ request.session.mainurl }}</span>
+                    </div>
                     <select name="series[]" class="form-control">
                         {% for series in productseries %}
                         <option type = "option" name="series[]" value="{{series}}">{{series}}</option><br>
                         {%endfor %}
                     </select><br>
                 </div>
-                    <input type="submit" name="series_button" value="Submit" onclick="LoadMain()">
-                    <t style="color:red">{{errorvalue}}</t>                  
-                </div>
+                <div id="from-url" class="from-url">
+                    <input type="checkbox" id="from-url" name="from-url" onchange="clearDateErr()"> Get Updated List From URL<br><br>
+                </div>        
+                <input type="submit" name="series_button" value="Submit" onclick="LoadMain()">
+                <t style="color:red">{{errorvalue}}</t>                  
             </form>
         </div>
     </div>

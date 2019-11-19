@@ -70,9 +70,10 @@ def brand_view(request):
             return redirect('home')
 
     main_url = str(request.session.get('mainurl'))
-    from_url = request.POST.get('from-url')
+    from_url = str(request.POST.get('from-url'))
+    print(from_url)
     if main_url:
-        if(from_url=='None'):
+        if(from_url=='On'):
             brand_list = get_brand_names(request)
         else:
             try:
@@ -116,7 +117,7 @@ def mobile_view(request):
         else:
             filter_value = 'Latest Released'
             main_url = str(request.session.get('mainurl'))
-            from_url = request.POST.get('from-url')
+            from_url = str(request.POST.get('from-url'))
             mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
             announced_year = ['Latest Released']
 
@@ -160,7 +161,7 @@ def mobile_view(request):
         #Model list contains year and model name
 
         main_url = str(request.session.get('mainurl'))
-        from_url = request.POST.get('from-url')
+        from_url = str(request.POST.get('from-url'))
         check_data_in_DB = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
         if(from_url=='on'):
             mobile_list = get_models_names(request,brand_url)
@@ -186,7 +187,7 @@ def mobile_view(request):
         logging.info("<<<<<<<<< update list button clicked >>>>>>>>>>>")
         filter_value = request.POST.get('years')
         main_url = str(request.session.get('mainurl'))
-        from_url = request.POST.get('from-url')
+        from_url = str(request.POST.get('from-url'))
         selected_brand = request.POST.getlist('brand[]')
 
         mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
@@ -216,7 +217,7 @@ def mobile_view(request):
     if request.POST.get('product_submit_button'):
         logging.info("social media submit button clicked")
         main_url = str(request.session.get('mainurl'))
-        from_url = request.POST.get('from-url')
+        from_url = str(request.POST.get('from-url'))
         mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
         mobile_dict = mobile_list[1]
 
