@@ -15,7 +15,7 @@ CHROMEDRIVER_PATH = r"ScrapingTool\controller\get_review_from_forum\chromedriver
 chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--incognito')
-chrome_options.add_argument('--headless')
+#chrome_options.add_argument('--headless')
 
 driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
@@ -36,10 +36,29 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                 user_review_link = user_review_container.get('href')
                 driver.get(user_review_link)
                 more_buttons = driver.find_element_by_css_selector(".review_load_more")
-                while more_buttons.is_displayed():
-                    driver.execute_script("arguments[0].click();", more_buttons)
-                    more_buttons = driver.find_element_by_css_selector(".review_load_more")
-                    # Beautiful Soup Code
+                driver.find_element(By.ID, "review_rating_type").click()
+                dropdown = driver.find_element(By.ID, "review_rating_type")
+                dropdown.find_element(By.XPATH, "//option[. = 'Latest']").click()
+                driver.find_element(By.ID, "review_rating_type").click()
+                while True:
+                    if(more_buttons.is_displayed()):
+                        driver.execute_script("arguments[0].click();", more_buttons)
+                        more_buttons = driver.find_element_by_css_selector(".review_load_more")
+                        html_source = driver.page_source
+                        new_user_review_container = BeautifulSoup(html_source, 'lxml')
+                        for issue_container in new_user_review_container.find_all("li", class_=" parent_review li_parent_0"):
+                            posted_date = issue_container.find("div", class_="_cmtname")
+                            post_date = posted_date.find("span")
+                            date_expr = r"(?:%s) ?\s(\d+)\, \d{4}" % '|'.join(calendar.month_abbr[1:])
+                            split_date = re.compile(date_expr)
+                            issue_date = split_date.search(str(post_date))
+                            if issue_date:
+                                raw_date = issue_date.group(0)
+                                converted_date = datetime.datetime.strptime(raw_date, '%b %d, %Y').strftime('%m/%d/%Y')
+                    if(converted_date>selected_dates[-1]):
+                        break
+
+                # Beautiful Soup Code
                 html_source = driver.page_source
                 new_user_review_container = BeautifulSoup(html_source, 'lxml')
                 for issue_container in new_user_review_container.find_all("li", class_=" parent_review li_parent_0"):
