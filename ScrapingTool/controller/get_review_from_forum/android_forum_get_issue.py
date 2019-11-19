@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import re
 from collections import defaultdict
 
@@ -38,18 +38,16 @@ def android_forum_get_issue(request,selected_model_links,selected_dates):
                 pattern = re.compile(
                     "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}")
                 date = pattern.search(strip_date).group()
-                converted_date = datetime.datetime.strptime(date, '%b %d, %Y').strftime('%m/%d/%Y')
+                converted_date = datetime.strptime(date, '%b %d, %Y').strftime('%m/%d/%Y')
+                cdate = datetime.strptime(converted_date, '%m/%d/%Y').date()
+                sdate = datetime.strptime(selected_dates[-1], '%m/%d/%Y').date()
+                s1date = datetime.strptime(selected_dates[0], '%m/%d/%Y').date()
 
                 child_node = node.find("div", class_="messageContent")
-                if not selected_dates:
-                    date_list.append(converted_date.strip('\u200e'))
-                    heading_name_list.append(thread_name[0])
-                    product_list.append(thread_name[1])
-                    url_list.append(complete_url)
-                    issue_data, category=generic_category_filter(child_node)
-                    user_comment_list.append(issue_data)
-                    category_list.append(category)
-
+                if (cdate > sdate):
+                    break
+                elif (cdate<s1date):
+                    pass
                 else:
                     for date in selected_dates:
                         if date == converted_date:
@@ -90,19 +88,32 @@ def get_thread_link_from_android_forum(pagination_url_list, selected_dates):
                 pattern = re.compile(
                     "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}")
                 date = pattern.search(strip_date).group()
-                converted_date = datetime.datetime.strptime(date, '%b %d, %Y').strftime('%m/%d/%Y')
-
-                for date in selected_dates:
-                    if date == converted_date:
-                        link = thread.find("a", class_="PreviewTooltip")
-                        thread_link_list.append(link.attrs['href'])
-                        thread_name_list.append(link.get_text())
-                        product_name_list.append(product_name)
-                    else:
-                        link = thread.find("a", class_="PreviewTooltip")
-                        thread_link_list.append(link.attrs['href'])
-                        thread_name_list.append(link.get_text())
-                        product_name_list.append(product_name)
+                converted_date = datetime.strptime(date, '%b %d, %Y').strftime('%m/%d/%Y')
+                cdate = datetime.strptime(converted_date, '%m/%d/%Y').date()
+                sdate = datetime.strptime(selected_dates[-1], '%m/%d/%Y').date()
+                s1date = datetime.strptime(selected_dates[0], '%m/%d/%Y').date()
+                if (cdate > sdate):
+                    break
+                elif (cdate<s1date):
+                    pass
+                else:
+                    for date in selected_dates:
+                        if date == converted_date:
+                            if thread.find("a", class_="PreviewTooltip"):
+                                link = thread.find("a", class_="PreviewTooltip")
+                                thread_link_list.append(link.attrs['href'])
+                                thread_name_list.append(link.get_text())
+                                product_name_list.append(product_name)
+                            else:
+                                for child_thread in thread.find_all("a", class_=""):
+                                    attrs_dict = child_thread.attrs
+                                    if attrs_dict:
+                                        thread_link_list.append(attrs_dict['href'])
+                                        thread_name_list.append(child_thread.get_text())
+                                        product_name_list.append(product_name)
+                        else:
+                            pass
+    print("thread_name_list", thread_name_list)
 
     i = 0
     for key in thread_link_list:
