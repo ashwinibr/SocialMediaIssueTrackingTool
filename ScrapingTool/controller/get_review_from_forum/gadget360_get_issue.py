@@ -15,7 +15,7 @@ CHROMEDRIVER_PATH = r"ScrapingTool\controller\get_review_from_forum\chromedriver
 chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--incognito')
-#chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 
 driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
