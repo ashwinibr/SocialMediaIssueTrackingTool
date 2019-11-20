@@ -55,7 +55,7 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                             if issue_date:
                                 raw_date = issue_date.group(0)
                                 converted_date = datetime.datetime.strptime(raw_date, '%b %d, %Y').strftime('%m/%d/%Y')
-                    if(converted_date>selected_dates[-1]):
+                    if(converted_date<selected_dates[-1]):
                         break
 
                 # Beautiful Soup Code
