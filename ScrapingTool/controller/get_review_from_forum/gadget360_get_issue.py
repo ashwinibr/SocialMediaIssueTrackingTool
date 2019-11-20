@@ -27,7 +27,8 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
     product_list = []
     category_list = []
     heading_name_list = []
-
+    brand = request.session.get('brand')
+    converted_date = selected_dates
     for model_url in selected_model_url:
         soup = parse(model_url)
         for html_container in soup.find_all("div", class_="_thd"):
@@ -55,7 +56,11 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                             if issue_date:
                                 raw_date = issue_date.group(0)
                                 converted_date = datetime.datetime.strptime(raw_date, '%b %d, %Y').strftime('%m/%d/%Y')
-                    if(converted_date<selected_dates[-1]):
+                        if converted_date<selected_dates[-1] and brand!="Google":
+                            print("breaking loop")
+                            break
+                    else:
+                        print("breaking loop")
                         break
 
                 # Beautiful Soup Code

@@ -2,7 +2,7 @@
 #CONSTANT FORUM URL
 ANDROID_FORUM_URL = "https://androidforums.com/"
 GSMARENA_URL = "https://www.gsmarena.com/"
-ANDROID_PIT_FORUM_URL = "https://www.androidpit.com"
+ANDROID_PIT_FORUM_URL = "https://www.androidpit.com/"
 GADGETS_FORUM_URL = "https://gadgets.ndtv.com/"
 
 #CONSTANT FORUM NAMES

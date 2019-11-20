@@ -119,13 +119,14 @@ def Check_Existing_Data(selected_url):
     query = 'SELECT Brand_Name, Link FROM {} WHERE URL="{}"'.format(MOBILE_BRANDS_DATABASE_TABLE, selected_url)
     cur.execute(query)
     result = cur.fetchall()
-
+    brand_list = []
     mobile_brand = []
     brand_url = []
     for r in result:
         mobile_brand.append(r[0])
         brand_url.append(r[1])
-    brand_list = [mobile_brand, brand_url] 
+    if mobile_brand:
+        brand_list = [mobile_brand, brand_url] 
     conn.close()
     return brand_list
 

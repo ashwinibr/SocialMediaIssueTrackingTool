@@ -73,12 +73,11 @@ def brand_view(request):
     from_url = str(request.POST.get('from-url'))
     print(from_url)
     if main_url:
-        if(from_url=='On'):
+        if(from_url=='on'):
             brand_list = get_brand_names(request)
         else:
-            try:
-                brand_list = Check_Existing_Data(main_url)
-            except:
+            brand_list = Check_Existing_Data(main_url)
+            if(len(brand_list)==0):
                 brand_list = get_brand_names(request)
 
         logging.info("<<<<<<< Received List of Mobile Brand Names >>>>>>> %s", brand_list[0])
@@ -152,6 +151,7 @@ def mobile_view(request):
         logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
         main_url = str(request.session.get('mainurl'))
         brand_dict = GetData_In_Dict(MOBILE_BRANDS_DATABASE_TABLE, main_url)
+        print(brand_dict)
         selected_brand = request.POST.getlist('brand[]')
         request.session['selected_brand'] = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
