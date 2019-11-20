@@ -1,0 +1,84 @@
+INFO:root:<<<<<<<<< Rendering in to the Home Page View >>>>>>>>>>>
+INFO:root:<<<<<<<<< Submit button clicked in homepage view >>>>>>>>>>>
+DEBUG:root:<<<<<< Connecting to user selected URL : https://talk.sonymobile.com >>>>>>>>
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "HEAD / HTTP/1.1" 200 0
+DEBUG:root:Connection status code : 200
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET /t5/Phones-Tablets/ct-p/Phones HTTP/1.1" 200 35260
+INFO:root:<<<<<<< Received List of Mobile Brand Names >>>>>>> ['Xperia 2019 products', 'X-series', 'Z-series', 'L-series', 'M-series', 'C-series', 'E-series', 'Tablets', 'Other Phones']
+INFO:root:Rendering to brandselection.html page to display brand names from user selcted URL
+INFO:root:<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>
+INFO:root:<<<<<<<<< User selected Brand name >>>>>>>>>>>X-series
+INFO:root:<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET /t5/X-series/ct-p/Xseries HTTP/1.1" 200 29165
+INFO:root:Session ID: mobile-view
+INFO:root:<<<<<<<<< BackButton clicked in Mobile page >>>>>>>>>>>
+INFO:root:<<<<<<<<< Redirecting from Mobile Page to Home Page View >>>>>>>>>>>
+INFO:root:<<<<<<< Received List of Mobile Brand Names >>>>>>> ['Xperia 2019 products', 'X-series', 'Z-series', 'L-series', 'M-series', 'C-series', 'E-series', 'Tablets', 'Other Phones']
+INFO:root:Rendering to brandselection.html page to display brand names from user selcted URL
+INFO:root:<<<<<<<<< BackButton clicked in brand page  >>>>>>>>>>>
+INFO:root:<<<<<<<<< Redirecting from Brand Page to Home Page View >>>>>>>>>>>
+INFO:root:<<<<<<<<< Rendering in to the Home Page View >>>>>>>>>>>
+INFO:root:<<<<<<<<< Submit button clicked in homepage view >>>>>>>>>>>
+DEBUG:root:<<<<<< Connecting to user selected URL : https://talk.sonymobile.com >>>>>>>>
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "HEAD / HTTP/1.1" 200 0
+DEBUG:root:Connection status code : 200
+INFO:root:<<<<<<< Received List of Mobile Brand Names >>>>>>> ['Xperia 2019 products', 'X-series', 'Z-series', 'L-series', 'M-series', 'C-series', 'E-series', 'Tablets', 'Other Phones']
+INFO:root:Rendering to brandselection.html page to display brand names from user selcted URL
+INFO:root:<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>
+INFO:root:<<<<<<<<< User selected Brand name >>>>>>>>>>>X-series
+INFO:root:<<<<<<<<< Getting mobile names from user selected Brand name >>>>>>>>>>>
+INFO:root:social media submit button clicked
+INFO:root:<<<<<<< User selected product list : ['Xperia XZ3'] >>>>>>>>>>>>>>
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3 HTTP/1.1" 200 37687
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/1 HTTP/1.1" 301 0
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET /t5/Xperia-XZ3/bd-p/Xperia-XZ3 HTTP/1.1" 200 37676
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/2 HTTP/1.1" 200 36900
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/3 HTTP/1.1" 200 36331
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/4 HTTP/1.1" 200 36783
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/5 HTTP/1.1" 200 36618
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/6 HTTP/1.1" 200 36405
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/7 HTTP/1.1" 200 36071
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/8 HTTP/1.1" 200 36998
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/9 HTTP/1.1" 200 36692
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/10 HTTP/1.1" 200 36241
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/11 HTTP/1.1" 200 36929
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/12 HTTP/1.1" 200 36525
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/13 HTTP/1.1" 200 36908
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/14 HTTP/1.1" 200 37031
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/15 HTTP/1.1" 200 36439
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/16 HTTP/1.1" 200 36429
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/17 HTTP/1.1" 200 36537
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/18 HTTP/1.1" 200 36678
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/19 HTTP/1.1" 200 36477
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET //t5/Xperia-XZ3/bd-p/Xperia-XZ3/page/20 HTTP/1.1" 200 31322
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET /t5/Xperia-XZ3/Xz3-sim-card-issues/td-p/1394849 HTTP/1.1" 200 34892
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET /t5/Xperia-XZ3/My-xperia-XZ3-often-disappoints-me/td-p/1394859 HTTP/1.1" 200 31740
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): talk.sonymobile.com:443
+DEBUG:urllib3.connectionpool:https://talk.sonymobile.com:443 "GET /t5/Xperia-XZ3/Help-with-phonecalls-randomly-cutting-off/td-p/1394481 HTTP/1.1" 200 32023

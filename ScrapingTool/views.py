@@ -13,8 +13,6 @@ from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.controller.main_scraper_module import \
     get_brand_names, get_models_names, get_data_from_url
 from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
-from ScrapingTool.sonyforum.get_issue_links import getIssueLinks
-from ScrapingTool.sonyforum.product_name_and_links import getProductNamesAndLinks
 from ScrapingTool.Models.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
     Get_Chart_Prod_List, Get_RequestID, Check_Existing_Data
 
