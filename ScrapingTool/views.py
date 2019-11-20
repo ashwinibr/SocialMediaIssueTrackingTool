@@ -55,6 +55,7 @@ def brand_view(request):
     if request.POST.get('homepage_submit_btn'):
         logging.info("<<<<<<<<< Submit button clicked in homepage view >>>>>>>>>>>")
         main_url = request.POST.get('mainurl')
+        print("main_url", main_url)
         logging.debug("<<<<<< Connecting to user selected URL : %s >>>>>>>>"
                       , main_url)
         status_code = get_response_code(main_url)
@@ -71,9 +72,11 @@ def brand_view(request):
 
     main_url = str(request.session.get('mainurl'))
     from_url = str(request.POST.get('from-url'))
-    print(from_url)
+    print("main url", main_url)
+    print("from url", from_url)
     if main_url:
-        if(from_url=='On'):
+        if(from_url=='on'):
+            print("inside")
             brand_list = get_brand_names(request)
         else:
             try:
@@ -340,240 +343,6 @@ def mobile_view(request):
     return render(request, "product.html",
                   {"errorvalue": error_message, "productname": mobile_list_display, "successmsg": successmsg,
                    "infomsg": info_msg, 'announcedyear': announced_year})
-
-
-@csrf_exempt
-def series_view(request):
-    logging.info("<<<<<<Rendering in series view>>>>>>>")
-    series_list = []
-
-    if request.POST.get('back_button'):
-        response = redirect('home')
-        logging.info("<<<<<<redirecting series page to home page view>>>>?")
-        return response
-
-    if request.POST.get('home_button'):
-        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
-        response = redirect('home')
-        logging.info("<<<<<<<<< Redirecting from Series Page to Home Page View >>>>>>>>>>>")
-        return response
-
-    if request.POST.get('homepage_submit_btn'):
-        main_url = request.POST.get('mainurl')
-        logging.info('URL Selected By User: %s', main_url)
-        status_code = get_response_code(main_url)
-        logging.debug("Status code : %s", status_code)
-
-        # if valid url entered,write it in to url.txt file
-        if status_code == 200:
-            request.session['mainurl']=main_url
-        # else if invalid url entered,displays error
-        else:
-            error_message = "Unable to Connect to URL"
-            logging.error("handling an error message for status code : %s", error_message)
-            messages.error(request,error_message)
-            return redirect('home')
-
-    # Call get_dictionary_data() method to get series names
-    series = getProductNamesAndLinks()
-    url = str(request.session.get('mainurl'))+"/t5/Phones-Tablets/ct-p/Phones"
-    series_dictionary = series.get_dictionary_data(url)
-    if series_dictionary:
-        for series_name in series_dictionary.keys():
-            logging.debug("iterate series names : %s", series_name)
-            series_list.append(series_name)
-
-        return render(request, "series.html",
-                      {"productseries": series_list})
-    else:
-        error_message = "Unable to Connect to URL"
-        logging.error("handling an error message for empty series dictionary : %s", error_message)
-        messages.error(request,error_message)
-        return redirect('home')
-
-
-@csrf_exempt
-def product_view(request):
-    error_message = ""
-    info_msg = ""
-    successmsg = ""
-    product_names_list = []
-
-    get_issue_link_obj = getIssueLinks()
-
-    if request.POST.get('back_button'):
-        response = redirect('series/')
-        logging.info("redirecting form product view to series page view")
-        return response
-
-    if request.POST.get('home_button'):
-        logging.info("<<<<<<<<< BackButton clicked in Series page  >>>>>>>>>>>")
-        response = redirect('home')
-        logging.info("<<<<<<<<< Redirecting from product view to Home Page View >>>>>>>>>>>")
-        return response
-
-    if request.POST.get('dashboard_button'):
-        ProdList = Get_Chart_Prod_List()
-        return render(request, "dashboard.html", {"product_list": ProdList})
-
-    if request.POST.get("gen_graph"):
-        SelProduct = request.POST.get("product")
-        logging.info('Product Selected for Graph  : %s', SelProduct)
-        GChart = CreateChart(SelProduct)
-        GChart.Create_Column_Chart(SelProduct)
-        GChart.Create_Pie_Chart(SelProduct)
-        ProdList = Get_Chart_Prod_List()
-        return render(request, "dashboard.html", {"product_list": ProdList})
-
-    #file_read = fileReaderWriter()
-    get_product_links = getProductNamesAndLinks()
-
-    # On click of series button
-    if request.POST.get('series_button'):
-        logging.info("series button clicked")
-        series_list = request.POST.getlist('series[]')
-        request.session['brand']=series_list[0]
-        # Call get_dictionary_data() method to get series link for selected series name by user
-        series = getProductNamesAndLinks()
-        url = str(request.session.get('mainurl'))+"/t5/Phones-Tablets/ct-p/Phones"
-        series_dictionary = series.get_dictionary_data(url)
-        for series_name, series_links in series_dictionary.items():
-            for list_of_series in series_list:
-                if list_of_series == series_name:
-                    logging.debug("selected series link %s", series_links)
-                    request.session['series']=series_links
-
-    series_url = str(request.session.get('series'))
-    logging.info("Series Selected By User : %s",series_url)
-    product_data_dictionary = get_product_links.get_links_for_products(series_url)
-
-    # fetching product name to be displayed on webpage
-    if product_data_dictionary:
-        for product_names in product_data_dictionary.keys():
-            logging.debug("scraping product names from website : %s", product_names)
-            product_names_list.append(product_names)
-
-        # On click of product_submit_button
-        if request.POST.get('product_submit_button'):
-            logging.info("product submit button clicked")
-
-            product_links_list = []
-
-            todate = request.POST.get('todate')
-            fromdate = request.POST.get('fromdate')
-
-            sel_series = request.session.get('brand')
-            main_url = str(request.session.get('mainurl'))
-            print(main_url,sel_series[0],product_names_list)
-            req_id = Get_RequestID(main_url,sel_series,product_names_list)
-            request.session['req_id'] = req_id
-
-            # Checking selection of dates
-            # Checking if From ,To and All date is NOT selected
-            if not fromdate and not todate and not request.POST.get("alldates") == "on":
-                error_message = "Error: Please select the date"
-                logging.error("displaying an error message if the user forgotten to select the date  : %s",
-                              error_message)
-
-            else:
-                if not fromdate and not request.POST.get("alldates") == "on":
-                    error_message = "Error: Please select the from date before submit"
-                    logging.error("displaying an error message if the user forgotten to select the From date  : %s",
-                                  error_message)
-                elif not todate and not request.POST.get("alldates") == "on":
-                    error_message = "Error: Please select the To date before submit"
-                    logging.error("displaying an error message if user forgotten to select the To date  : %s",
-                                  error_message)
-                else:
-                    # Fetch products selected by user-checklist
-                    checklist = request.POST.getlist('product[]')
-                    logging.debug("User selected product list : %s", checklist)
-
-                    # Fetching product links for appropriate product name selected by user
-                    for product_name, product_links in product_data_dictionary.items():
-                        for checklist_product_name in checklist:
-                            if checklist_product_name == product_name:
-                                logging.debug("getting selected products links %s: ", product_links)
-                                product_links_list.append(product_links)
-                    # If product selected and there is respective link for that enter  if condition
-                    if product_links_list:
-                        if fromdate and todate:
-                            start_date, end_date = dateFormat(fromdate, todate)
-                            if start_date <= end_date:
-                                list_of_dates = date_format_change(fromdate, todate)
-                                logging.debug("+++++list of dates %s:", list_of_dates)
-                                # Fetching all the links of product pages by calling method issueLinksPagination() for selected product
-                                data_dictionary = get_issue_link_obj.issueLinksPagination(request,list_of_dates,
-                                                                                          product_links_list)
-
-                                logging.debug("Data Dictionary %s:", data_dictionary)
-
-                                if data_dictionary:
-                                    successmsg = "Data extracted successfully, Click download to get data in excel"
-                                    ProdList = Get_Chart_Prod_List()
-                                    GChart = CreateChart(ProdList[0])
-                                    GChart.Create_Column_Chart(ProdList[0])
-                                    GChart.Create_Pie_Chart(ProdList[0])
-                                    logging.info(
-                                        "displaying an success message after scraping data from website : %s",
-                                        successmsg)
-                                else:
-                                    info_msg = "Info:No data for selected date"
-                                    logging.warning("there is no data for selected product with selected date %s",
-                                                    info_msg)
-                            else:
-                                error_message = "Error:From date should be less than or equal to To date"
-                                logging.error(
-                                    "displaying an error message if user selected - to date<from date  : %s",
-                                    error_message)
-
-                        elif request.POST.get("alldates") == "on":
-                            list_of_dates = []
-                            get_issue_link_obj.issueLinksPagination(request,list_of_dates, product_links_list)
-                            successmsg = "Data extracted successfully, Click download to get data in excel"
-                            ProdList = Get_Chart_Prod_List()
-                            GChart = CreateChart(ProdList[0])
-                            GChart.Create_Column_Chart(ProdList[0])
-                            GChart.Create_Pie_Chart(ProdList[0])
-                            logging.info(
-                                "displaying an success message after scraping data from website : %s",
-                                successmsg)
-                        else:
-                            error_message = "Error: Please select the date before submit"
-                            logging.error(
-                                "displaying an error message to select date  : %s",
-                                error_message)
-                    # Else if product not selected,displays error
-                    else:
-                        error_message = "Error: Please select the product"
-                        logging.error(
-                            "displaying an error message to select product  : %s",
-                            error_message)
-
-        # On click of download button,to download Data excel sheet
-        elif request.POST.get("douwnload_button"):
-            logging.info('Download Button Clicked')
-            file_path = 'ScrapingTool/Generic/files/'
-            file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
-            with open(file_path+file_name, 'rb') as f:
-                response = HttpResponse(f.read(),
-                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = 'attachment; filename=' + file_name
-                response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                return response
-
-        return render(request, "product.html",
-                      {"productname": product_names_list, "errorvalue": error_message, "successmsg": successmsg,
-                       "infomsg": info_msg})
-
-    else:
-        error_message = "Unable to Connect to URL"
-        logging.error("handling an error message for empty product dictionary : %s", error_message)
-        messages.error(request,error_message)
-        return redirect('home')
-
-
-
 
 
 
