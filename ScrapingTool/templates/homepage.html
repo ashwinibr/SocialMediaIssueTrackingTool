@@ -7,10 +7,8 @@
             var checkError = "{{errorvalue}}";
             var e = document.getElementById("id_main_url");
             var checkurl = e.options[e.selectedIndex].text;
-                if (checkError=="" && checkurl=="https://talk.sonymobile.com"){
-                    document.getElementById("homepage-form").action = "series/";                    
-                }else if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||
-                checkurl=="https://www.gsmarena.com" || checkurl == "https://androidforums.com" ||
+                if(checkError=="" && checkurl=="https://www.gsmarena.com/" ||
+                checkurl=="https://www.gsmarena.com" || checkurl == "https://androidforums.com" || checkurl=="https://talk.sonymobile.com" ||
                 checkurl == "https://www.androidpit.com" || checkurl === "https://gadgets.ndtv.com") {
                     document.getElementById("homepage-form").action ="brand/";
                 }else{
