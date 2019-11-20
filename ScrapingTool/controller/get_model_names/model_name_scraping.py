@@ -2,12 +2,44 @@ import logging
 import re
 from collections import defaultdict
 
-from ScrapingTool.Generic.constant import GSMARENA_URL, MODEL_NAME_DICT_KEY, ANNOUNCED_YEAR_DICT_KEY, \
-    MODEL_LINK_DICT_KEY, MODEL_NAME_DATABASE_TABLE, ANDROID_PIT_FORUM_URL,  MAIN_URL_KEY, GADGETS_FORUM_URL, \
-    ANDROID_FORUM_URL, BRAND_NAME_KEY
+from ScrapingTool.Generic.constant import *
 from ScrapingTool.Generic.parser import parse
 from ScrapingTool.Models.sqlite3_read_write import Write_to_DB
 
+
+def get_models_names_from_sonyforum(request, soup):
+    mobile_model_name_list = []
+    mobile_model_links_list = []
+    mobile_model_year_list = []
+    main_url = []
+    mobile_brand = request.session.get('brand')
+
+    for mobile_model_container in soup.find_all("a", class_="lia-link-navigation lia-message-unread"):
+        mobile_model_name_list.append(mobile_model_container.text)
+        mobile_model_links_list.append(mobile_model_container.attrs['href'])
+        main_url.append(SONY_FORUM_URL)
+        mobile_model_year_list.append("All")
+
+    model_dictionary = {MAIN_URL_KEY: main_url, BRAND_NAME_KEY: mobile_brand,
+                        ANNOUNCED_YEAR_DICT_KEY: mobile_model_year_list,
+                        MODEL_NAME_DICT_KEY: mobile_model_name_list,
+                        MODEL_LINK_DICT_KEY: mobile_model_links_list}
+    dic_year = defaultdict(list)
+    dic_model_name = defaultdict(list)
+
+    i = 0
+    for key in mobile_model_year_list:
+        dic_year[key].append(mobile_model_name_list[i])
+        i += 1
+
+    j = 0
+    for mobile_name_key in mobile_model_name_list:
+        dic_model_name[mobile_name_key].append(mobile_model_links_list[j])
+        j += 1
+
+    Write_to_DB(model_dictionary, MODEL_NAME_DATABASE_TABLE)
+
+    return dic_year, dic_model_name
 
 def get_models_names_from_gsmarena(request,soup,url):
 

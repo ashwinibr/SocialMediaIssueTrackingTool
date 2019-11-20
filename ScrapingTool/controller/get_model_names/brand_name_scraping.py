@@ -1,5 +1,4 @@
-from ScrapingTool.Generic.constant import BRAND_NAME_DICT_KEY, BRAND_LINK_DICT_KEY, MOBILE_BRANDS_DATABASE_TABLE, \
-    ANDROID_FORUM_URL, ANDROID_PIT_FORUM_URL, GSMARENA_URL, MAIN_URL_KEY, GADGETS_FORUM_URL
+from ScrapingTool.Generic.constant import *
 from ScrapingTool.Models.sqlite3_read_write import Write_to_DB
 
 
@@ -61,5 +60,19 @@ def get_brand_name_from_gadget360(soup, mobile_brand_list, mobile_brand_links_li
 
     print(mobile_brand_list)
     brand_dict = {MAIN_URL_KEY:main_url, BRAND_NAME_DICT_KEY: mobile_brand_list, BRAND_LINK_DICT_KEY: mobile_brand_links_list}
+    Write_to_DB(brand_dict, MOBILE_BRANDS_DATABASE_TABLE)
+    return mobile_brand_list, mobile_brand_links_list
+
+
+def get_brand_name_forum_sonyforum(soup, mobile_brand_list, mobile_brand_links_list):
+    main_url = []
+
+    for mobile_brand_container in soup.find_all("a", class_="lia-link-navigation category-title"):
+        mobile_brand_list.append(mobile_brand_container.text)
+        mobile_brand_links_list.append(mobile_brand_container.attrs['href'])
+        main_url.append(SONY_FORUM_URL)
+
+    brand_dict = {MAIN_URL_KEY: main_url, BRAND_NAME_DICT_KEY: mobile_brand_list,
+                  BRAND_LINK_DICT_KEY: mobile_brand_links_list}
     Write_to_DB(brand_dict, MOBILE_BRANDS_DATABASE_TABLE)
     return mobile_brand_list, mobile_brand_links_list

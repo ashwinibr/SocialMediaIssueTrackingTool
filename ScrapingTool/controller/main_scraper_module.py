@@ -4,6 +4,7 @@ from ScrapingTool.Generic.constant import *
 from ScrapingTool.controller.get_model_names.brand_name_scraping import *
 from ScrapingTool.controller.get_review_from_forum.Gsmarena_get_issue import gsmarena_get_issue
 from ScrapingTool.controller.get_review_from_forum.android_forum_get_issue import android_forum_get_issue
+from ScrapingTool.controller.get_review_from_forum.sonyforum_get_issue import sony_forum_get_issue
 from ScrapingTool.controller.get_model_names.model_name_scraping import *
 
 
@@ -24,7 +25,9 @@ def get_brand_names(request):
         url = url + "forum/"
     elif GADGETS_FORUM_STRING in url:
         url = url + "mobiles/all-brands"
-
+    elif SONY_FORUM_STRING in url:
+        url = url + "/t5/Phones-Tablets/ct-p/Phones"
+    print("url",url)
     soup = parse(url)
     mobile_brand_list = []
     mobile_brand_links_list = []
@@ -37,6 +40,8 @@ def get_brand_names(request):
         get_brand_name_from_androidpit_forum(soup,mobile_brand_list,mobile_brand_links_list)
     elif GADGETS_FORUM_STRING in url:
         get_brand_name_from_gadget360(soup, mobile_brand_list, mobile_brand_links_list)
+    elif SONY_FORUM_STRING in url:
+        get_brand_name_forum_sonyforum(soup, mobile_brand_list, mobile_brand_links_list)
 
     return mobile_brand_list,mobile_brand_links_list
 
@@ -54,6 +59,9 @@ def get_models_names(request,url):
         model_name_dic = get_models_names_from_android_pit_forum(request,soup,url)
     elif GADGETS_FORUM_STRING in url:
         model_name_dic = get_models_names_from_gadgets360(request,soup)
+    elif SONY_FORUM_STRING in url:
+        model_name_dic = get_models_names_from_sonyforum(request, soup)
+        
     return model_name_dic
 
 
@@ -66,6 +74,8 @@ def get_data_from_url(request,url,selected_model_url,selected_dates):
         data_dictionary = gsmarena_get_issue(request, selected_model_url, selected_dates)
     elif GADGETS_FORUM_STRING in url :
         data_dictionary = gadget360_get_issue(request, selected_model_url, selected_dates)
+    elif SONY_FORUM_STRING in url:
+        data_dictionary = sony_forum_get_issue(request, selected_model_url, selected_dates)
     end_time = time.time()
 
     execution_time_in_sec = end_time-start_time
