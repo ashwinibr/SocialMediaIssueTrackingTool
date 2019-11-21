@@ -6,6 +6,19 @@ from ScrapingTool.Generic.category_search import generic_category_filter
 from ScrapingTool.Models.file_read_write import fileReaderWriter
 from ScrapingTool.Generic.parser import parse
 
+from bs4 import BeautifulSoup
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+
+CHROMEDRIVER_PATH = r"ScrapingTool\controller\get_review_from_forum\chromedriver_win32\chromedriver.exe"
+chrome_options = Options()
+chrome_options.add_argument('--ignore-certificate-errors')
+chrome_options.add_argument('--incognito')
+chrome_options.add_argument('--headless')
+
+driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
 def get_issue_from_gsmarena(request,selected_model_links,selected_dates):
     date_list = []
@@ -17,11 +30,13 @@ def get_issue_from_gsmarena(request,selected_model_links,selected_dates):
     # Fetching issue content from given link
     for model_url in selected_model_links:
         complete_url = GSMARENA_URL + model_url
-        soup = parse(complete_url)
-        for html_container in soup.find_all("div", class_="article-info-line page-specs light border-bottom"):
+        driver.get(complete_url)
+        html_source = driver.page_source
+        new_user_review_container = BeautifulSoup(html_source, 'lxml')
+        for html_container in new_user_review_container.find_all("div", class_="article-info-line page-specs light border-bottom"):
             product_name = html_container.find("h1", class_="specs-phone-name-title")
 
-            for issue_container in soup.find_all("div", class_="user-thread"):
+            for issue_container in new_user_review_container.find_all("div", class_="user-thread"):
                 child_node = issue_container.find("p", class_="uopin")
                 # Fetching date,the issue was posted
                 posted_date = issue_container.find("li", class_="upost")
@@ -78,9 +93,12 @@ def get_issue_from_gsmarena(request,selected_model_links,selected_dates):
 def gsmarena_get_issue(request,model_link_list,list_of_dates):
     review_issue = []
     for links in model_link_list:
-        soup = parse(links)
+        driver.get(links)
+        html_source = driver.page_source
+        new_user_review_container = BeautifulSoup(html_source, 'lxml')
+
         review_opinion_link_list = []
-        for review_button_container in soup.find_all("div", class_="button-links"):
+        for review_button_container in new_user_review_container.find_all("div", class_="button-links"):
             for review_button_link in review_button_container.find_all("a"):
                 review_opinion_link_list.append(review_button_link.attrs['href'])
         review_issue.append(review_opinion_link_list[0])
@@ -92,9 +110,11 @@ def gsmarena_get_issue(request,model_link_list,list_of_dates):
 def pagination_for_user_comment_links(review_opinion_link_list):
     pagination_list = []
     for links in review_opinion_link_list:
-        soup = parse(GSMARENA_URL + links)
+        driver.get(GSMARENA_URL + links)
+        html_source = driver.page_source
+        new_user_review_container = BeautifulSoup(html_source, 'lxml')
         number = []
-        for link in soup.find_all("div", class_="sub-footer no-margin-bottom"):
+        for link in new_user_review_container.find_all("div", class_="sub-footer no-margin-bottom"):
             for l in link.find_all("div", class_="nav-pages"):
                 if l.find("a"):
                     for pagination_links in l.find_all("a"):

@@ -30,10 +30,12 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
     brand = request.session.get('brand')
     converted_date = selected_dates
     for model_url in selected_model_url:
-        soup = parse(model_url)
-        for html_container in soup.find_all("div", class_="_thd"):
+        driver.get(model_url)
+        html_source = driver.page_source
+        new_user_review_container = BeautifulSoup(html_source, 'lxml')
+        for html_container in new_user_review_container.find_all("div", class_="_thd"):
             product_name = html_container.find("h1")
-            for user_review_container in soup.find_all("a", class_="_flx _rmbtn _seervw"):
+            for user_review_container in new_user_review_container.find_all("a", class_="_flx _rmbtn _seervw"):
                 user_review_link = user_review_container.get('href')
                 driver.get(user_review_link)
                 more_buttons = driver.find_element_by_css_selector(".review_load_more")
@@ -45,8 +47,6 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
                     if(more_buttons.is_displayed()):
                         driver.execute_script("arguments[0].click();", more_buttons)
                         more_buttons = driver.find_element_by_css_selector(".review_load_more")
-                        html_source = driver.page_source
-                        new_user_review_container = BeautifulSoup(html_source, 'lxml')
                         for issue_container in new_user_review_container.find_all("li", class_=" parent_review li_parent_0"):
                             posted_date = issue_container.find("div", class_="_cmtname")
                             post_date = posted_date.find("span")
