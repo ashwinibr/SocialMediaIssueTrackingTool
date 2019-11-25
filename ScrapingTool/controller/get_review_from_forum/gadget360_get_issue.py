@@ -28,7 +28,7 @@ def gadget360_get_issue(request, selected_model_url, selected_dates):
     category_list = []
     heading_name_list = []
     brand = request.session.get('brand')
-    converted_date = selected_dates
+    converted_date = selected_dates[-1]
     for model_url in selected_model_url:
         driver.get(model_url)
         html_source = driver.page_source
