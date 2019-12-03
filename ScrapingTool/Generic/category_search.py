@@ -1,5 +1,5 @@
 import re
-from ScrapingTool.Models.sqlite3_read_write import Get_Keywards_List
+from ScrapingTool.Models.mongo_read_write import Get_Keywards_List
 
 def generic_category_filter(child_node):
     categories = Get_Keywards_List()

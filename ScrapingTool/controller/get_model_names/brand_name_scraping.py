@@ -1,5 +1,5 @@
 from ScrapingTool.Generic.constant import *
-from ScrapingTool.Models.sqlite3_read_write import Write_to_DB
+from ScrapingTool.Models.mongo_read_write import Write_to_DB
 
 
 def get_brand_name_from_gsmarena(soup,mobile_brand_list,mobile_brand_links_list):
@@ -58,7 +58,6 @@ def get_brand_name_from_gadget360(soup, mobile_brand_list, mobile_brand_links_li
             mobile_brand_links_list.append(brand_link)
             main_url.append(GADGETS_FORUM_URL)
 
-    print(mobile_brand_list)
     brand_dict = {MAIN_URL_KEY:main_url, BRAND_NAME_DICT_KEY: mobile_brand_list, BRAND_LINK_DICT_KEY: mobile_brand_links_list}
     Write_to_DB(brand_dict, MOBILE_BRANDS_DATABASE_TABLE)
     return mobile_brand_list, mobile_brand_links_list

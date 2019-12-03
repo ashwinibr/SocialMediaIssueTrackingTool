@@ -1,5 +1,7 @@
 import sqlite3
 from string import Template
+from ScrapingTool.Models.mongo_read_write import Get_Chart_Data
+from ScrapingTool.Generic.constant import *
 
 class CreateChart:
     def __init__(self,Product):
@@ -8,16 +10,9 @@ class CreateChart:
         self.cursor = ''
         self.results = []
 
-
     def Create_Column_Chart(self, Product):
         print('running GChart Col ' + Product)
-        query = "SELECT Date, sum(NrOfIssues) from Issues_Count_By_Keyword WHERE Product='{}' GROUP By Date ORDER BY Date ASC".format(Product)
-        
-        self.cursor = self.conn.execute(query)
-
-        for row in self.cursor:
-            self.results.append({'Date': row[0], 'NrOfIssues': row[1]})
-        print(self.results)
+        self.results = Get_Chart_Data(EXPORTED_DATA_DATABASE_TABLE,'Date')
         self.template = '''
         {% extends 'base.html' %}
 
@@ -54,13 +49,7 @@ class CreateChart:
 
     def Create_Pie_Chart(self, Product):
         print('running GChart Pie ' + Product)
-        self.results=[]
-        query = "SELECT Category, sum(NrOfIssues) from Issues_Count_By_Keyword WHERE Product='{}' GROUP By Category ORDER BY sum(NrOfIssues) DESC".format(Product)
-        
-        self.cursor = self.conn.execute(query)
-        
-        for row in self.cursor:
-            self.results.append({'Category': row[0], 'NrOfIssues': row[1]})
+        self.results = Get_Chart_Data(EXPORTED_DATA_DATABASE_TABLE,'Category')
         
         self.template = self.template + '''
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

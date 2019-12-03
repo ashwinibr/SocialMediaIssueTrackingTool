@@ -13,7 +13,7 @@ from ScrapingTool.GoogleCharts.GoogleCharts import CreateChart
 from ScrapingTool.controller.main_scraper_module import \
     get_brand_names, get_models_names, get_data_from_url
 from ScrapingTool.Generic.DateFormateClass import date_format_change, dateFormat
-from ScrapingTool.Models.sqlite3_read_write import GetData_In_Dict, GetData_In_Tuple, \
+from ScrapingTool.Models.mongo_read_write import GetData_In_Dict, GetData_In_Tuple, \
     Get_Chart_Prod_List, Get_RequestID, Check_Existing_Data
 
 logging.basicConfig(filename='error.log', level=logging.DEBUG)
@@ -151,7 +151,6 @@ def mobile_view(request):
         logging.info("<<<<<<<<< Submit button clicked in brandselection view >>>>>>>>>>>")
         main_url = str(request.session.get('mainurl'))
         brand_dict = GetData_In_Dict(MOBILE_BRANDS_DATABASE_TABLE, main_url)
-        print(brand_dict)
         selected_brand = request.POST.getlist('brand[]')
         request.session['selected_brand'] = request.POST.getlist('brand[]')
         logging.info("<<<<<<<<< User selected Brand name >>>>>>>>>>>%s", selected_brand[0])
@@ -163,11 +162,15 @@ def mobile_view(request):
         main_url = str(request.session.get('mainurl'))
         from_url = str(request.POST.get('from-url'))
         check_data_in_DB = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
+
         if(from_url=='on'):
+            print("if")
             mobile_list = get_models_names(request,brand_url)
         elif(len(check_data_in_DB[1])<=2):
+            print("elif")
             mobile_list = get_models_names(request,brand_url)
         else:
+            print("else")
             mobile_list = GetData_In_Tuple(MODEL_NAME_DATABASE_TABLE,main_url, request.session.get('selected_brand'))
 
 
@@ -275,10 +278,10 @@ def mobile_view(request):
 
                             if data_information:
                                 successmsg = "Data extracted successfully, Click download to get data in excel"
-                                ProdList = Get_Chart_Prod_List()
-                                GChart = CreateChart(ProdList[0])
-                                GChart.Create_Column_Chart(ProdList[0])
-                                GChart.Create_Pie_Chart(ProdList[0])
+                                #ProdList = Get_Chart_Prod_List()
+                                #GChart = CreateChart(ProdList[0])
+                                #GChart.Create_Column_Chart(ProdList[0])
+                                #GChart.Create_Pie_Chart(ProdList[0])
                                 logging.info(
                                     "displaying an success message after scraping data from website : %s",
                                     successmsg)
@@ -297,10 +300,10 @@ def mobile_view(request):
 
                         if data_information:
                             successmsg = "Data extracted successfully, Click download to get data in excel"
-                            ProdList = Get_Chart_Prod_List()
-                            GChart = CreateChart(ProdList[0])
-                            GChart.Create_Column_Chart(ProdList[0])
-                            GChart.Create_Pie_Chart(ProdList[0])
+                            #ProdList = Get_Chart_Prod_List()
+                            #GChart = CreateChart(ProdList[0])
+                            #GChart.Create_Column_Chart(ProdList[0])
+                            #GChart.Create_Pie_Chart(ProdList[0])
                             logging.info(
                                 "displaying an success message after scraping data from website ")
                         else:
