@@ -59,8 +59,8 @@ def android_forum_get_issue(request,selected_model_links,selected_dates):
                             user_comment_list.append(issue_data)
                             category_list.append(category)
 
-    data_dictionary = {"Product": product_list, "date": date_list, "Category": category_list,"Thread":heading_name_list,
-                       "Link":url_list,"comment": user_comment_list}
+    data_dictionary = {"Product": product_list, "Date": date_list, "Category": category_list,"Thread":heading_name_list,
+                       "Link":url_list,"Comment": user_comment_list}
 
     if not product_list:
         data_dictionary={}
