@@ -104,16 +104,11 @@ def Check_Existing_Data(selected_url):
     return brand_list
 
 def Get_Keywards_List():
-    conn = sqlite3.connect(DATABASE_NAME)
-    with conn:
-        cur = conn.cursor()
-    
-    sql_query = """SELECT Category FROM Issue_Keywords;"""
-    cur.execute(sql_query)
-    result = cur.fetchall()
+    collection = Create_Mongodb_Collection("Issue_Keywords")
+    result = collection.find({})
     keywords = []
     for key in result:
-        keywords.append(key[0])
+        keywords.append(key['Keyword'])
     return keywords
 
 def Get_Chart_Prod_List():
