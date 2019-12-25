@@ -70,7 +70,8 @@ def get_issue_from_gsmarena(request,selected_model_links,selected_dates):
                     for date in selected_dates:
                         if date == modified_date.strip('\u200e'):
                             url_list.append(complete_url)
-                            product_list.append(product_name.text)
+                            prd_name = product_name.text.split(' -')
+                            product_list.append(prd_name[0])
                             date_list.append(modified_date.strip('\u200e'))
                             child_node = issue_container.find("p", class_="uopin")
                             issue_data, category = generic_category_filter(child_node)

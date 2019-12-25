@@ -17,10 +17,11 @@ class fileReaderWriter:
             writer = pd.ExcelWriter(file_path+file_name)
             # Load spreadsheet
             data_frame = pd.DataFrame.from_dict(data)
-            data_frame.to_sql("Exported_Data",conn, if_exists="replace", index=False)
             data_frame.to_excel(writer, 'Sheet1', index=False)
-            logging.info("data is saved in excel")
+            data_frame.insert(loc=0, column='Request_ID', value=str(request.session.get('req_id')))
+            data_frame.to_sql("Exported_Data",conn, if_exists="append", index=False)
             writer.save()
+            logging.info("data is saved in excel")
             conn.commit()
 
             data = Get_Keywards_List()
@@ -33,3 +34,18 @@ class fileReaderWriter:
         except IOError as e:
             logging.error('An error occurred when trying to write the file {0} : {1}.'.format(writer, str(e)))
 
+    def create_excel_from_db(self, request, data_dictionary):
+        try:
+            file_path = 'ScrapingTool/Generic/files/'
+            file_name = "Request_ID-"+str(request.session.get('req_id'))+'_'+request.session.get('brand')+'.xlsx'
+
+            writer = pd.ExcelWriter(file_path+file_name)
+            print(data_dictionary)
+            # Load spreadsheet
+            data_frame = pd.DataFrame.from_dict(data_dictionary)
+            data_frame.to_excel(writer, 'Sheet1', index=False)
+            writer.save()
+            logging.info("data is saved in excel")
+
+        except IOError as e:
+            logging.error('An error occurred when trying to write the file {0} : {1}.'.format(writer, str(e)))

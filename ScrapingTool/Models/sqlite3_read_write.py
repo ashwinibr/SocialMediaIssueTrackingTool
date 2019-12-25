@@ -1,6 +1,9 @@
 import sqlite3
 import pandas as pd
 from collections import defaultdict
+from collections import defaultdict
+from datetime import datetime
+from ScrapingTool.Generic.DateFormateClass import *
 
 from ScrapingTool.Generic.constant import DATABASE_NAME, MOBILE_BRANDS_DATABASE_TABLE
 
@@ -21,6 +24,45 @@ def Write_to_DB(dictionary,table_name):
     conn.commit()
     conn.close()
 
+def Check_If_Data_Exist_In_DB(selected_model_name,from_date,to_date):
+    DATABASE_NAME="db.sqlite3"
+    conn = sqlite3.connect(DATABASE_NAME)
+    with conn:
+        cur = conn.cursor()
+    from_dt, to_dt = dateFormat(from_date, to_date)
+
+    if(len(selected_model_name)>1):
+        model_str = ""
+        for model in selected_model_name:
+            model_str = model_str + "Product LIKE '%{}%' or ".format(model)
+
+        sql_query = """SELECT DISTINCT Product, Date, Link, Category, Comment FROM Exported_Data WHERE {} Date 
+        BETWEEN "{}" AND "{}";""".format(model_str,from_dt.strftime("%m/%d/%Y"), to_dt.strftime("%m/%d/%Y"))  
+    else:
+        model_str = selected_model_name[0]
+        sql_query = """SELECT DISTINCT Product, Date, Link, Category, Comment FROM Exported_Data WHERE Product LIKE "%{}%" AND Date 
+        BETWEEN "{}" AND "{}";""".format(model_str,from_dt.strftime("%m/%d/%Y"), to_dt.strftime("%m/%d/%Y"))  
+
+    cur.execute(sql_query)
+    result = cur.fetchall()
+
+    product_list = []
+    date_list = []
+    url_list = []
+    category_list = []
+    user_comment_list = []
+
+    for product, row_date, link, category, comment in result:
+        product_list.append(product)
+        date_list.append(row_date)
+        url_list.append(link)
+        category_list.append(category)
+        user_comment_list.append(comment)
+
+    data_dictionary = {"Product": product_list, "Date": date_list, "Link": url_list, "Category": category_list,
+                       "Comment": user_comment_list}
+    return data_dictionary
+
 def Get_Chart_Prod_List():
     conn = sqlite3.connect(DATABASE_NAME)
     with conn:
@@ -34,7 +76,7 @@ def Get_Chart_Prod_List():
         prod_list.append(r[0])
     return prod_list
 
-def Get_RequestID(url, brand, models_list):
+def Get_RequestID(url, brand, models_list, fromdate, todate):
     conn = sqlite3.connect("db.sqlite3")
     with conn:
         cur = conn.cursor()
@@ -46,7 +88,7 @@ def Get_RequestID(url, brand, models_list):
         else:
             models_list_str = models_list_str+","+model   
 
-    cur.execute("INSERT INTO Request_Data VALUES(NULL,?,?,?)",(url,brand,models_list_str))
+    cur.execute("INSERT INTO Request_Data VALUES(NULL,?,?,?,?,?)",(url,brand,models_list_str,fromdate,todate))
     req_id = cur.lastrowid
     conn.commit()
     conn.close()
@@ -67,15 +109,16 @@ def Update_Issue_Count_For_Key(key):
     with conn:
         cur = conn.cursor()
     
-    sql_query = """SELECT Product, Date, count(Product) FROM Exported_Data WHERE Category like "%{}%" GROUP by Date,Product;""".format(key)  
+    sql_query = """SELECT Request_ID, Product, Date, count(Product) FROM Exported_Data WHERE Category like "%{}%" GROUP by Request_ID,Date,Product;""".format(key)  
     cur.execute(sql_query)
     result = cur.fetchall()
-    issue_dict = {'Product':[],'Date':[],'Category':[],'NrOfIssues':[]}
+    issue_dict = {'Request_ID':[],'Product':[],'Date':[],'Category':[],'NrOfIssues':[]}
     for r in result:
-        issue_dict['Product'].append(r[0])
-        issue_dict['Date'].append(r[1])
+        issue_dict['Request_ID'].append(r[0])
+        issue_dict['Product'].append(r[1])
+        issue_dict['Date'].append(r[2])
         issue_dict['Category'].append(key)        
-        issue_dict['NrOfIssues'].append(r[2])
+        issue_dict['NrOfIssues'].append(r[3])
 
     data_frame = pd.DataFrame.from_dict(issue_dict)
     data_frame.to_sql('Issues_Count_By_Keyword', conn, if_exists="append", index=False)
