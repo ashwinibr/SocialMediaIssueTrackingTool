@@ -256,7 +256,7 @@ def mobile_view(request):
                 logging.info("<<<<<<< User selected product list : %s >>>>>>>>>>>>>>", selected_model_name)
                 sel_brand = str(request.session.get('brand'))
 
-                req_id = Get_RequestID(main_url,sel_brand,selected_model_name)
+                req_id = Get_RequestID(main_url, sel_brand, selected_model_name, fromdate, todate)
                 request.session['req_id'] = req_id
                 if selected_model_name:
                     selected_model_url = []
